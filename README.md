@@ -6,3 +6,7 @@
 
 - Create a mysql database with the name db_asvblr
 - Change the credentials of the database in the file .\src\main\resources\application.properties
+
+### Swagger
+
+http://localhost:8080/swagger-ui.html
