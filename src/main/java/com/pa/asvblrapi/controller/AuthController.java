@@ -91,27 +91,27 @@ public class AuthController {
         Set<Role> roles = new HashSet<>();
 
         if (strRoles == null) {
-            Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                    .orElseThrow(() -> new RuntimeException("Error : Role is not found."));
+            Role userRole = roleRepository.findByName("ROLE_USER");
+                    //.orElseThrow(() -> new RuntimeException("Error : Role is not found."));
             roles.add(userRole);
         } else {
             strRoles.forEach(role -> {
                 switch (role) {
                     case "admin":
-                        Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-                                .orElseThrow(() -> new RuntimeException("Error : Role is not found."));
+                        Role adminRole = roleRepository.findByName("ROLE_ADMIN");
+                                //.orElseThrow(() -> new RuntimeException("Error : Role is not found."));
                         roles.add(adminRole);
 
                         break;
-                    case "mod":
-                        Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-                                .orElseThrow(() -> new RuntimeException("Error : Role is not found."));
-                        roles.add(modRole);
+                    case "president":
+                        Role presidentRole = roleRepository.findByName("ROLE_PRESIDENT");
+                                //.orElseThrow(() -> new RuntimeException("Error : Role is not found."));
+                        roles.add(presidentRole);
 
                         break;
                     default:
-                        Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-                                .orElseThrow(() -> new RuntimeException("Error : Role is not found."));
+                        Role userRole = roleRepository.findByName("ROLE_USER");
+                                //.orElseThrow(() -> new RuntimeException("Error : Role is not found."));
                         roles.add(userRole);
                 }
             });
