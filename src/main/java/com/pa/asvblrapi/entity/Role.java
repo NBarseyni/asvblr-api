@@ -18,10 +18,9 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private ERole name;
+    private String name;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "roles_privileges",
             joinColumns = @JoinColumn(
@@ -31,4 +30,8 @@ public class Role {
             )
     )
     private Collection<Privilege> privileges;
+
+    public Role (String name) {
+        this.name = name;
+    }
 }
