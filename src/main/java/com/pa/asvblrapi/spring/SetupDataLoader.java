@@ -1,7 +1,9 @@
 package com.pa.asvblrapi.spring;
 
+import com.pa.asvblrapi.entity.PaymentMode;
 import com.pa.asvblrapi.entity.Privilege;
 import com.pa.asvblrapi.entity.Role;
+import com.pa.asvblrapi.repository.PaymentModeRepository;
 import com.pa.asvblrapi.repository.PrivilegeRepository;
 import com.pa.asvblrapi.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Autowired
     private PrivilegeRepository privilegeRepository;
+
+    @Autowired
+    private PaymentModeRepository paymentModeRepository;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -70,5 +75,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         role.setPrivileges(privileges);
         role = roleRepository.save(role);
         return role;
+    }
+
+    private final PaymentMode createPaymentModeIfNotFound(final String name) {
+        PaymentMode paymentMode = paymentModeRepository.findByName(name);
+        if (paymentMode == null) {
+            paymentMode = new PaymentMode(name);
+            paymentMode = paymentModeRepository.save(paymentMode);
+        }
+        return paymentMode;
     }
 }
