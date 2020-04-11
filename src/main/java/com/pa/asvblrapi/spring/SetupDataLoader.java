@@ -1,6 +1,5 @@
 package com.pa.asvblrapi.spring;
 
-import com.pa.asvblrapi.entity.ERole;
 import com.pa.asvblrapi.entity.Privilege;
 import com.pa.asvblrapi.entity.Role;
 import com.pa.asvblrapi.repository.PrivilegeRepository;

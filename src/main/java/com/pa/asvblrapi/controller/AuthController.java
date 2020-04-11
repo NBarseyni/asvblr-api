@@ -1,6 +1,5 @@
 package com.pa.asvblrapi.controller;
 
-import com.pa.asvblrapi.entity.ERole;
 import com.pa.asvblrapi.entity.Role;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.jwt.JwtUtils;
