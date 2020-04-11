@@ -1,8 +1,10 @@
 package com.pa.asvblrapi.spring;
 
+import com.pa.asvblrapi.entity.Category;
 import com.pa.asvblrapi.entity.PaymentMode;
 import com.pa.asvblrapi.entity.Privilege;
 import com.pa.asvblrapi.entity.Role;
+import com.pa.asvblrapi.repository.CategoryRepository;
 import com.pa.asvblrapi.repository.PaymentModeRepository;
 import com.pa.asvblrapi.repository.PrivilegeRepository;
 import com.pa.asvblrapi.repository.RoleRepository;
@@ -31,6 +33,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Autowired
     private PaymentModeRepository paymentModeRepository;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -84,5 +89,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             paymentMode = paymentModeRepository.save(paymentMode);
         }
         return paymentMode;
+    }
+
+    private final Category createCategoryIfNotFound(final String name) {
+        Category category = categoryRepository.findByName(name);
+        if (category == null) {
+            category = new Category(name);
+            category = categoryRepository.save(category);
+        }
+        return category;
     }
 }
