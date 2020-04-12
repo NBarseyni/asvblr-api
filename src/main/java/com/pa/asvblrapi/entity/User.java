@@ -24,6 +24,9 @@ public class User {
     private String password;
     private boolean enabled;
 
+    @OneToOne(mappedBy = "user")
+    private Player player;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_roles",
     joinColumns = @JoinColumn(name = "user_id"),
