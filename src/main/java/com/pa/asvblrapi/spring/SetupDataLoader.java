@@ -59,6 +59,20 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
         createRoleIfNotFound("ROLE_PRESIDENT", presidentPrivileges);
 
+        // Create fake Categories
+        createCategoryIfNotFound("Homme 6vs6");
+        createCategoryIfNotFound("Homme 4vs4");
+        createCategoryIfNotFound("Femme 6vs6");
+        createCategoryIfNotFound("Femme 4vs4");
+
+        // Create PaymentMode
+        createPaymentModeIfNotFound("Chèques classiques de Banque");
+        createPaymentModeIfNotFound("Pass 92 : collégiens domiciliés aux Hauts-de-Seine");
+        createPaymentModeIfNotFound("Coupons sport");
+        createPaymentModeIfNotFound("Chèques vacances");
+        createPaymentModeIfNotFound("Bons C.A.F");
+        createPaymentModeIfNotFound("Espèces");
+
         alreadySetup = true;
     }
 
