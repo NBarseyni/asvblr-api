@@ -26,4 +26,8 @@ public class Season {
 
     @OneToMany(mappedBy = "season")
     private List<Team> teams;
+
+    public Season(String name) {
+        this.name = name;
+    }
 }
