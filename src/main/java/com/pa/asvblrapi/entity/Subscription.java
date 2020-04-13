@@ -1,5 +1,6 @@
 package com.pa.asvblrapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,7 +33,7 @@ public class Subscription {
     private String city;
     @NotNull
     private String email;
-    private int phoneNumber;
+    private String phoneNumber;
     @NotNull
     private Date birthDate;
     @NotNull
@@ -44,8 +45,9 @@ public class Subscription {
     @JoinColumn(name = "player_id")
     private Player player;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "season_id", nullable = false)
+    @JsonBackReference
     private Season season;
 
     @ManyToOne
@@ -71,4 +73,48 @@ public class Subscription {
     @ManyToOne
     @JoinColumn(name = "formLicence_id")
     private Document formLicence;
+
+    public Subscription(String firstName, String lastName, boolean gender, String address, int postcode, String city,
+                        String email, String phoneNumber, Date birthDate, String birthCountry, boolean insurance,
+                        Season season, Category category, PaymentMode paymentMode) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.gender = gender;
+        this.address = address;
+        this.postcode = postcode;
+        this.city = city;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
+        this.birthDate = birthDate;
+        this.birthCountry = birthCountry;
+        this.insurance = insurance;
+        this.season = season;
+        this.category = category;
+        this.paymentMode = paymentMode;
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
