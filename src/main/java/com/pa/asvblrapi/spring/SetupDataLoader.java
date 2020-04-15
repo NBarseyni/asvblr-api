@@ -1,13 +1,7 @@
 package com.pa.asvblrapi.spring;
 
-import com.pa.asvblrapi.entity.Category;
-import com.pa.asvblrapi.entity.PaymentMode;
-import com.pa.asvblrapi.entity.Privilege;
-import com.pa.asvblrapi.entity.Role;
-import com.pa.asvblrapi.repository.CategoryRepository;
-import com.pa.asvblrapi.repository.PaymentModeRepository;
-import com.pa.asvblrapi.repository.PrivilegeRepository;
-import com.pa.asvblrapi.repository.RoleRepository;
+import com.pa.asvblrapi.entity.*;
+import com.pa.asvblrapi.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -30,6 +24,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
     @Autowired
     private PrivilegeRepository privilegeRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private PaymentModeRepository paymentModeRepository;
@@ -55,9 +52,16 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         final List<Privilege> adminPrivileges = new ArrayList<Privilege>(Arrays.asList(readPrivilege, subscriptionManagement));
         final List<Privilege> presidentPrivileges = new ArrayList<Privilege>(Arrays.asList(readPrivilege, subscriptionManagement));
 
-        createRoleIfNotFound("ROLE_USER", userPrivileges);
-        createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
-        createRoleIfNotFound("ROLE_PRESIDENT", presidentPrivileges);
+        final Role userRole = createRoleIfNotFound("ROLE_USER", userPrivileges);
+        final Role adminRole = createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
+        final Role presidentRole = createRoleIfNotFound("ROLE_PRESIDENT", presidentPrivileges);
+
+        createUserIfNotFound("testUser@test.com", "userTest", "Test", "Test",
+                "123456", new ArrayList<Role>(Arrays.asList(userRole)));
+        createUserIfNotFound("testAdmin@test.com", "adminTest", "Test", "Test",
+                "123456", new ArrayList<Role>(Arrays.asList(adminRole)));
+        createUserIfNotFound("testPresident@test.com", "presidentTest", "Test", "Test",
+                "123456", new ArrayList<Role>(Arrays.asList(presidentRole)));
 
         // Create fake Categories
         createCategoryIfNotFound("Homme 6vs6");
@@ -94,6 +98,23 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         role.setPrivileges(privileges);
         role = roleRepository.save(role);
         return role;
+    }
+
+    private final User createUserIfNotFound(final String email, final String username, final String firstName,
+                                            final String lastName, final String password, final Collection<Role> roles) {
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            user = new User();
+            user.setEmail(email);
+            user.setUsername(username);
+            user.setFirstName(firstName);
+            user.setLastName(lastName);
+            user.setPassword(encoder.encode(password));
+            user.setEnabled(true);
+        }
+        user.setRoles(roles);
+        user = userRepository.save(user);
+        return user;
     }
 
     private final PaymentMode createPaymentModeIfNotFound(final String name) {
