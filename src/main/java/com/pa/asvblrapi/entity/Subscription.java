@@ -39,7 +39,19 @@ public class Subscription {
     @NotNull
     private String birthCountry;
     @NotNull
+    private String topSize;
+    @NotNull
+    private String pantsSize;
+    @NotNull
+    private int requestedJerseyNumber;
+    @NotNull
     private boolean insurance;
+    @NotNull
+    private boolean equipment;
+    @NotNull
+    private boolean referee;
+    @NotNull
+    private boolean coach;
 
     @ManyToOne
     @JoinColumn(name = "player_id")
@@ -75,7 +87,8 @@ public class Subscription {
     private Document formLicence;
 
     public Subscription(String firstName, String lastName, boolean gender, String address, int postcode, String city,
-                        String email, String phoneNumber, Date birthDate, String birthCountry, boolean insurance,
+                        String email, String phoneNumber, Date birthDate, String birthCountry, String topSize,
+                        String pantsSize, boolean insurance, boolean equipment, boolean referee, boolean coach,
                         Season season, Category category, PaymentMode paymentMode) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -87,6 +100,11 @@ public class Subscription {
         this.phoneNumber = phoneNumber;
         this.birthDate = birthDate;
         this.birthCountry = birthCountry;
+        this.topSize = topSize;
+        this.pantsSize = pantsSize;
+        this.equipment = equipment;
+        this.referee = referee;
+        this.coach = coach;
         this.insurance = insurance;
         this.season = season;
         this.category = category;

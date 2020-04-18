@@ -29,8 +29,20 @@ public class SubscriptionDto {
     private Date birthDate;
     @NotBlank
     private String birthCountry;
+    @NotBlank
+    private String topSize;
+    @NotBlank
+    private String pantsSize;
+    @NotNull
+    private int requestedJerseyNumber;
     @NotNull
     private boolean insurance;
+    @NotNull
+    private boolean equipment;
+    @NotNull
+    private boolean referee;
+    @NotNull
+    private boolean coach;
     @NotNull
     private Long idSeason;
     @NotNull

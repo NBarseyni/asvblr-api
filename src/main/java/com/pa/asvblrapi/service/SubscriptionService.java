@@ -70,7 +70,12 @@ public class SubscriptionService {
                 subscriptionDto.getPhoneNumber(),
                 subscriptionDto.getBirthDate(),
                 subscriptionDto.getBirthCountry(),
+                subscriptionDto.getTopSize(),
+                subscriptionDto.getPantsSize(),
                 subscriptionDto.isInsurance(),
+                subscriptionDto.isEquipment(),
+                subscriptionDto.isReferee(),
+                subscriptionDto.isCoach(),
                 season.get(),
                 category.get(),
                 paymentMode.get()
