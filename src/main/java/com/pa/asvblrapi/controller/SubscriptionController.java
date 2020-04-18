@@ -42,6 +42,17 @@ public class SubscriptionController {
         }
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Object> update(@PathVariable Long id, @Valid @RequestBody SubscriptionDto subscriptionDto) {
+        try {
+            Subscription subscription = this.subscriptionService.updateSubscription(id, subscriptionDto);
+            return ResponseEntity.status(HttpStatus.OK).body(subscription);
+        }
+        catch (SubscriptionNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable Long id) {
         try {
