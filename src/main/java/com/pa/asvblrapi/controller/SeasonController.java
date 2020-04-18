@@ -44,13 +44,16 @@ public class SeasonController {
         }
     }
 
-    /*
     @PutMapping("/update/{id}")
     public ResponseEntity<Object> update(@PathVariable Long id, @Valid @RequestBody SeasonDto seasonDto) {
-
+        try {
+            Season season = this.seasonService.updateSeason(id, seasonDto);
+            return ResponseEntity.status(HttpStatus.OK).body(season);
+        }
+        catch (SeasonNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
-
-     */
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Object> delete(@PathVariable Long id) {

@@ -30,6 +30,15 @@ public class SeasonService {
         return this.seasonRepository.save(season);
     }
 
+    public Season updateSeason(Long id, SeasonDto seasonDto) throws SeasonNotFoundException {
+        Optional<Season> season = this.seasonRepository.findById(id);
+        if (!season.isPresent()) {
+            throw new SeasonNotFoundException(id);
+        }
+        season.get().setName(seasonDto.getName());
+        return this.seasonRepository.save(season.get());
+    }
+
     public void deleteSeason(Long id) throws SeasonNotFoundException, AccessDeniedException {
         Optional<Season> season = this.seasonRepository.findById(id);
 
