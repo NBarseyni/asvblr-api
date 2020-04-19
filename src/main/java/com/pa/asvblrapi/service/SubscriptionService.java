@@ -120,7 +120,7 @@ public class SubscriptionService {
         subscription.get().setSeason(season.get());
         subscription.get().setCategory(category.get());
         subscription.get().setPaymentMode(paymentMode.get());
-        return subscription.get();
+        return this.subscriptionRepository.save(subscription.get());
     }
 
     public void deleteSubscription(Long id) throws SubscriptionNotFoundException, AccessDeniedException {
