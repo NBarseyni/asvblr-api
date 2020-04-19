@@ -4,7 +4,6 @@ import com.pa.asvblrapi.dto.TeamDto;
 import com.pa.asvblrapi.entity.Team;
 import com.pa.asvblrapi.exception.SeasonNotFoundException;
 import com.pa.asvblrapi.exception.TeamNotFoundException;
-import com.pa.asvblrapi.repository.TeamRepository;
 import com.pa.asvblrapi.service.TeamService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

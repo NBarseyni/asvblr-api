@@ -29,7 +29,9 @@ public class Team {
     @OneToMany(mappedBy = "team")
     private List<JerseyNumber> jerseyNumbers;
 
-    public Team(String name) {
+    public Team(String name, String photo, Season season) {
         this.name = name;
+        this.photo = photo;
+        this.season = season;
     }
 }
