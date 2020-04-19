@@ -28,4 +28,8 @@ public class Team {
 
     @OneToMany(mappedBy = "team")
     private List<JerseyNumber> jerseyNumbers;
+
+    public Team(String name) {
+        this.name = name;
+    }
 }
