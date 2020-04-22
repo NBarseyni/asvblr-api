@@ -49,5 +49,4 @@ public class SubscriptionDto {
     private Long idCategory;
     @NotNull
     private Long idPaymentMode;
-
 }

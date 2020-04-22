@@ -28,6 +28,5 @@ public class PositionController {
     public Position getPosition(@PathVariable Long id) {
         return this.positionService.getPosition(id)
                 .orElseThrow(() -> new PositionNotFoundException(id));
-        
     }
 }

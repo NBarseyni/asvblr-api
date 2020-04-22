@@ -3,7 +3,6 @@ package com.pa.asvblrapi.controller;
 import com.pa.asvblrapi.entity.Category;
 import com.pa.asvblrapi.exception.CategoryNotFoundException;
 import com.pa.asvblrapi.repository.CategoryRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
