@@ -1,15 +1,19 @@
 package com.pa.asvblrapi.controller;
 
 import com.pa.asvblrapi.dto.TeamDto;
+import com.pa.asvblrapi.entity.Photo;
 import com.pa.asvblrapi.entity.Team;
 import com.pa.asvblrapi.exception.SeasonNotFoundException;
 import com.pa.asvblrapi.exception.TeamNotFoundException;
+import com.pa.asvblrapi.service.PhotoService;
 import com.pa.asvblrapi.service.TeamService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
@@ -18,9 +22,11 @@ import java.util.List;
 public class TeamController {
 
     private final TeamService teamService;
+    private final PhotoService photoService;
 
-    TeamController(TeamService teamService) {
+    TeamController(TeamService teamService, PhotoService photoService) {
         this.teamService = teamService;
+        this.photoService = photoService;
     }
 
     @GetMapping("/")
@@ -42,6 +48,19 @@ public class TeamController {
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PostMapping("/{id}/photos")
+    public ResponseEntity<Object> createPhoto(@RequestParam("file") MultipartFile multipartFile, @PathVariable Long id) {
+        Team team = this.teamService.getTeam(id)
+                .orElseThrow(() -> new TeamNotFoundException(id));
+        try {
+            Photo photo = this.photoService.createPhoto(multipartFile, team);
+            return ResponseEntity.status(HttpStatus.CREATED).body(photo);
+        }
+        catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
