@@ -17,6 +17,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 @Configuration
 @EnableWebSecurity
@@ -55,12 +56,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/api/auth/**",
-                        "/api/paymentModes/**",
-                        "/api/categories/**",
-                        "/api/seasons/**",
-                        "/api/subscriptions/**").permitAll()
-                //.antMatchers("/api/test/**").permitAll()
+                .antMatchers("/api/auth/**", "/api/categories/**", "/api/paymentModes/**",
+                        "/api/photos/**", "/api/positions/**", "/api/seasons/**",
+                        "/api/subscriptions/**", "/api/teams/**").permitAll()
                 .antMatchers("/api/test/**").hasAuthority("SUBSCRIPTION_MANAGEMENT")
                 .antMatchers("/api/users/**").hasAuthority("READ_PRIVILEGE")
                 .anyRequest().authenticated();
@@ -76,6 +74,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 "/swagger-resources/**",
                 "/configuration/security",
                 "/swagger-ui.html",
-                "/webjars/**");
+                "/webjars/**",
+                "/photos/**");
+    }
+
+    @Bean
+    public CommonsMultipartResolver multipartResolver() {
+        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
+        multipartResolver.setMaxUploadSize(100000000);
+        return multipartResolver;
     }
 }
