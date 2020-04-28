@@ -36,11 +36,11 @@ public class TeamService {
         if(!season.isPresent()) {
             throw new SeasonNotFoundException(teamDto.getIdSeason());
         }
-        Team team = new Team(teamDto.getName(), teamDto.getPhoto(), season.get());
+        Team team = new Team(teamDto.getName(), season.get());
         return this.teamRepository.save(team);
     }
 
-    public Team updateTeam(Long id, TeamDto teamDto) throws TeamNotFoundException {
+    public Team updateTeam(Long id, TeamDto teamDto) throws TeamNotFoundException, SeasonNotFoundException {
         Optional<Team> team = this.teamRepository.findById(id);
         if(!team.isPresent()) {
             throw new TeamNotFoundException(id);
@@ -50,7 +50,6 @@ public class TeamService {
             throw new SeasonNotFoundException(teamDto.getIdSeason());
         }
         team.get().setName(teamDto.getName());
-        team.get().setPhoto(teamDto.getPhoto());
         team.get().setSeason(season.get());
         return this.teamRepository.save(team.get());
     }

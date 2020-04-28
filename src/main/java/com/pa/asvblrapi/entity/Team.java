@@ -1,5 +1,6 @@
 package com.pa.asvblrapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,18 +21,20 @@ public class Team {
     private Long id;
     @NotNull
     private String name;
-    private String photo;
+
+    @OneToMany(mappedBy = "team")
+    private List<Photo> photos;
 
     @ManyToOne
     @JoinColumn(name = "season_id", nullable = false)
+    @JsonBackReference
     private Season season;
 
     @OneToMany(mappedBy = "team")
     private List<JerseyNumber> jerseyNumbers;
 
-    public Team(String name, String photo, Season season) {
+    public Team(String name, Season season) {
         this.name = name;
-        this.photo = photo;
         this.season = season;
     }
 }

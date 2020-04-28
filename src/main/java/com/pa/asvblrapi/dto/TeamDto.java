@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 public class TeamDto {
     @NotBlank
     private String name;
-    private String photo;
     @NotNull
     private Long idSeason;
 }
