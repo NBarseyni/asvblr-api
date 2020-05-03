@@ -2,8 +2,10 @@ package com.pa.asvblrapi.controller;
 
 import com.pa.asvblrapi.dto.SeasonDto;
 import com.pa.asvblrapi.entity.Season;
+import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.exception.SeasonNotFoundException;
 import com.pa.asvblrapi.service.SeasonService;
+import com.pa.asvblrapi.service.SubscriptionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,9 +19,11 @@ import java.util.List;
 public class SeasonController {
 
     private final SeasonService seasonService;
+    private final SubscriptionService subscriptionService;
 
-    SeasonController(SeasonService seasonService) {
+    SeasonController(SeasonService seasonService, SubscriptionService subscriptionService) {
         this.seasonService = seasonService;
+        this.subscriptionService = subscriptionService;
     }
 
     @GetMapping("/")
@@ -31,6 +35,11 @@ public class SeasonController {
     public Season getSeason(@PathVariable Long id) {
         return this.seasonService.getSeason(id)
                 .orElseThrow(() -> new SeasonNotFoundException(id));
+    }
+
+    @GetMapping("/{id}/subscriptions")
+    public List<Subscription> getSubscriptionBySeason(@PathVariable Long id) {
+        return this.subscriptionService.getSubscriptionsBySeason(id);
     }
 
     @PostMapping("/create")

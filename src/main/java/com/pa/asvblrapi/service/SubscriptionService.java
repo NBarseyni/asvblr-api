@@ -39,6 +39,10 @@ public class SubscriptionService {
         return this.subscriptionRepository.findAll();
     }
 
+    public List<Subscription> getSubscriptionsBySeason(Long id ) {
+        return this.subscriptionRepository.findSubscriptionBySeason(id);
+    }
+
     public Optional<Subscription> getSubscription(Long id) {
         return this.subscriptionRepository.findById(id);
     }
