@@ -11,11 +11,14 @@ import com.pa.asvblrapi.spring.RandomPasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.nio.file.AccessDeniedException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/subscriptions")
@@ -31,6 +34,9 @@ public class SubscriptionController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private PasswordEncoder encoder;
 
     @GetMapping("/")
     public List<Subscription> getSubscriptions() {
@@ -53,14 +59,18 @@ public class SubscriptionController {
                 username += "1";
             }
 
-            User user = this.userRepository.save(
-                    new User(username, subscription.getFirstName(), subscription.getLastName(), subscription.getEmail(),
-                            randomPasswordGenerator.generatePassword()));
+            String password = randomPasswordGenerator.generatePassword();
 
-            String text = String.format("Bonjour, voici vos identifiants : \n Username : %s \n Password : %s",
-                    username, user.getPassword());
+            this.userRepository.save(new User(username, subscription.getFirstName(), subscription.getLastName(),
+                    subscription.getEmail(), encoder.encode(password)));
 
-            this.emailService.sendSimpleMessage(subscription.getEmail(), "Inscription" , text);
+            Map<String, Object> map = new HashMap<>();
+            map.put("name", String.format("%s %s", subscription.getFirstName(), subscription.getLastName()));
+            map.put("username", username);
+            map.put("password", password);
+
+            this.emailService.sendMessageUsingThymeleafTemplate(subscription.getEmail(),
+                    "Inscription Association sportive de Volley Ball de Bourg-la-Reine", map);
             return ResponseEntity.status(HttpStatus.CREATED).body(subscription);
         }
         catch (Exception e) {
