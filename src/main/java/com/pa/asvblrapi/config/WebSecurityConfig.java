@@ -57,7 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
                 .antMatchers("/api/auth/**", "/api/categories/**", "/api/paymentModes/**",
-                        "/api/photos/**", "/api/positions/**", "/api/seasons/**",
+                        "/api/photos/**", "/api/players/**", "/api/positions/**", "/api/seasons/**",
                         "/api/subscriptions/**", "/api/teams/**").permitAll()
                 .antMatchers("/api/test/**").hasAuthority("SUBSCRIPTION_MANAGEMENT")
                 .antMatchers("/api/users/**").hasAuthority("READ_PRIVILEGE")
