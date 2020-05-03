@@ -2,8 +2,12 @@ package com.pa.asvblrapi.controller;
 
 import com.pa.asvblrapi.dto.SubscriptionDto;
 import com.pa.asvblrapi.entity.Subscription;
+import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.SubscriptionNotFoundException;
+import com.pa.asvblrapi.repository.UserRepository;
 import com.pa.asvblrapi.service.SubscriptionService;
+import com.pa.asvblrapi.spring.EmailServiceImpl;
+import com.pa.asvblrapi.spring.RandomPasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +24,14 @@ public class SubscriptionController {
     @Autowired
     private SubscriptionService subscriptionService;
 
+    private final RandomPasswordGenerator randomPasswordGenerator = new RandomPasswordGenerator();
+
+    @Autowired
+    private EmailServiceImpl emailService;
+
+    @Autowired
+    private UserRepository userRepository;
+
     @GetMapping("/")
     public List<Subscription> getSubscriptions() {
         return this.subscriptionService.getAllSubscriptions();
@@ -35,6 +47,20 @@ public class SubscriptionController {
     public ResponseEntity<Subscription> create(@Valid @RequestBody SubscriptionDto subscriptionDto) {
         try {
             Subscription subscription = this.subscriptionService.createSubscription(subscriptionDto);
+            String username = subscription.getFirstName() + subscription.getLastName();
+
+            while(this.userRepository.existsByUsername(username)) {
+                username += "1";
+            }
+
+            User user = this.userRepository.save(
+                    new User(username, subscription.getFirstName(), subscription.getLastName(), subscription.getEmail(),
+                            randomPasswordGenerator.generatePassword()));
+
+            String text = String.format("Bonjour, voici vos identifiants : \n Username : %s \n Password : %s",
+                    username, user.getPassword());
+
+            this.emailService.sendSimpleMessage(subscription.getEmail(), "Inscription" , text);
             return ResponseEntity.status(HttpStatus.CREATED).body(subscription);
         }
         catch (Exception e) {
