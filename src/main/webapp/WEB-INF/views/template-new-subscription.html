@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:remove="all">Template for HTML email with inline image</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p>Bonjour, <span th:text="${name}"> Peter Static</span> !</p>
+<p>Votre inscription a bien été prise en compte.</p>
+<p>Voici vos identifiants pour suivre l'avancée de votre inscription :</p>
+<p>Identifiant : <span th:text="${username}"> userTest</span></p>
+<p>Mot de passe : <span th:text="${password}"></span></p>
+<!--
+<p>
+    <img src="sample.png" th:src="|cid:${imageResourceName}|" />
+</p>
+-->
+<p>
+    Cordialement, <br />
+    <em>L'association sportive de Volley Ball de Bourg-la-Reine</em>
+</p>
+</body>
+</html>
