@@ -21,12 +21,16 @@ public class Photo {
     @NotNull
     private String name;
     @ManyToOne
-    @JoinColumn(name = "team_id", nullable = false)
+    @JoinColumn(name = "team_id", nullable = true)
     @JsonBackReference
     private Team team;
 
     public Photo(String name, Team team) {
         this.name = name;
         this.team = team;
+    }
+
+    public Photo(String name) {
+        this.name = name;
     }
 }
