@@ -4,12 +4,14 @@ import com.pa.asvblrapi.entity.Position;
 import com.pa.asvblrapi.exception.PositionNotFoundException;
 import com.pa.asvblrapi.service.PositionService;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @Controller
 @RequestMapping("/api/positions")
 public class PositionController {
@@ -19,7 +21,7 @@ public class PositionController {
         this.positionService = positionService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<Position> getPositions() {
         return this.positionService.getAllPosition();
     }

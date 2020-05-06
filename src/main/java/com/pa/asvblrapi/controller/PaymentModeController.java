@@ -9,7 +9,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/paymentModes")
+@RequestMapping("/api/payment-modes")
 public class PaymentModeController {
 
     private final PaymentModeRepository paymentModeRepository;
@@ -18,7 +18,7 @@ public class PaymentModeController {
         this.paymentModeRepository = paymentModeRepository;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<PaymentMode> getPaymentModes() {
         return paymentModeRepository.findAll();
     }

@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/players")
 public class PlayerController {
@@ -22,7 +23,7 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<Player> getPlayers() {
         return this.playerService.getAllPlayer();
     }
@@ -33,7 +34,7 @@ public class PlayerController {
                 .orElseThrow(() -> new PlayerNotFoundException(id));
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Object> updatePlayer(@PathVariable Long id, @Valid @RequestBody PlayerDto playerDto) {
         try {
             Player player = this.playerService.updatePlayer(id, playerDto);
@@ -44,8 +45,8 @@ public class PlayerController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deletePlayer(@PathVariable Long id) {
         try {
             this.playerService.deletePlayer(id);
         }

@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping(value = "/api/teams")
 public class TeamController {
@@ -29,7 +30,7 @@ public class TeamController {
         this.photoService = photoService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<Team> getTeams() {
         return this.teamService.getAllTeam();
     }
@@ -40,8 +41,8 @@ public class TeamController {
                 .orElseThrow(() -> new TeamNotFoundException(id));
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Team> create(@Valid @RequestBody TeamDto teamDto) {
+    @PostMapping("")
+    public ResponseEntity<Team> createTeam(@Valid @RequestBody TeamDto teamDto) {
         try {
             Team team = this.teamService.createTeam(teamDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(team);
@@ -52,7 +53,7 @@ public class TeamController {
     }
 
     @PostMapping("/{id}/photos")
-    public ResponseEntity<Object> createPhoto(@RequestParam("file") MultipartFile multipartFile, @PathVariable Long id) {
+    public ResponseEntity<Object> createTeamPhoto(@RequestParam("file") MultipartFile multipartFile, @PathVariable Long id) {
         Team team = this.teamService.getTeam(id)
                 .orElseThrow(() -> new TeamNotFoundException(id));
         try {
@@ -64,8 +65,8 @@ public class TeamController {
         }
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Object> update(@PathVariable Long id, @Valid @RequestBody TeamDto teamDto) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateTeam(@PathVariable Long id, @Valid @RequestBody TeamDto teamDto) {
         try {
             Team team = this.teamService.updateTeam(id, teamDto);
             return ResponseEntity.status(HttpStatus.OK).body(team);
@@ -75,8 +76,8 @@ public class TeamController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteTeam(@PathVariable Long id) {
         try {
             this.teamService.deleteTeam(id);
         }

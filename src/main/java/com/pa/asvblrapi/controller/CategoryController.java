@@ -18,7 +18,7 @@ public class CategoryController {
         this.categoryRepository = categoryRepository;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<Category> getCategories() {
         return this.categoryRepository.findAll();
     }

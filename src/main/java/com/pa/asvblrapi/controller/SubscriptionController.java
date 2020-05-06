@@ -39,7 +39,7 @@ public class SubscriptionController {
     @Autowired
     private PasswordEncoder encoder;
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<Subscription> getSubscriptions() {
         return this.subscriptionService.getAllSubscriptions();
     }
@@ -50,8 +50,8 @@ public class SubscriptionController {
                 .orElseThrow(() -> new SubscriptionNotFoundException(id));
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Subscription> create(@Valid @RequestBody SubscriptionDto subscriptionDto) {
+    @PostMapping("")
+    public ResponseEntity<Subscription> createSubscription(@Valid @RequestBody SubscriptionDto subscriptionDto) {
         try {
             Subscription subscription = this.subscriptionService.createSubscription(subscriptionDto);
             String username = subscription.getFirstName() + subscription.getLastName();
@@ -79,8 +79,8 @@ public class SubscriptionController {
         }
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Object> update(@PathVariable Long id, @Valid @RequestBody SubscriptionDto subscriptionDto) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateSubscription(@PathVariable Long id, @Valid @RequestBody SubscriptionDto subscriptionDto) {
         try {
             Subscription subscription = this.subscriptionService.updateSubscription(id, subscriptionDto);
             return ResponseEntity.status(HttpStatus.OK).body(subscription);
@@ -90,8 +90,8 @@ public class SubscriptionController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteSubscription(@PathVariable Long id) {
         try {
             this.subscriptionService.deleteSubscription(id);
         }

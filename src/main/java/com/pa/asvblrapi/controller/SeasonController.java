@@ -27,7 +27,7 @@ public class SeasonController {
         this.subscriptionService = subscriptionService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<Season> getSeasons() {
         return this.seasonService.getAllSeasons();
     }
@@ -43,8 +43,8 @@ public class SeasonController {
         return this.subscriptionService.getSubscriptionsBySeason(id);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Season> create(@Valid @RequestBody SeasonDto seasonDto) {
+    @PostMapping("")
+    public ResponseEntity<Season> createSeason(@Valid @RequestBody SeasonDto seasonDto) {
         try {
             Season season = this.seasonService.createSeason(seasonDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(season);
@@ -54,8 +54,8 @@ public class SeasonController {
         }
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Object> update(@PathVariable Long id, @Valid @RequestBody SeasonDto seasonDto) {
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateSeason(@PathVariable Long id, @Valid @RequestBody SeasonDto seasonDto) {
         try {
             Season season = this.seasonService.updateSeason(id, seasonDto);
             return ResponseEntity.status(HttpStatus.OK).body(season);
@@ -65,8 +65,8 @@ public class SeasonController {
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Object> delete(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Object> deleteSeason(@PathVariable Long id) {
         try {
             this.seasonService.deleteSeason(id);
         }
