@@ -56,7 +56,7 @@ public class TeamController {
         Team team = this.teamService.getTeam(id)
                 .orElseThrow(() -> new TeamNotFoundException(id));
         try {
-            Photo photo = this.photoService.createPhoto(multipartFile, team);
+            Photo photo = this.photoService.createTeamPhoto(multipartFile, team);
             return ResponseEntity.status(HttpStatus.CREATED).body(photo);
         }
         catch (IOException e) {
