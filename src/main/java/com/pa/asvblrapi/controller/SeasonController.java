@@ -14,6 +14,7 @@ import javax.validation.Valid;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/seasons")
 public class SeasonController {

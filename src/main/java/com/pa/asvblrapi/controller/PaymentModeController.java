@@ -3,13 +3,11 @@ package com.pa.asvblrapi.controller;
 import com.pa.asvblrapi.entity.PaymentMode;
 import com.pa.asvblrapi.exception.PaymentModeNotFoundException;
 import com.pa.asvblrapi.repository.PaymentModeRepository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api/paymentModes")
 public class PaymentModeController {
