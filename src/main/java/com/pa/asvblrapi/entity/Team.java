@@ -31,7 +31,7 @@ public class Team {
     private Season season;
 
     @OneToMany(mappedBy = "team")
-    private List<JerseyNumber> jerseyNumbers;
+    private List<Jersey> jerseys;
 
     public Team(String name, Season season) {
         this.name = name;

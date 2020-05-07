@@ -1,9 +1,9 @@
 package com.pa.asvblrapi.repository;
 
-import com.pa.asvblrapi.entity.JerseyNumber;
+import com.pa.asvblrapi.entity.Jersey;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface JerseyNumberRepository extends JpaRepository<JerseyNumber, Long> {
+public interface JerseyRepository extends JpaRepository<Jersey, Long> {
 }

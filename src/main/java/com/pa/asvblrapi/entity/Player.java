@@ -36,7 +36,7 @@ public class Player {
 
     @ManyToOne
     @JoinColumn(name = "jerseyNumber_id")
-    private JerseyNumber jerseyNumber;
+    private Jersey jersey;
 
     @OneToMany(mappedBy = "player")
     private List<Subscription> subscriptions;

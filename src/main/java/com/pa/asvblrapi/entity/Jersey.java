@@ -12,7 +12,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class JerseyNumber {
+public class Jersey {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
