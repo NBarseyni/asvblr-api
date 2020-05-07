@@ -117,7 +117,7 @@ public class SubscriptionService {
         subscription.get().setBirthCountry(subscriptionDto.getBirthCountry());
         subscription.get().setTopSize(subscriptionDto.getTopSize());
         subscription.get().setPantsSize(subscriptionDto.getPantsSize());
-        subscription.get().setInsurance(subscriptionDto.isInsurance());
+        subscription.get().setInsuranceRequested(subscriptionDto.isInsurance());
         subscription.get().setEquipment(subscriptionDto.isEquipment());
         subscription.get().setReferee(subscriptionDto.isReferee());
         subscription.get().setCoach(subscriptionDto.isCoach());

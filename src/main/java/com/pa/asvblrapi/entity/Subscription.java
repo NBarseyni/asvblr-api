@@ -45,7 +45,7 @@ public class Subscription {
     @NotNull
     private int requestedJerseyNumber;
     @NotNull
-    private boolean insurance;
+    private boolean insuranceRequested;
     @NotNull
     private boolean equipment;
     @NotNull
@@ -88,7 +88,7 @@ public class Subscription {
 
     public Subscription(String firstName, String lastName, boolean gender, String address, int postcode, String city,
                         String email, String phoneNumber, Date birthDate, String birthCountry, String topSize,
-                        String pantsSize, boolean insurance, boolean equipment, boolean referee, boolean coach,
+                        String pantsSize, boolean insuranceRequested, boolean equipment, boolean referee, boolean coach,
                         Season season, Category category, PaymentMode paymentMode) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -105,7 +105,7 @@ public class Subscription {
         this.equipment = equipment;
         this.referee = referee;
         this.coach = coach;
-        this.insurance = insurance;
+        this.insuranceRequested = insuranceRequested;
         this.season = season;
         this.category = category;
         this.paymentMode = paymentMode;
