@@ -1,5 +1,7 @@
 package com.pa.asvblrapi.spring;
 
+import com.pa.asvblrapi.entity.Subscription;
+import com.pa.asvblrapi.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -12,6 +14,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -37,6 +40,32 @@ public class EmailServiceImpl {
         catch (MailException exception) {
             exception.printStackTrace();
         }
+    }
+
+    public void sendMessageCreateSubscription(Subscription subscription) throws MessagingException {
+        Context thymeleafContext = new Context();
+
+        Map<String, Object> templateModel = new HashMap<>();
+        templateModel.put("name", String.format("%s %s", subscription.getFirstName(), subscription.getLastName()));
+
+        thymeleafContext.setVariables(templateModel);
+        String htmlBody = thymeleafTemplateEngine.process("template-new-subscription.html", thymeleafContext);
+
+        sendHtmlMessage(subscription.getEmail(), "Inscription prise en compte", htmlBody);
+    }
+
+    public void sendMessageCreateUser(User user, String password) throws MessagingException {
+        Context thymeleafContext = new Context();
+
+        Map<String, Object> templateModel = new HashMap<>();
+        templateModel.put("name", String.format("%s %s", user.getFirstName(), user.getLastName()));
+        templateModel.put("username", user.getUsername());
+        templateModel.put("password", password);
+
+        thymeleafContext.setVariables(templateModel);
+        String htmlBody = thymeleafTemplateEngine.process("template-new-user.html", thymeleafContext);
+
+        sendHtmlMessage(user.getEmail(), "Inscription validée", htmlBody);
     }
 
     public void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel)
