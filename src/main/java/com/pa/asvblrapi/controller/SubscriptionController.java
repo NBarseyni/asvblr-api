@@ -54,24 +54,7 @@ public class SubscriptionController {
     public ResponseEntity<Subscription> createSubscription(@Valid @RequestBody SubscriptionDto subscriptionDto) {
         try {
             Subscription subscription = this.subscriptionService.createSubscription(subscriptionDto);
-            String username = subscription.getFirstName() + subscription.getLastName();
-
-            while(this.userRepository.existsByUsername(username)) {
-                username += "1";
-            }
-
-            String password = randomPasswordGenerator.generatePassword();
-
-            this.userRepository.save(new User(username, subscription.getFirstName(), subscription.getLastName(),
-                    subscription.getEmail(), encoder.encode(password)));
-
-            Map<String, Object> map = new HashMap<>();
-            map.put("name", String.format("%s %s", subscription.getFirstName(), subscription.getLastName()));
-            map.put("username", username);
-            map.put("password", password);
-
-            this.emailService.sendMessageUsingThymeleafTemplate(subscription.getEmail(),
-                    "Inscription Association sportive de Volley Ball de Bourg-la-Reine", map);
+            this.emailService.sendMessageCreateSubscription(subscription);
             return ResponseEntity.status(HttpStatus.CREATED).body(subscription);
         }
         catch (Exception e) {
