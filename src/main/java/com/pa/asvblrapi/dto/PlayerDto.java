@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 
 @Getter
 @Setter
@@ -14,8 +15,16 @@ public class PlayerDto {
     @NotBlank
     private String lastName;
     @NotBlank
+    private String address;
+    @NotNull
+    private int postcode;
+    @NotBlank
+    private String city;
+    @NotBlank
     private String email;
-    private int phoneNumber;
+    private String phoneNumber;
+    @NotNull
+    private Date birthDate;
     @NotBlank
     private String licenceNumber;
     @NotBlank
@@ -25,5 +34,5 @@ public class PlayerDto {
     @NotNull
     private Long idUser;
     @NotNull
-    private Long idJerseyNumber;
+    private Long idJersey;
 }
