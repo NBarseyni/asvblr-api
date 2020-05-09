@@ -22,4 +22,8 @@ public class Document {
     private Long id;
     @NotNull
     private String name;
+
+    public Document(String name) {
+        this.name = name;
+    }
 }
