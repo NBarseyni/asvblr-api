@@ -1,10 +1,7 @@
 package com.pa.asvblrapi.service;
 
 import com.pa.asvblrapi.dto.SubscriptionDto;
-import com.pa.asvblrapi.entity.Category;
-import com.pa.asvblrapi.entity.PaymentMode;
-import com.pa.asvblrapi.entity.Season;
-import com.pa.asvblrapi.entity.Subscription;
+import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.exception.CategoryNotFoundException;
 import com.pa.asvblrapi.exception.PaymentModeNotFoundException;
 import com.pa.asvblrapi.exception.SeasonNotFoundException;
@@ -127,8 +124,28 @@ public class SubscriptionService {
         return this.subscriptionRepository.save(subscription.get());
     }
 
-    public void updateSubscription(Subscription subscription) {
-        this.subscriptionRepository.save(subscription);
+    public void addCNI(Long id, Document document) {
+        Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
+        if(subscription.isPresent()) {
+            subscription.get().setCNI(document);
+            this.subscriptionRepository.save(subscription.get());
+        }
+    }
+
+    public void addIdentityPhoto(Long id, Document document) {
+        Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
+        if(subscription.isPresent()) {
+            subscription.get().setIdentityPhoto(document);
+            this.subscriptionRepository.save(subscription.get());
+        }
+    }
+
+    public void addMedicalCertificate(Long id, Document document) {
+        Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
+        if(subscription.isPresent()) {
+            subscription.get().setMedicalCertificate(document);
+            this.subscriptionRepository.save(subscription.get());
+        }
     }
 
     public void confirmedSubscription(Long id) throws SubscriptionNotFoundException {

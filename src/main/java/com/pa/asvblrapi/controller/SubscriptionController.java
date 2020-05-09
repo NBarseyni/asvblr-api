@@ -32,8 +32,6 @@ public class SubscriptionController {
     @Autowired
     private SubscriptionService subscriptionService;
 
-    private final RandomPasswordGenerator randomPasswordGenerator = new RandomPasswordGenerator();
-
     @Autowired
     private EmailServiceImpl emailService;
 
@@ -76,12 +74,10 @@ public class SubscriptionController {
 
     @PostMapping(path = "/{id}/cni")
     public ResponseEntity<Object> addCNI(@RequestPart("file") MultipartFile file, @PathVariable Long id) {
-        Subscription subscription = this.subscriptionService.getSubscription(id)
-                .orElseThrow(() -> new SubscriptionNotFoundException(id));
+        this.subscriptionService.getSubscription(id).orElseThrow(() -> new SubscriptionNotFoundException(id));
         try {
             Document document = this.documentService.createDocument(file);
-            subscription.setCNI(document);
-            this.subscriptionService.updateSubscription(subscription);
+            this.subscriptionService.addCNI(id, document);
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }
         catch (IOException e) {
@@ -91,12 +87,10 @@ public class SubscriptionController {
 
     @PostMapping("/{id}/identity-photo")
     public ResponseEntity<Object> addIdentityPhoto(@RequestPart("file") MultipartFile file, @PathVariable Long id) {
-        Subscription subscription = this.subscriptionService.getSubscription(id)
-                .orElseThrow(() -> new SubscriptionNotFoundException(id));
+        this.subscriptionService.getSubscription(id).orElseThrow(() -> new SubscriptionNotFoundException(id));
         try {
             Document document = this.documentService.createDocument(file);
-            subscription.setIdentityPhoto(document);
-            this.subscriptionService.updateSubscription(subscription);
+            this.subscriptionService.addIdentityPhoto(id, document);
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }
         catch (IOException e) {
@@ -106,12 +100,10 @@ public class SubscriptionController {
 
     @PostMapping("/{id}/medical-certificate")
     public ResponseEntity<Object> addMedicalCertificate(@RequestPart("file") MultipartFile file, @PathVariable Long id) {
-        Subscription subscription = this.subscriptionService.getSubscription(id)
-                .orElseThrow(() -> new SubscriptionNotFoundException(id));
+        this.subscriptionService.getSubscription(id).orElseThrow(() -> new SubscriptionNotFoundException(id));
         try {
             Document document = this.documentService.createDocument(file);
-            subscription.setMedicalCertificate(document);
-            this.subscriptionService.updateSubscription(subscription);
+            this.subscriptionService.addMedicalCertificate(id, document);
             return ResponseEntity.status(HttpStatus.OK).body(null);
         }
         catch (IOException e) {
