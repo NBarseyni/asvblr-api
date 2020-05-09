@@ -119,6 +119,28 @@ public class SubscriptionController {
         }
     }
 
+    @PatchMapping("/{id}/confirmed")
+    public ResponseEntity<Object> confirmedSubscription(@PathVariable Long id) {
+        try {
+            this.subscriptionService.confirmedSubscription(id);
+        }
+        catch (SubscriptionNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    @PatchMapping("/{id}/unconfirmed")
+    public ResponseEntity<Object> unconfirmedSubscription(@PathVariable Long id) {
+        try {
+            this.subscriptionService.unconfirmedSubscription(id);
+        }
+        catch (SubscriptionNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteSubscription(@PathVariable Long id) {
         try {

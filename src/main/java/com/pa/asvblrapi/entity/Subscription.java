@@ -52,6 +52,8 @@ public class Subscription {
     private boolean referee;
     @NotNull
     private boolean coach;
+    @NotNull
+    private boolean confirmed;
 
     @ManyToOne
     @JoinColumn(name = "player_id")
@@ -101,6 +103,7 @@ public class Subscription {
         this.equipment = equipment;
         this.referee = referee;
         this.coach = coach;
+        this.confirmed = false;
         this.insuranceRequested = insuranceRequested;
         this.season = season;
         this.category = category;

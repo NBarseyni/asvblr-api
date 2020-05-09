@@ -131,6 +131,26 @@ public class SubscriptionService {
         this.subscriptionRepository.save(subscription);
     }
 
+    public void confirmedSubscription(Long id) throws SubscriptionNotFoundException {
+        Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
+
+        if(!subscription.isPresent()) {
+            throw new SubscriptionNotFoundException(id);
+        }
+        subscription.get().setConfirmed(true);
+        this.subscriptionRepository.save(subscription.get());
+    }
+
+    public void unconfirmedSubscription(Long id) throws SubscriptionNotFoundException {
+        Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
+
+        if(!subscription.isPresent()) {
+            throw new SubscriptionNotFoundException(id);
+        }
+        subscription.get().setConfirmed(false);
+        this.subscriptionRepository.save(subscription.get());
+    }
+
     public void deleteSubscription(Long id) throws SubscriptionNotFoundException, AccessDeniedException {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
 
