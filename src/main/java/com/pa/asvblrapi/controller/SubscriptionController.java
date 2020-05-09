@@ -1,10 +1,12 @@
 package com.pa.asvblrapi.controller;
 
 import com.pa.asvblrapi.dto.SubscriptionDto;
+import com.pa.asvblrapi.entity.Document;
 import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.SubscriptionNotFoundException;
 import com.pa.asvblrapi.repository.UserRepository;
+import com.pa.asvblrapi.service.DocumentService;
 import com.pa.asvblrapi.service.SubscriptionService;
 import com.pa.asvblrapi.spring.EmailServiceImpl;
 import com.pa.asvblrapi.spring.RandomPasswordGenerator;
@@ -13,8 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.HashMap;
 import java.util.List;
@@ -34,10 +38,7 @@ public class SubscriptionController {
     private EmailServiceImpl emailService;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder encoder;
+    private DocumentService documentService;
 
     @GetMapping("")
     public List<Subscription> getSubscriptions() {
@@ -70,6 +71,21 @@ public class SubscriptionController {
         }
         catch (SubscriptionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PostMapping(path = "/{id}/cni")
+    public ResponseEntity<Object> addCNI(@RequestPart("file") MultipartFile file, @PathVariable Long id) {
+        Subscription subscription = this.subscriptionService.getSubscription(id)
+                .orElseThrow(() -> new SubscriptionNotFoundException(id));
+        try {
+            Document document = this.documentService.createDocument(file);
+            subscription.setCNI(document);
+            this.subscriptionService.updateSubscription(subscription);
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        }
+        catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 

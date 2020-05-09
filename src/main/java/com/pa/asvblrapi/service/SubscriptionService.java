@@ -127,6 +127,10 @@ public class SubscriptionService {
         return this.subscriptionRepository.save(subscription.get());
     }
 
+    public void updateSubscription(Subscription subscription) {
+        this.subscriptionRepository.save(subscription);
+    }
+
     public void deleteSubscription(Long id) throws SubscriptionNotFoundException, AccessDeniedException {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
 
