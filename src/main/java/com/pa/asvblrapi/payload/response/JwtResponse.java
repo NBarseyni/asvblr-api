@@ -1,5 +1,7 @@
 package com.pa.asvblrapi.payload.response;
 
+import com.pa.asvblrapi.dto.UserDto;
+import com.pa.asvblrapi.entity.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,17 +11,11 @@ import java.util.List;
 @Setter
 public class JwtResponse {
     private String token;
-    private String type = "Bearer";
-    private Long id;
-    private String username;
-    private String email;
-    private List<String> roles;
+    private UserDto user;
 
-    public JwtResponse(String accessToken, Long id, String username, String email, List<String> roles) {
+    public JwtResponse(String accessToken, Long id, String username, String firstName, String lastName,
+                       String email, String role, List<String> privileges) {
         this.token = accessToken;
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.roles = roles;
+        this.user = new UserDto(id, username, firstName, lastName, email, role, privileges);
     }
 }
