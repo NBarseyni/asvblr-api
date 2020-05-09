@@ -124,6 +124,14 @@ public class SubscriptionService {
         return this.subscriptionRepository.save(subscription.get());
     }
 
+    public void setPlayer(Long id, Player player) {
+        Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
+        if(subscription.isPresent()) {
+            subscription.get().setPlayer(player);
+            this.subscriptionRepository.save(subscription.get());
+        }
+    }
+
     public void addCNI(Long id, Document document) {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
         if(subscription.isPresent()) {
@@ -148,14 +156,14 @@ public class SubscriptionService {
         }
     }
 
-    public void confirmedSubscription(Long id) throws SubscriptionNotFoundException {
+    public Subscription confirmedSubscription(Long id) throws SubscriptionNotFoundException {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
 
         if(!subscription.isPresent()) {
             throw new SubscriptionNotFoundException(id);
         }
         subscription.get().setConfirmed(true);
-        this.subscriptionRepository.save(subscription.get());
+        return this.subscriptionRepository.save(subscription.get());
     }
 
     public void unconfirmedSubscription(Long id) throws SubscriptionNotFoundException {

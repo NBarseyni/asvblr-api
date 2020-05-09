@@ -2,11 +2,13 @@ package com.pa.asvblrapi.controller;
 
 import com.pa.asvblrapi.dto.SubscriptionDto;
 import com.pa.asvblrapi.entity.Document;
+import com.pa.asvblrapi.entity.Player;
 import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.SubscriptionNotFoundException;
 import com.pa.asvblrapi.repository.UserRepository;
 import com.pa.asvblrapi.service.DocumentService;
+import com.pa.asvblrapi.service.PlayerService;
 import com.pa.asvblrapi.service.SubscriptionService;
 import com.pa.asvblrapi.spring.EmailServiceImpl;
 import com.pa.asvblrapi.spring.RandomPasswordGenerator;
@@ -17,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
@@ -33,10 +36,21 @@ public class SubscriptionController {
     private SubscriptionService subscriptionService;
 
     @Autowired
-    private EmailServiceImpl emailService;
+    private PlayerService playerService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private DocumentService documentService;
+
+    @Autowired
+    private EmailServiceImpl emailService;
+
+    private RandomPasswordGenerator randomPasswordGenerator = new RandomPasswordGenerator();
+
+    @Autowired
+    private PasswordEncoder encoder;
 
     @GetMapping("")
     public List<Subscription> getSubscriptions() {
@@ -114,10 +128,24 @@ public class SubscriptionController {
     @PatchMapping("/{id}/confirmed")
     public ResponseEntity<Object> confirmedSubscription(@PathVariable Long id) {
         try {
-            this.subscriptionService.confirmedSubscription(id);
+            Subscription subscription = this.subscriptionService.confirmedSubscription(id);
+            String username = String.format("%s%s", subscription.getFirstName(), subscription.getLastName());
+            int i = 1;
+            while(userRepository.existsByUsername(username)) {
+                username += i;
+            }
+            String password = randomPasswordGenerator.generatePassword();
+            User user = userRepository.save(new User(username, subscription.getFirstName(), subscription.getLastName(),
+                    subscription.getEmail(), encoder.encode(password)));
+            Player player = this.playerService.createPlayer(subscription, user);
+            this.subscriptionService.setPlayer(id, player);
+            this.emailService.sendMessageCreateUser(user, password);
         }
         catch (SubscriptionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        catch (MessagingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
