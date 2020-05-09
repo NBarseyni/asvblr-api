@@ -104,6 +104,21 @@ public class SubscriptionController {
         }
     }
 
+    @PostMapping("/{id}/medical-certificate")
+    public ResponseEntity<Object> addMedicalCertificate(@RequestPart("file") MultipartFile file, @PathVariable Long id) {
+        Subscription subscription = this.subscriptionService.getSubscription(id)
+                .orElseThrow(() -> new SubscriptionNotFoundException(id));
+        try {
+            Document document = this.documentService.createDocument(file);
+            subscription.setMedicalCertificate(document);
+            this.subscriptionService.updateSubscription(subscription);
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        }
+        catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteSubscription(@PathVariable Long id) {
         try {
