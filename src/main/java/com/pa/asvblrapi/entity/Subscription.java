@@ -82,10 +82,6 @@ public class Subscription {
     @JoinColumn(name = "medicalCertificate_id")
     private Document medicalCertificate;
 
-    @ManyToOne
-    @JoinColumn(name = "formLicence_id")
-    private Document formLicence;
-
     public Subscription(String firstName, String lastName, boolean gender, String address, int postcode, String city,
                         String email, String phoneNumber, Date birthDate, String birthCountry, String topSize,
                         String pantsSize, boolean insuranceRequested, boolean equipment, boolean referee, boolean coach,
