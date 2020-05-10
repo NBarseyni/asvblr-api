@@ -1,9 +1,11 @@
 package com.pa.asvblrapi.service;
 
+import com.pa.asvblrapi.dto.UserDto;
 import com.pa.asvblrapi.dto.UserDtoFirebase;
 import com.pa.asvblrapi.entity.Privilege;
 import com.pa.asvblrapi.entity.Role;
 import com.pa.asvblrapi.entity.User;
+import com.pa.asvblrapi.exception.UserNotFoundException;
 import com.pa.asvblrapi.repository.PrivilegeRepository;
 import com.pa.asvblrapi.repository.RoleRepository;
 import com.pa.asvblrapi.repository.UserRepository;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 @Service
 public class UserService {
@@ -36,6 +40,10 @@ public class UserService {
 
     @Autowired
     private FirebaseService firebaseService;
+
+    public Optional<User> getUser(Long id) {
+        return this.userRepository.findById(id);
+    }
 
     public User createUser(String firstName, String lastName, String email) throws Exception {
         try {
@@ -61,5 +69,36 @@ public class UserService {
         catch (Exception e) {
             throw new Exception(e.getMessage());
         }
+    }
+
+    public User updateUser(Long id, UserDto userDto) throws UserNotFoundException, InterruptedException, ExecutionException {
+        Optional<User> user = userRepository.findById(id);
+        if(!user.isPresent()) {
+            throw new UserNotFoundException(id);
+        }
+        try {
+            user.get().setFirstName(userDto.getFirstName());
+            user.get().setLastName(userDto.getLastName());
+            user.get().setEmail(userDto.getEmail());
+            User userSave = userRepository.save(user.get());
+            this.firebaseService.updateUserDetails(new UserDtoFirebase(userSave.getUsername(), userSave.getFirstName(),
+                    userSave.getLastName(), userSave.getEmail()));
+            return userSave;
+        }
+        catch (InterruptedException e) {
+            throw new InterruptedException(e.getMessage());
+        }
+        catch (ExecutionException e) {
+            throw new ExecutionException(e.getCause());
+        }
+    }
+
+    public void deleteUser(Long id) throws UserNotFoundException {
+        Optional<User> user = userRepository.findById(id);
+        if(!user.isPresent()) {
+            throw new UserNotFoundException(id);
+        }
+        this.userRepository.delete(user.get());
+        this.firebaseService.deleteUser(user.get().getUsername());
     }
 }
