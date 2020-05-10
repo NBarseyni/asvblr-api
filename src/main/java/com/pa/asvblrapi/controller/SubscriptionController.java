@@ -6,26 +6,18 @@ import com.pa.asvblrapi.entity.Player;
 import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.SubscriptionNotFoundException;
-import com.pa.asvblrapi.repository.UserRepository;
-import com.pa.asvblrapi.service.DocumentService;
-import com.pa.asvblrapi.service.PlayerService;
-import com.pa.asvblrapi.service.SubscriptionService;
+import com.pa.asvblrapi.service.*;
 import com.pa.asvblrapi.spring.EmailServiceImpl;
-import com.pa.asvblrapi.spring.RandomPasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -39,18 +31,13 @@ public class SubscriptionController {
     private PlayerService playerService;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private DocumentService documentService;
 
     @Autowired
     private EmailServiceImpl emailService;
-
-    private RandomPasswordGenerator randomPasswordGenerator = new RandomPasswordGenerator();
-
-    @Autowired
-    private PasswordEncoder encoder;
 
     @GetMapping("")
     public List<Subscription> getSubscriptions() {
@@ -86,7 +73,7 @@ public class SubscriptionController {
         }
     }
 
-    @PostMapping(path = "/{id}/cni")
+    @PostMapping("/{id}/cni")
     public ResponseEntity<Object> addCNI(@RequestPart("file") MultipartFile file, @PathVariable Long id) {
         this.subscriptionService.getSubscription(id).orElseThrow(() -> new SubscriptionNotFoundException(id));
         try {
@@ -129,22 +116,14 @@ public class SubscriptionController {
     public ResponseEntity<Object> confirmedSubscription(@PathVariable Long id) {
         try {
             Subscription subscription = this.subscriptionService.confirmedSubscription(id);
-            String username = String.format("%s%s", subscription.getFirstName(), subscription.getLastName());
-            int i = 1;
-            while(userRepository.existsByUsername(username)) {
-                username += i;
-            }
-            String password = randomPasswordGenerator.generatePassword();
-            User user = userRepository.save(new User(username, subscription.getFirstName(), subscription.getLastName(),
-                    subscription.getEmail(), encoder.encode(password)));
+            User user = this.userService.createUser(subscription.getFirstName(), subscription.getLastName(), subscription.getEmail());
             Player player = this.playerService.createPlayer(subscription, user);
             this.subscriptionService.setPlayer(id, player);
-            this.emailService.sendMessageCreateUser(user, password);
         }
         catch (SubscriptionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-        catch (MessagingException e) {
+        catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
         return ResponseEntity.status(HttpStatus.OK).body(null);
