@@ -1,7 +1,9 @@
 package com.pa.asvblrapi.spring;
 
+import com.pa.asvblrapi.dto.UserDtoFirebase;
 import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.repository.*;
+import com.pa.asvblrapi.service.FirebaseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -37,6 +39,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     @Autowired
     private PasswordEncoder encoder;
 
+    @Autowired
+    private FirebaseService firebaseService;
+
     @Override
     @Transactional
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
@@ -56,12 +61,17 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         final Role adminRole = createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
         final Role presidentRole = createRoleIfNotFound("ROLE_PRESIDENT", presidentPrivileges);
 
-        createUserIfNotFound("testUser@test.com", "userTest", "Test", "Test",
-                "123456", new ArrayList<Role>(Arrays.asList(userRole)));
-        createUserIfNotFound("testAdmin@test.com", "adminTest", "Test", "Test",
-                "123456", new ArrayList<Role>(Arrays.asList(adminRole)));
-        createUserIfNotFound("testPresident@test.com", "presidentTest", "Test", "Test",
-                "123456", new ArrayList<Role>(Arrays.asList(presidentRole)));
+        try {
+            createUserIfNotFound("testUser@test.com", "userTest", "Test", "Test",
+                    "123456", new ArrayList<Role>(Arrays.asList(userRole)));
+            createUserIfNotFound("testAdmin@test.com", "adminTest", "Test", "Test",
+                    "123456", new ArrayList<Role>(Arrays.asList(adminRole)));
+            createUserIfNotFound("testPresident@test.com", "presidentTest", "Test", "Test",
+                    "123456", new ArrayList<Role>(Arrays.asList(presidentRole)));
+        }
+        catch (Exception e) {
+            new Exception(e.getMessage());
+        }
 
         // Create fake Categories
         createCategoryIfNotFound("Homme 6vs6");
@@ -101,7 +111,8 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
     private final User createUserIfNotFound(final String email, final String username, final String firstName,
-                                            final String lastName, final String password, final Collection<Role> roles) {
+                                            final String lastName, final String password, final Collection<Role> roles)
+            throws Exception {
         User user = userRepository.findByUsername(username);
         if (user == null) {
             user = new User();
@@ -114,6 +125,12 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         }
         user.setRoles(roles);
         user = userRepository.save(user);
+        try {
+            this.firebaseService.saveUserDetails(new UserDtoFirebase(username, firstName, lastName, email));
+        }
+        catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
         return user;
     }
 
