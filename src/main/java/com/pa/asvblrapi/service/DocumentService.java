@@ -22,6 +22,10 @@ public class DocumentService {
 
     private final String UPLOADED_FOLDER = "src/main/resources/public/documents/";
 
+    public Optional<Document> getDocument(Long id) {
+        return this.documentRepository.findById(id);
+    }
+
     public Document createDocument(MultipartFile file) throws IOException {
         try {
             String filename = file.getOriginalFilename();
