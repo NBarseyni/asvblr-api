@@ -1,10 +1,13 @@
 package com.pa.asvblrapi.service;
 
 import com.pa.asvblrapi.dto.PlayerDto;
+import com.pa.asvblrapi.entity.ClothingSize;
 import com.pa.asvblrapi.entity.Player;
 import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.entity.User;
+import com.pa.asvblrapi.exception.ClothingSizeNotFoundException;
 import com.pa.asvblrapi.exception.PlayerNotFoundException;
+import com.pa.asvblrapi.repository.ClothingSizeRepository;
 import com.pa.asvblrapi.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,9 @@ import java.util.Optional;
 public class PlayerService {
     @Autowired
     private PlayerRepository playerRepository;
+
+    @Autowired
+    private ClothingSizeRepository clothingSizeRepository;
 
     public List<Player> getAllPlayer() {
         return this.playerRepository.findAll();
@@ -43,10 +49,18 @@ public class PlayerService {
         return this.playerRepository.save(player);
     }
 
-    public Player updatePlayer(Long id, PlayerDto playerDto) throws PlayerNotFoundException {
+    public Player updatePlayer(Long id, PlayerDto playerDto) throws PlayerNotFoundException, ClothingSizeNotFoundException {
         Optional<Player> player = this.playerRepository.findById(id);
         if (!player.isPresent()) {
             throw new PlayerNotFoundException(id);
+        }
+        Optional<ClothingSize> topSize = this.clothingSizeRepository.findById(playerDto.getIdTopSize());
+        if (!topSize.isPresent()) {
+            throw new ClothingSizeNotFoundException(id);
+        }
+        Optional<ClothingSize> pantsSize = this.clothingSizeRepository.findById(playerDto.getIdPantsSize());
+        if (!pantsSize.isPresent()) {
+            throw new ClothingSizeNotFoundException(id);
         }
         player.get().setFirstName(playerDto.getFirstName());
         player.get().setLastName(playerDto.getLastName());
@@ -56,8 +70,8 @@ public class PlayerService {
         player.get().setEmail(playerDto.getEmail());
         player.get().setPhoneNumber(playerDto.getPhoneNumber());
         player.get().setBirthDate(playerDto.getBirthDate());
-        player.get().setJerseySize(playerDto.getJerseySize());
-        player.get().setPantSize(playerDto.getPantSize());
+        player.get().setTopSize(topSize.get());
+        player.get().setPantsSize(pantsSize.get());
         return this.playerRepository.save(player.get());
     }
 

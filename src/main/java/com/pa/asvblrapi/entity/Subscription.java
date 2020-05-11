@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -38,10 +39,12 @@ public class Subscription {
     private Date birthDate;
     @NotNull
     private String birthCountry;
-    @NotNull
-    private String topSize;
-    @NotNull
-    private String pantsSize;
+    @ManyToOne
+    @JoinColumn(name = "topSize_id", nullable = false)
+    private ClothingSize topSize;
+    @ManyToOne
+    @JoinColumn(name = "pantsSize_id", nullable = false)
+    private ClothingSize pantsSize;
     @NotNull
     private int requestedJerseyNumber;
     @NotNull
@@ -85,8 +88,8 @@ public class Subscription {
     private Document medicalCertificate;
 
     public Subscription(String firstName, String lastName, boolean gender, String address, int postcode, String city,
-                        String email, String phoneNumber, Date birthDate, String birthCountry, String topSize,
-                        String pantsSize, boolean insuranceRequested, boolean equipment, boolean referee, boolean coach,
+                        String email, String phoneNumber, Date birthDate, String birthCountry, ClothingSize topSize,
+                        ClothingSize pantsSize, boolean insuranceRequested, boolean equipment, boolean referee, boolean coach,
                         Season season, Category category, PaymentMode paymentMode) {
         this.firstName = firstName;
         this.lastName = lastName;

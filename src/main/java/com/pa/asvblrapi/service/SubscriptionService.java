@@ -2,14 +2,8 @@ package com.pa.asvblrapi.service;
 
 import com.pa.asvblrapi.dto.SubscriptionDto;
 import com.pa.asvblrapi.entity.*;
-import com.pa.asvblrapi.exception.CategoryNotFoundException;
-import com.pa.asvblrapi.exception.PaymentModeNotFoundException;
-import com.pa.asvblrapi.exception.SeasonNotFoundException;
-import com.pa.asvblrapi.exception.SubscriptionNotFoundException;
-import com.pa.asvblrapi.repository.CategoryRepository;
-import com.pa.asvblrapi.repository.PaymentModeRepository;
-import com.pa.asvblrapi.repository.SeasonRepository;
-import com.pa.asvblrapi.repository.SubscriptionRepository;
+import com.pa.asvblrapi.exception.*;
+import com.pa.asvblrapi.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +25,9 @@ public class SubscriptionService {
 
     @Autowired
     private PaymentModeRepository paymentModeRepository;
+
+    @Autowired
+    private ClothingSizeRepository clothingSizeRepository;
 
     public List<Subscription> getAllSubscriptions() {
         return this.subscriptionRepository.findAll();
@@ -60,6 +57,15 @@ public class SubscriptionService {
             throw new PaymentModeNotFoundException(subscriptionDto.getIdPaymentMode());
         }
 
+        Optional<ClothingSize> topSize = this.clothingSizeRepository.findById(subscriptionDto.getIdTopSize());
+        if(!topSize.isPresent()) {
+            throw new ClothingSizeNotFoundException(subscriptionDto.getIdTopSize());
+        }
+        Optional<ClothingSize> pantsSize = this.clothingSizeRepository.findById(subscriptionDto.getIdPantsSize());
+        if(!pantsSize.isPresent()) {
+            throw new ClothingSizeNotFoundException(subscriptionDto.getIdPantsSize());
+        }
+
         Subscription subscription = new Subscription(
                 subscriptionDto.getFirstName(),
                 subscriptionDto.getLastName(),
@@ -71,9 +77,9 @@ public class SubscriptionService {
                 subscriptionDto.getPhoneNumber(),
                 subscriptionDto.getBirthDate(),
                 subscriptionDto.getBirthCountry(),
-                subscriptionDto.getTopSize(),
-                subscriptionDto.getPantsSize(),
-                subscriptionDto.isInsurance(),
+                topSize.get(),
+                pantsSize.get(),
+                subscriptionDto.isInsuranceRequested(),
                 subscriptionDto.isEquipment(),
                 subscriptionDto.isReferee(),
                 subscriptionDto.isCoach(),
@@ -102,6 +108,14 @@ public class SubscriptionService {
         if(!paymentMode.isPresent()) {
             throw new PaymentModeNotFoundException(subscriptionDto.getIdPaymentMode());
         }
+        Optional<ClothingSize> topSize = this.clothingSizeRepository.findById(subscriptionDto.getIdTopSize());
+        if(!topSize.isPresent()) {
+            throw new ClothingSizeNotFoundException(subscriptionDto.getIdTopSize());
+        }
+        Optional<ClothingSize> pantsSize = this.clothingSizeRepository.findById(subscriptionDto.getIdPantsSize());
+        if(!pantsSize.isPresent()) {
+            throw new ClothingSizeNotFoundException(subscriptionDto.getIdPantsSize());
+        }
         subscription.get().setFirstName(subscriptionDto.getFirstName());
         subscription.get().setLastName(subscriptionDto.getLastName());
         subscription.get().setGender(subscriptionDto.isGender());
@@ -112,9 +126,9 @@ public class SubscriptionService {
         subscription.get().setPhoneNumber(subscriptionDto.getPhoneNumber());
         subscription.get().setBirthDate(subscriptionDto.getBirthDate());
         subscription.get().setBirthCountry(subscriptionDto.getBirthCountry());
-        subscription.get().setTopSize(subscriptionDto.getTopSize());
-        subscription.get().setPantsSize(subscriptionDto.getPantsSize());
-        subscription.get().setInsuranceRequested(subscriptionDto.isInsurance());
+        subscription.get().setTopSize(topSize.get());
+        subscription.get().setPantsSize(pantsSize.get());
+        subscription.get().setInsuranceRequested(subscriptionDto.isInsuranceRequested());
         subscription.get().setEquipment(subscriptionDto.isEquipment());
         subscription.get().setReferee(subscriptionDto.isReferee());
         subscription.get().setCoach(subscriptionDto.isCoach());
