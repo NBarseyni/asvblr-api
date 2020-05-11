@@ -10,6 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class PlayerDto {
+    private Long id;
     @NotBlank
     private String firstName;
     @NotBlank
@@ -27,10 +28,10 @@ public class PlayerDto {
     private Date birthDate;
     @NotBlank
     private String licenceNumber;
-    @NotBlank
-    private String jerseySize;
-    @NotBlank
-    private String pantSize;
+    @NotNull
+    private Long idTopSize;
+    @NotNull
+    private Long idPantsSize;
     @NotNull
     private Long idUser;
     @NotNull

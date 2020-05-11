@@ -10,6 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class SubscriptionDto {
+    private Long id;
     @NotBlank
     private String firstName;
     @NotBlank
@@ -29,24 +30,29 @@ public class SubscriptionDto {
     private Date birthDate;
     @NotBlank
     private String birthCountry;
-    @NotBlank
-    private String topSize;
-    @NotBlank
-    private String pantsSize;
+    @NotNull
+    private Long idTopSize;
+    @NotNull
+    private Long idPantsSize;
     @NotNull
     private int requestedJerseyNumber;
     @NotNull
-    private boolean insurance;
+    private boolean insuranceRequested;
     @NotNull
     private boolean equipment;
     @NotNull
     private boolean referee;
     @NotNull
     private boolean coach;
+    private boolean confirmed;
+    private Long idPlayer;
     @NotNull
     private Long idSeason;
     @NotNull
     private Long idCategory;
     @NotNull
     private Long idPaymentMode;
+    private Long idCNI;
+    private Long idIdentityPhoto;
+    private Long idMedicalCertificate;
 }
