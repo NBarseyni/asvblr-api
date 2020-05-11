@@ -37,6 +37,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private CategoryRepository categoryRepository;
 
     @Autowired
+    private ClothingSizeRepository clothingSizeRepository;
+
+    @Autowired
     private PasswordEncoder encoder;
 
     @Autowired
@@ -86,6 +89,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createPaymentModeIfNotFound("Chèques vacances");
         createPaymentModeIfNotFound("Bons C.A.F");
         createPaymentModeIfNotFound("Espèces");
+
+        // Create CloshingSize
+        createClothingSizeIfNotFound("XS");
+        createClothingSizeIfNotFound("S");
+        createClothingSizeIfNotFound("M");
+        createClothingSizeIfNotFound("L");
+        createClothingSizeIfNotFound("XL");
+        createClothingSizeIfNotFound("XXL");
 
         alreadySetup = true;
     }
@@ -150,5 +161,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             category = categoryRepository.save(category);
         }
         return category;
+    }
+
+    private ClothingSize createClothingSizeIfNotFound(final String name) {
+        ClothingSize clothingSize = this.clothingSizeRepository.findByName(name);
+        if (clothingSize == null) {
+            clothingSize = new ClothingSize(name);
+            clothingSize = this.clothingSizeRepository.save(clothingSize);
+        }
+        return clothingSize;
     }
 }
