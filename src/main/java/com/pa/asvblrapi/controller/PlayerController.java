@@ -4,6 +4,7 @@ import com.pa.asvblrapi.dto.PlayerDto;
 import com.pa.asvblrapi.entity.Player;
 import com.pa.asvblrapi.exception.PlayerNotFoundException;
 import com.pa.asvblrapi.exception.SeasonNotFoundException;
+import com.pa.asvblrapi.mapper.PlayerMapper;
 import com.pa.asvblrapi.service.PlayerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,21 +25,21 @@ public class PlayerController {
     }
 
     @GetMapping("")
-    public List<Player> getPlayers() {
-        return this.playerService.getAllPlayer();
+    public List<PlayerDto> getPlayers() {
+        return PlayerMapper.instance.toDto(this.playerService.getAllPlayer());
     }
 
     @GetMapping("/{id}")
-    public Player getPlayer(@PathVariable Long id) {
-        return this.playerService.getPlayer(id)
-                .orElseThrow(() -> new PlayerNotFoundException(id));
+    public PlayerDto getPlayer(@PathVariable Long id) {
+        return PlayerMapper.instance.toDto(this.playerService.getPlayer(id)
+                .orElseThrow(() -> new PlayerNotFoundException(id)));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Object> updatePlayer(@PathVariable Long id, @Valid @RequestBody PlayerDto playerDto) {
         try {
             Player player = this.playerService.updatePlayer(id, playerDto);
-            return ResponseEntity.status(HttpStatus.OK).body(player);
+            return ResponseEntity.status(HttpStatus.OK).body(PlayerMapper.instance.toDto(player));
         }
         catch (PlayerNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

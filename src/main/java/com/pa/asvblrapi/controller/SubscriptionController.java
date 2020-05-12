@@ -6,6 +6,7 @@ import com.pa.asvblrapi.entity.Player;
 import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.SubscriptionNotFoundException;
+import com.pa.asvblrapi.mapper.SubscriptionMapper;
 import com.pa.asvblrapi.service.*;
 import com.pa.asvblrapi.spring.EmailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,22 +41,22 @@ public class SubscriptionController {
     private EmailServiceImpl emailService;
 
     @GetMapping("")
-    public List<Subscription> getSubscriptions() {
-        return this.subscriptionService.getAllSubscriptions();
+    public List<SubscriptionDto> getSubscriptions() {
+        return SubscriptionMapper.instance.toDto(this.subscriptionService.getAllSubscriptions());
     }
 
     @GetMapping("/{id}")
-    public Subscription getSubscription(@PathVariable Long id) {
-        return this.subscriptionService.getSubscription(id)
-                .orElseThrow(() -> new SubscriptionNotFoundException(id));
+    public SubscriptionDto getSubscription(@PathVariable Long id) {
+        return SubscriptionMapper.instance.toDto(this.subscriptionService.getSubscription(id)
+                .orElseThrow(() -> new SubscriptionNotFoundException(id)));
     }
 
     @PostMapping("")
-    public ResponseEntity<Subscription> createSubscription(@Valid @RequestBody SubscriptionDto subscriptionDto) {
+    public ResponseEntity<SubscriptionDto> createSubscription(@Valid @RequestBody SubscriptionDto subscriptionDto) {
         try {
             Subscription subscription = this.subscriptionService.createSubscription(subscriptionDto);
             this.emailService.sendMessageCreateSubscription(subscription);
-            return ResponseEntity.status(HttpStatus.CREATED).body(subscription);
+            return ResponseEntity.status(HttpStatus.CREATED).body(SubscriptionMapper.instance.toDto(subscription));
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -66,7 +67,7 @@ public class SubscriptionController {
     public ResponseEntity<Object> updateSubscription(@PathVariable Long id, @Valid @RequestBody SubscriptionDto subscriptionDto) {
         try {
             Subscription subscription = this.subscriptionService.updateSubscription(id, subscriptionDto);
-            return ResponseEntity.status(HttpStatus.OK).body(subscription);
+            return ResponseEntity.status(HttpStatus.OK).body(SubscriptionMapper.instance.toDto(subscription));
         }
         catch (SubscriptionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

@@ -6,10 +6,14 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", uses = {})
 public interface TeamMapper extends EntityMapper<TeamDto, Team> {
     TeamMapper instance = Mappers.getMapper(TeamMapper.class);
 
     @Mapping(source = "season.id", target = "idSeason")
     TeamDto toDto(Team team);
+
+    List<TeamDto> toDto(List<Team> teams);
 }

@@ -6,6 +6,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", uses = {})
 public interface SubscriptionMapper extends EntityMapper<SubscriptionDto, Subscription> {
     SubscriptionMapper instance = Mappers.getMapper(SubscriptionMapper.class);
@@ -20,4 +22,6 @@ public interface SubscriptionMapper extends EntityMapper<SubscriptionDto, Subscr
     @Mapping(source = "topSize.id", target = "idTopSize")
     @Mapping(source = "pantsSize.id", target = "idPantsSize")
     SubscriptionDto toDto(Subscription subscription);
+
+    List<SubscriptionDto> toDto(List<Subscription> subscriptions);
 }

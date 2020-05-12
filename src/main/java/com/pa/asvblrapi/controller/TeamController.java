@@ -5,6 +5,7 @@ import com.pa.asvblrapi.entity.Photo;
 import com.pa.asvblrapi.entity.Team;
 import com.pa.asvblrapi.exception.SeasonNotFoundException;
 import com.pa.asvblrapi.exception.TeamNotFoundException;
+import com.pa.asvblrapi.mapper.TeamMapper;
 import com.pa.asvblrapi.service.PhotoService;
 import com.pa.asvblrapi.service.TeamService;
 import org.springframework.http.HttpStatus;
@@ -31,21 +32,21 @@ public class TeamController {
     }
 
     @GetMapping("")
-    public List<Team> getTeams() {
-        return this.teamService.getAllTeam();
+    public List<TeamDto> getTeams() {
+        return TeamMapper.instance.toDto(this.teamService.getAllTeam());
     }
 
     @GetMapping("/{id}")
-    public Team getTeam(@PathVariable Long id) {
-        return this.teamService.getTeam(id)
-                .orElseThrow(() -> new TeamNotFoundException(id));
+    public TeamDto getTeam(@PathVariable Long id) {
+        return TeamMapper.instance.toDto(this.teamService.getTeam(id)
+                .orElseThrow(() -> new TeamNotFoundException(id)));
     }
 
     @PostMapping("")
-    public ResponseEntity<Team> createTeam(@Valid @RequestBody TeamDto teamDto) {
+    public ResponseEntity<TeamDto> createTeam(@Valid @RequestBody TeamDto teamDto) {
         try {
             Team team = this.teamService.createTeam(teamDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(team);
+            return ResponseEntity.status(HttpStatus.CREATED).body(TeamMapper.instance.toDto(team));
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -69,7 +70,7 @@ public class TeamController {
     public ResponseEntity<Object> updateTeam(@PathVariable Long id, @Valid @RequestBody TeamDto teamDto) {
         try {
             Team team = this.teamService.updateTeam(id, teamDto);
-            return ResponseEntity.status(HttpStatus.OK).body(team);
+            return ResponseEntity.status(HttpStatus.OK).body(TeamMapper.instance.toDto(team));
         }
         catch (SeasonNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

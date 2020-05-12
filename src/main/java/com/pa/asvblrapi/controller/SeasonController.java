@@ -1,9 +1,12 @@
 package com.pa.asvblrapi.controller;
 
 import com.pa.asvblrapi.dto.SeasonDto;
+import com.pa.asvblrapi.dto.SubscriptionDto;
 import com.pa.asvblrapi.entity.Season;
 import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.exception.SeasonNotFoundException;
+import com.pa.asvblrapi.mapper.SeasonMapper;
+import com.pa.asvblrapi.mapper.SubscriptionMapper;
 import com.pa.asvblrapi.service.SeasonService;
 import com.pa.asvblrapi.service.SubscriptionService;
 import org.springframework.http.HttpStatus;
@@ -28,26 +31,26 @@ public class SeasonController {
     }
 
     @GetMapping("")
-    public List<Season> getSeasons() {
-        return this.seasonService.getAllSeasons();
+    public List<SeasonDto> getSeasons() {
+        return SeasonMapper.instance.toDto(this.seasonService.getAllSeasons());
     }
 
     @GetMapping("/{id}")
-    public Season getSeason(@PathVariable Long id) {
-        return this.seasonService.getSeason(id)
-                .orElseThrow(() -> new SeasonNotFoundException(id));
+    public SeasonDto getSeason(@PathVariable Long id) {
+        return SeasonMapper.instance.toDto(this.seasonService.getSeason(id)
+                .orElseThrow(() -> new SeasonNotFoundException(id)));
     }
 
     @GetMapping("/{id}/subscriptions")
-    public List<Subscription> getSubscriptionBySeason(@PathVariable Long id) {
-        return this.subscriptionService.getSubscriptionsBySeason(id);
+    public List<SubscriptionDto> getSubscriptionBySeason(@PathVariable Long id) {
+        return SubscriptionMapper.instance.toDto(this.subscriptionService.getSubscriptionsBySeason(id));
     }
 
     @PostMapping("")
-    public ResponseEntity<Season> createSeason(@Valid @RequestBody SeasonDto seasonDto) {
+    public ResponseEntity<SeasonDto> createSeason(@Valid @RequestBody SeasonDto seasonDto) {
         try {
             Season season = this.seasonService.createSeason(seasonDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(season);
+            return ResponseEntity.status(HttpStatus.CREATED).body(SeasonMapper.instance.toDto(season));
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -58,7 +61,7 @@ public class SeasonController {
     public ResponseEntity<Object> updateSeason(@PathVariable Long id, @Valid @RequestBody SeasonDto seasonDto) {
         try {
             Season season = this.seasonService.updateSeason(id, seasonDto);
-            return ResponseEntity.status(HttpStatus.OK).body(season);
+            return ResponseEntity.status(HttpStatus.OK).body(SeasonMapper.instance.toDto(season));
         }
         catch (SeasonNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

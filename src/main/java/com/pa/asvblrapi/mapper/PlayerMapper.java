@@ -8,6 +8,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring", uses = { UserRepository.class, JerseyRepository.class })
 public interface PlayerMapper extends EntityMapper<PlayerDto, Player> {
     PlayerMapper instance = Mappers.getMapper(PlayerMapper.class);
@@ -22,4 +24,6 @@ public interface PlayerMapper extends EntityMapper<PlayerDto, Player> {
     @Mapping(source = "topSize.id", target = "idTopSize")
     @Mapping(source = "pantsSize.id", target = "idPantsSize")
     PlayerDto toDto(Player player);
+
+    List<PlayerDto> toDto(List<Player> players);
 }
