@@ -33,7 +33,7 @@ public class SubscriptionMappingTests {
                 true, "address", 75001, "city", "email",
                 "phoneNumber", new Date(), "France", clothingSize, clothingSize,
                 0, true, true, true, true,
-                true, "comment", player, season, category,
+                true, "comment", new Date(), new Date(), player, season, category,
                 paymentMode, cni, identityPhoto, medicalCertificate);
 
         SubscriptionDto subscriptionDto = SubscriptionMapper.instance.toDto(subscription);
@@ -59,6 +59,8 @@ public class SubscriptionMappingTests {
         assertThat(subscriptionDto.isCoach()).isEqualTo(subscription.isCoach());
         assertThat(subscriptionDto.isConfirmed()).isEqualTo(subscription.isConfirmed());
         assertThat(subscriptionDto.getComment()).isEqualTo(subscription.getComment());
+        assertThat(subscriptionDto.getCreationDate()).isEqualTo(subscription.getCreationDate());
+        assertThat(subscriptionDto.getValidationDate()).isEqualTo(subscription.getValidationDate());
         assertThat(subscriptionDto.getIdPlayer()).isEqualTo(player.getId());
         assertThat(subscriptionDto.getIdSeason()).isEqualTo(season.getId());
         assertThat(subscriptionDto.getIdCategory()).isEqualTo(category.getId());

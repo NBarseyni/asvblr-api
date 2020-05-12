@@ -46,6 +46,8 @@ public class SubscriptionDto {
     @NotNull
     private boolean coach;
     private boolean confirmed;
+    private Date creationDate;
+    private Date validationDate;
     private Long idPlayer;
     @NotNull
     private Long idSeason;

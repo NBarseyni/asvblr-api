@@ -9,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Getter
@@ -58,6 +59,8 @@ public class Subscription {
     @NotNull
     private boolean confirmed;
     private String comment;
+    private Date creationDate;
+    private Date validationDate;
     @ManyToOne
     @JoinColumn(name = "player_id")
     private Player player;
@@ -90,7 +93,7 @@ public class Subscription {
     public Subscription(String firstName, String lastName, boolean gender, String address, int postcode, String city,
                         String email, String phoneNumber, Date birthDate, String nationality, ClothingSize topSize,
                         ClothingSize pantsSize, boolean insuranceRequested, boolean equipment, boolean referee, boolean coach,
-                        Season season, Category category, PaymentMode paymentMode) {
+                        String comment, Season season, Category category, PaymentMode paymentMode) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -108,6 +111,8 @@ public class Subscription {
         this.coach = coach;
         this.confirmed = false;
         this.insuranceRequested = insuranceRequested;
+        this.comment = comment;
+        this.creationDate = new Date();
         this.season = season;
         this.category = category;
         this.paymentMode = paymentMode;
