@@ -38,7 +38,7 @@ public class Subscription {
     @NotNull
     private Date birthDate;
     @NotNull
-    private String birthCountry;
+    private String nationality;
     @ManyToOne
     @JoinColumn(name = "topSize_id", nullable = false)
     private ClothingSize topSize;
@@ -88,7 +88,7 @@ public class Subscription {
     private Document medicalCertificate;
 
     public Subscription(String firstName, String lastName, boolean gender, String address, int postcode, String city,
-                        String email, String phoneNumber, Date birthDate, String birthCountry, ClothingSize topSize,
+                        String email, String phoneNumber, Date birthDate, String nationality, ClothingSize topSize,
                         ClothingSize pantsSize, boolean insuranceRequested, boolean equipment, boolean referee, boolean coach,
                         Season season, Category category, PaymentMode paymentMode) {
         this.firstName = firstName;
@@ -100,7 +100,7 @@ public class Subscription {
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.birthDate = birthDate;
-        this.birthCountry = birthCountry;
+        this.nationality = nationality;
         this.topSize = topSize;
         this.pantsSize = pantsSize;
         this.equipment = equipment;

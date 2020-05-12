@@ -76,7 +76,7 @@ public class SubscriptionService {
                 subscriptionDto.getEmail(),
                 subscriptionDto.getPhoneNumber(),
                 subscriptionDto.getBirthDate(),
-                subscriptionDto.getBirthCountry(),
+                subscriptionDto.getNationality(),
                 topSize.get(),
                 pantsSize.get(),
                 subscriptionDto.isInsuranceRequested(),
@@ -125,7 +125,7 @@ public class SubscriptionService {
         subscription.get().setEmail(subscriptionDto.getEmail());
         subscription.get().setPhoneNumber(subscriptionDto.getPhoneNumber());
         subscription.get().setBirthDate(subscriptionDto.getBirthDate());
-        subscription.get().setBirthCountry(subscriptionDto.getBirthCountry());
+        subscription.get().setNationality(subscriptionDto.getNationality());
         subscription.get().setTopSize(topSize.get());
         subscription.get().setPantsSize(pantsSize.get());
         subscription.get().setInsuranceRequested(subscriptionDto.isInsuranceRequested());

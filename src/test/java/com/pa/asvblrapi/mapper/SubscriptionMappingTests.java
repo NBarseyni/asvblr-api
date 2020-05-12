@@ -5,7 +5,6 @@ import com.pa.asvblrapi.entity.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.print.Doc;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.*;
@@ -50,7 +49,7 @@ public class SubscriptionMappingTests {
         assertThat(subscriptionDto.getEmail()).isEqualTo(subscription.getEmail());
         assertThat(subscriptionDto.getPhoneNumber()).isEqualTo(subscription.getPhoneNumber());
         assertThat(subscriptionDto.getBirthDate()).isEqualTo(subscription.getBirthDate());
-        assertThat(subscriptionDto.getBirthCountry()).isEqualTo(subscription.getBirthCountry());
+        assertThat(subscriptionDto.getNationality()).isEqualTo(subscription.getNationality());
         assertThat(subscriptionDto.getIdTopSize()).isEqualTo(clothingSize.getId());
         assertThat(subscriptionDto.getIdPantsSize()).isEqualTo(clothingSize.getId());
         assertThat(subscriptionDto.getRequestedJerseyNumber()).isEqualTo(subscription.getRequestedJerseyNumber());

@@ -29,7 +29,7 @@ public class SubscriptionDto {
     @NotNull
     private Date birthDate;
     @NotBlank
-    private String birthCountry;
+    private String nationality;
     @NotNull
     private Long idTopSize;
     @NotNull
