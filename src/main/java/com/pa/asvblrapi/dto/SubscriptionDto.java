@@ -34,6 +34,7 @@ public class SubscriptionDto {
     private Long idTopSize;
     @NotNull
     private Long idPantsSize;
+    private String comment;
     @NotNull
     private int requestedJerseyNumber;
     @NotNull

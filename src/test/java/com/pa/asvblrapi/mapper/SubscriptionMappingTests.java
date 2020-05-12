@@ -30,8 +30,11 @@ public class SubscriptionMappingTests {
         Document medicalCertificate = new Document();
         medicalCertificate.setId((long)8);
 
-        Subscription subscription = new Subscription((long)1, "firstName", "lastName", true, "address", 75001, "city", "email",
-                "phoneNumber", new Date(), "France", clothingSize, clothingSize, 0, true, true, true, true, true, player, season, category,
+        Subscription subscription = new Subscription((long)1, "firstName", "lastName",
+                true, "address", 75001, "city", "email",
+                "phoneNumber", new Date(), "France", clothingSize, clothingSize,
+                0, true, true, true, true,
+                true, "comment", player, season, category,
                 paymentMode, cni, identityPhoto, medicalCertificate);
 
         SubscriptionDto subscriptionDto = SubscriptionMapper.instance.toDto(subscription);
@@ -56,6 +59,7 @@ public class SubscriptionMappingTests {
         assertThat(subscriptionDto.isReferee()).isEqualTo(subscription.isReferee());
         assertThat(subscriptionDto.isCoach()).isEqualTo(subscription.isCoach());
         assertThat(subscriptionDto.isConfirmed()).isEqualTo(subscription.isConfirmed());
+        assertThat(subscriptionDto.getComment()).isEqualTo(subscription.getComment());
         assertThat(subscriptionDto.getIdPlayer()).isEqualTo(player.getId());
         assertThat(subscriptionDto.getIdSeason()).isEqualTo(season.getId());
         assertThat(subscriptionDto.getIdCategory()).isEqualTo(category.getId());

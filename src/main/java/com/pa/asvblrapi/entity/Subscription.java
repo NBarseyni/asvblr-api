@@ -57,7 +57,7 @@ public class Subscription {
     private boolean coach;
     @NotNull
     private boolean confirmed;
-
+    private String comment;
     @ManyToOne
     @JoinColumn(name = "player_id")
     private Player player;
