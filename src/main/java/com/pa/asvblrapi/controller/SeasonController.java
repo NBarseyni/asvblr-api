@@ -68,6 +68,17 @@ public class SeasonController {
         }
     }
 
+    @PatchMapping("/{id}/set-current-season")
+    public ResponseEntity<Object> setCurrentSeason(@PathVariable Long id) {
+        try {
+            this.seasonService.setCurrentSeason(id);
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        }
+        catch (SeasonNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteSeason(@PathVariable Long id) {
         try {

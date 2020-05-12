@@ -11,4 +11,5 @@ public class SeasonDto {
     private Long id;
     @NotBlank
     private String name;
+    private boolean currentSeason;
 }

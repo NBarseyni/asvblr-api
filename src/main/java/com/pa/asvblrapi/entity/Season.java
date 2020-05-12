@@ -20,6 +20,7 @@ public class Season {
     private Long id;
     @NotNull
     private String name;
+    private boolean currentSeason;
 
     @OneToMany(mappedBy = "season")
     private List<Subscription> subscriptions;
@@ -29,5 +30,6 @@ public class Season {
 
     public Season(String name) {
         this.name = name;
+        this.currentSeason = false;
     }
 }

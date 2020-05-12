@@ -39,6 +39,21 @@ public class SeasonService {
         return this.seasonRepository.save(season.get());
     }
 
+    public void setCurrentSeason(Long id) throws SeasonNotFoundException {
+        List<Season> seasons = this.seasonRepository.findAll();
+        for (Season value : seasons) {
+            value.setCurrentSeason(false);
+            this.seasonRepository.save(value);
+        }
+
+        Optional<Season> season = this.seasonRepository.findById(id);
+        if (!season.isPresent()) {
+            throw new SeasonNotFoundException(id);
+        }
+        season.get().setCurrentSeason(true);
+        this.seasonRepository.save(season.get());
+    }
+
     public void deleteSeason(Long id) throws SeasonNotFoundException, AccessDeniedException {
         Optional<Season> season = this.seasonRepository.findById(id);
 
