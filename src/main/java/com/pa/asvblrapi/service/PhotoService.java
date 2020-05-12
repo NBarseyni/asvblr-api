@@ -27,6 +27,10 @@ public class PhotoService {
         return this.photoRepository.findAll();
     }
 
+    public Optional<Photo> getPhoto(Long id) {
+        return this.photoRepository.findById(id);
+    }
+
     public Photo createPhoto(MultipartFile file) throws IOException {
         try {
             String fileName = file.getOriginalFilename();

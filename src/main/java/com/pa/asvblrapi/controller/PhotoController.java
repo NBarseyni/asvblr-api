@@ -1,7 +1,9 @@
 package com.pa.asvblrapi.controller;
 
+import com.pa.asvblrapi.dto.PhotoDto;
 import com.pa.asvblrapi.entity.Photo;
 import com.pa.asvblrapi.exception.PhotoNotFoundException;
+import com.pa.asvblrapi.mapper.PhotoMapper;
 import com.pa.asvblrapi.service.PhotoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,15 +24,21 @@ public class PhotoController {
     }
 
     @GetMapping("")
-    public List<Photo> getPhotos() {
-        return this.photoService.getAllPhotos();
+    public List<PhotoDto> getPhotos() {
+        return PhotoMapper.instance.toDto(this.photoService.getAllPhotos());
+    }
+
+    @GetMapping("/{id}")
+    public PhotoDto getPhoto(@PathVariable Long id) {
+        return PhotoMapper.instance.toDto(this.photoService.getPhoto(id)
+                .orElseThrow(() -> new PhotoNotFoundException(id)));
     }
 
     @PostMapping("")
-    public ResponseEntity<Photo> createPhoto(@RequestParam("file") MultipartFile multipartFile) {
+    public ResponseEntity<PhotoDto> createPhoto(@RequestParam("file") MultipartFile multipartFile) {
         try {
             Photo photo = this.photoService.createPhoto(multipartFile);
-            return ResponseEntity.status(HttpStatus.CREATED).body(photo);
+            return ResponseEntity.status(HttpStatus.CREATED).body(PhotoMapper.instance.toDto(photo));
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
