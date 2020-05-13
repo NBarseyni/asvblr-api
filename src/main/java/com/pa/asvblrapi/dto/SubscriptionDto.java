@@ -30,12 +30,9 @@ public class SubscriptionDto {
     private Date birthDate;
     @NotBlank
     private String nationality;
-    @NotNull
     private Long idTopSize;
-    @NotNull
     private Long idPantsSize;
     private String comment;
-    @NotNull
     private int requestedJerseyNumber;
     @NotNull
     private boolean insuranceRequested;
@@ -45,7 +42,7 @@ public class SubscriptionDto {
     private boolean referee;
     @NotNull
     private boolean coach;
-    private boolean confirmed;
+    private boolean validated;
     private Date creationDate;
     private Date validationDate;
     private Long idPlayer;

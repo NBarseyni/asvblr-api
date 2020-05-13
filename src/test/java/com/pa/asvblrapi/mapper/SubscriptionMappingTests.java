@@ -57,7 +57,7 @@ public class SubscriptionMappingTests {
         assertThat(subscriptionDto.isEquipment()).isEqualTo(subscription.isEquipment());
         assertThat(subscriptionDto.isReferee()).isEqualTo(subscription.isReferee());
         assertThat(subscriptionDto.isCoach()).isEqualTo(subscription.isCoach());
-        assertThat(subscriptionDto.isConfirmed()).isEqualTo(subscription.isConfirmed());
+        assertThat(subscriptionDto.isValidated()).isEqualTo(subscription.isValidated());
         assertThat(subscriptionDto.getComment()).isEqualTo(subscription.getComment());
         assertThat(subscriptionDto.getCreationDate()).isEqualTo(subscription.getCreationDate());
         assertThat(subscriptionDto.getValidationDate()).isEqualTo(subscription.getValidationDate());

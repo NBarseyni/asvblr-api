@@ -41,12 +41,11 @@ public class Subscription {
     @NotNull
     private String nationality;
     @ManyToOne
-    @JoinColumn(name = "topSize_id", nullable = false)
+    @JoinColumn(name = "topSize_id")
     private ClothingSize topSize;
     @ManyToOne
-    @JoinColumn(name = "pantsSize_id", nullable = false)
+    @JoinColumn(name = "pantsSize_id")
     private ClothingSize pantsSize;
-    @NotNull
     private int requestedJerseyNumber;
     @NotNull
     private boolean insuranceRequested;
@@ -57,7 +56,7 @@ public class Subscription {
     @NotNull
     private boolean coach;
     @NotNull
-    private boolean confirmed;
+    private boolean validated;
     private String comment;
     private Date creationDate;
     private Date validationDate;
@@ -109,7 +108,7 @@ public class Subscription {
         this.equipment = equipment;
         this.referee = referee;
         this.coach = coach;
-        this.confirmed = false;
+        this.validated = false;
         this.insuranceRequested = insuranceRequested;
         this.comment = comment;
         this.creationDate = new Date();

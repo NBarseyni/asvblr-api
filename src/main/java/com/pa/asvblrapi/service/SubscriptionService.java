@@ -58,13 +58,25 @@ public class SubscriptionService {
             throw new PaymentModeNotFoundException(subscriptionDto.getIdPaymentMode());
         }
 
-        Optional<ClothingSize> topSize = this.clothingSizeRepository.findById(subscriptionDto.getIdTopSize());
-        if(!topSize.isPresent()) {
-            throw new ClothingSizeNotFoundException(subscriptionDto.getIdTopSize());
+        ClothingSize topSize;
+        if (subscriptionDto.getIdTopSize() != null) {
+            Optional<ClothingSize> topSizeOptional = this.clothingSizeRepository.findById(subscriptionDto.getIdTopSize());
+            if(!topSizeOptional.isPresent()) {
+                throw new ClothingSizeNotFoundException(subscriptionDto.getIdTopSize());
+            }
+            topSize = topSizeOptional.get();
+        } else {
+            topSize = null;
         }
-        Optional<ClothingSize> pantsSize = this.clothingSizeRepository.findById(subscriptionDto.getIdPantsSize());
-        if(!pantsSize.isPresent()) {
-            throw new ClothingSizeNotFoundException(subscriptionDto.getIdPantsSize());
+        ClothingSize pantsSize;
+        if (subscriptionDto.getIdPantsSize() != null) {
+            Optional<ClothingSize> pantsSizeOptional = this.clothingSizeRepository.findById(subscriptionDto.getIdPantsSize());
+            if(!pantsSizeOptional.isPresent()) {
+                throw new ClothingSizeNotFoundException(subscriptionDto.getIdPantsSize());
+            }
+            pantsSize = pantsSizeOptional.get();
+        } else {
+            pantsSize = null;
         }
 
         Subscription subscription = new Subscription(
@@ -78,8 +90,8 @@ public class SubscriptionService {
                 subscriptionDto.getPhoneNumber(),
                 subscriptionDto.getBirthDate(),
                 subscriptionDto.getNationality(),
-                topSize.get(),
-                pantsSize.get(),
+                topSize,
+                pantsSize,
                 subscriptionDto.isInsuranceRequested(),
                 subscriptionDto.isEquipment(),
                 subscriptionDto.isReferee(),
@@ -178,7 +190,7 @@ public class SubscriptionService {
         if(!subscription.isPresent()) {
             throw new SubscriptionNotFoundException(id);
         }
-        subscription.get().setConfirmed(true);
+        subscription.get().setValidated(true);
         subscription.get().setValidationDate(new Date());
         return this.subscriptionRepository.save(subscription.get());
     }
@@ -189,7 +201,7 @@ public class SubscriptionService {
         if(!subscription.isPresent()) {
             throw new SubscriptionNotFoundException(id);
         }
-        subscription.get().setConfirmed(false);
+        subscription.get().setValidated(false);
         this.subscriptionRepository.save(subscription.get());
     }
 
