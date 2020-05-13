@@ -46,7 +46,6 @@ public class SubscriptionDto {
     private Date creationDate;
     private Date validationDate;
     private Long idPlayer;
-    @NotNull
     private Long idSeason;
     @NotNull
     private Long idCategory;

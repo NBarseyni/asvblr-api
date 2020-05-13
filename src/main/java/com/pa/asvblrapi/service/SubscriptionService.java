@@ -43,7 +43,7 @@ public class SubscriptionService {
     }
 
     public Subscription createSubscription(SubscriptionDto subscriptionDto) throws SeasonNotFoundException, CategoryNotFoundException, PaymentModeNotFoundException{
-        Optional<Season> season = this.seasonRepository.findById(subscriptionDto.getIdSeason());
+        Optional<Season> season = this.seasonRepository.findCurrentSeason();
         if(!season.isPresent()) {
             throw new SeasonNotFoundException(subscriptionDto.getIdSeason());
         }
@@ -110,10 +110,6 @@ public class SubscriptionService {
         if(!subscription.isPresent()) {
             throw new SubscriptionNotFoundException(id);
         }
-        Optional<Season> season = this.seasonRepository.findById(subscriptionDto.getIdSeason());
-        if(!season.isPresent()) {
-            throw new SeasonNotFoundException(subscriptionDto.getIdSeason());
-        }
         Optional<Category> category = this.categoryRepository.findById(subscriptionDto.getIdCategory());
         if(!category.isPresent()) {
             throw new CategoryNotFoundException(subscriptionDto.getIdCategory());
@@ -146,7 +142,6 @@ public class SubscriptionService {
         subscription.get().setEquipment(subscriptionDto.isEquipment());
         subscription.get().setReferee(subscriptionDto.isReferee());
         subscription.get().setCoach(subscriptionDto.isCoach());
-        subscription.get().setSeason(season.get());
         subscription.get().setCategory(category.get());
         subscription.get().setPaymentMode(paymentMode.get());
         return this.subscriptionRepository.save(subscription.get());

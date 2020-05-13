@@ -5,6 +5,7 @@ import com.pa.asvblrapi.entity.Document;
 import com.pa.asvblrapi.entity.Player;
 import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.entity.User;
+import com.pa.asvblrapi.exception.SeasonNotFoundException;
 import com.pa.asvblrapi.exception.SubscriptionNotFoundException;
 import com.pa.asvblrapi.mapper.SubscriptionMapper;
 import com.pa.asvblrapi.service.*;
@@ -52,11 +53,14 @@ public class SubscriptionController {
     }
 
     @PostMapping("")
-    public ResponseEntity<SubscriptionDto> createSubscription(@Valid @RequestBody SubscriptionDto subscriptionDto) {
+    public ResponseEntity<Object> createSubscription(@Valid @RequestBody SubscriptionDto subscriptionDto) {
         try {
             Subscription subscription = this.subscriptionService.createSubscription(subscriptionDto);
             this.emailService.sendMessageCreateSubscription(subscription);
             return ResponseEntity.status(HttpStatus.CREATED).body(SubscriptionMapper.instance.toDto(subscription));
+        }
+        catch (SeasonNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No current season");
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
