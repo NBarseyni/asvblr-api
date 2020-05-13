@@ -1,11 +1,15 @@
 package com.pa.asvblrapi.controller;
 
 import com.pa.asvblrapi.dto.PlayerDto;
+import com.pa.asvblrapi.dto.SubscriptionDto;
 import com.pa.asvblrapi.entity.Player;
 import com.pa.asvblrapi.exception.PlayerNotFoundException;
 import com.pa.asvblrapi.exception.SeasonNotFoundException;
 import com.pa.asvblrapi.mapper.PlayerMapper;
+import com.pa.asvblrapi.mapper.SubscriptionMapper;
 import com.pa.asvblrapi.service.PlayerService;
+import com.pa.asvblrapi.service.SubscriptionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +22,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/players")
 public class PlayerController {
-    private final PlayerService playerService;
+    @Autowired
+    private PlayerService playerService;
 
-    PlayerController(PlayerService playerService) {
-        this.playerService = playerService;
-    }
+    @Autowired
+    private SubscriptionService subscriptionService;
 
     @GetMapping("")
     public List<PlayerDto> getPlayers() {
@@ -33,6 +37,11 @@ public class PlayerController {
     public PlayerDto getPlayer(@PathVariable Long id) {
         return PlayerMapper.instance.toDto(this.playerService.getPlayer(id)
                 .orElseThrow(() -> new PlayerNotFoundException(id)));
+    }
+
+    @GetMapping("/{id}/subscriptions")
+    public List<SubscriptionDto> getSubscriptionsByPlayer(@PathVariable Long id) {
+        return SubscriptionMapper.instance.toDto(this.subscriptionService.getSubscriptionsByPlayer(id));
     }
 
     @PutMapping("/{id}")

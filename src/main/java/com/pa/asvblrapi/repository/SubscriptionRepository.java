@@ -15,4 +15,9 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
             nativeQuery = true
     )
     List<Subscription> findSubscriptionBySeason(@Param("id") Long id);
+
+    @Query(value = "select s.* from Subscription s where s.player_id = :id",
+            nativeQuery = true
+    )
+    List<Subscription> findSubscriptionsByPlayer(@Param("id") Long id);
 }
