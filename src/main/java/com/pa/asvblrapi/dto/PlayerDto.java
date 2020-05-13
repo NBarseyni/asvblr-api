@@ -28,12 +28,9 @@ public class PlayerDto {
     private Date birthDate;
     @NotBlank
     private String licenceNumber;
-    @NotNull
     private Long idTopSize;
-    @NotNull
     private Long idPantsSize;
     @NotNull
     private Long idUser;
-    @NotNull
     private Long idJersey;
 }

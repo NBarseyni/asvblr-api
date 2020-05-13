@@ -37,10 +37,10 @@ public class Player {
     private Date birthDate;
     private String licenceNumber;
     @ManyToOne
-    @JoinColumn(name = "topSize_id", nullable = false)
+    @JoinColumn(name = "topSize_id")
     private ClothingSize topSize;
     @ManyToOne
-    @JoinColumn(name = "pantsSize_id", nullable = false)
+    @JoinColumn(name = "pantsSize_id")
     private ClothingSize pantsSize;
 
     @OneToOne(cascade = CascadeType.ALL)
