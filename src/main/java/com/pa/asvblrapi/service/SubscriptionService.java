@@ -184,7 +184,7 @@ public class SubscriptionService {
         }
     }
 
-    public Subscription confirmedSubscription(Long id) throws SubscriptionNotFoundException {
+    public Subscription validatedSubscription(Long id) throws SubscriptionNotFoundException {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
 
         if(!subscription.isPresent()) {
@@ -195,7 +195,7 @@ public class SubscriptionService {
         return this.subscriptionRepository.save(subscription.get());
     }
 
-    public void unconfirmedSubscription(Long id) throws SubscriptionNotFoundException {
+    public void unvalidatedSubscription(Long id) throws SubscriptionNotFoundException {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
 
         if(!subscription.isPresent()) {

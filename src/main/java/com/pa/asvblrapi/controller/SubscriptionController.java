@@ -113,10 +113,10 @@ public class SubscriptionController {
         }
     }
 
-    @PatchMapping("/{id}/confirmed")
-    public ResponseEntity<Object> confirmedSubscription(@PathVariable Long id) {
+    @PatchMapping("/{id}/validated")
+    public ResponseEntity<Object> validatedSubscription(@PathVariable Long id) {
         try {
-            Subscription subscription = this.subscriptionService.confirmedSubscription(id);
+            Subscription subscription = this.subscriptionService.validatedSubscription(id);
             User user = this.userService.createUser(subscription.getFirstName(), subscription.getLastName(), subscription.getEmail());
             Player player = this.playerService.createPlayer(subscription, user);
             this.subscriptionService.setPlayer(id, player);
@@ -130,10 +130,10 @@ public class SubscriptionController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    @PatchMapping("/{id}/unconfirmed")
-    public ResponseEntity<Object> unconfirmedSubscription(@PathVariable Long id) {
+    @PatchMapping("/{id}/unvalidated")
+    public ResponseEntity<Object> unvalidatedSubscription(@PathVariable Long id) {
         try {
-            this.subscriptionService.unconfirmedSubscription(id);
+            this.subscriptionService.unvalidatedSubscription(id);
         }
         catch (SubscriptionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
