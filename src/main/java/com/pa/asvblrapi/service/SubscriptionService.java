@@ -183,12 +183,15 @@ public class SubscriptionService {
         }
     }
 
-    public Subscription validatedSubscription(Long id) throws SubscriptionNotFoundException {
+    public Subscription validatedSubscription(Long id) throws SubscriptionNotFoundException, SubscriptionAlreadyValidatedException {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
-
-        if(!subscription.isPresent()) {
+        if (!subscription.isPresent()) {
             throw new SubscriptionNotFoundException(id);
         }
+        if (subscription.get().isValidated()) {
+            throw new SubscriptionAlreadyValidatedException();
+        }
+
         subscription.get().setValidated(true);
         subscription.get().setValidationDate(new Date());
         return this.subscriptionRepository.save(subscription.get());

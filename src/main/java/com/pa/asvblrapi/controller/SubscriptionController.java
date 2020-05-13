@@ -6,6 +6,7 @@ import com.pa.asvblrapi.entity.Player;
 import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.SeasonNotFoundException;
+import com.pa.asvblrapi.exception.SubscriptionAlreadyValidatedException;
 import com.pa.asvblrapi.exception.SubscriptionNotFoundException;
 import com.pa.asvblrapi.mapper.SubscriptionMapper;
 import com.pa.asvblrapi.service.*;
@@ -20,6 +21,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -127,6 +129,9 @@ public class SubscriptionController {
         }
         catch (SubscriptionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        catch (SubscriptionAlreadyValidatedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
