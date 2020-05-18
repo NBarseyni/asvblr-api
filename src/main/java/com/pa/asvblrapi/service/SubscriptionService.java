@@ -96,6 +96,7 @@ public class SubscriptionService {
                 subscriptionDto.getNationality(),
                 topSize,
                 pantsSize,
+                subscriptionDto.getRequestedJerseyNumber(),
                 subscriptionDto.isInsuranceRequested(),
                 subscriptionDto.isEquipment(),
                 subscriptionDto.isReferee(),
@@ -142,6 +143,7 @@ public class SubscriptionService {
         subscription.get().setNationality(subscriptionDto.getNationality());
         subscription.get().setTopSize(topSize.get());
         subscription.get().setPantsSize(pantsSize.get());
+        subscription.get().setRequestedJerseyNumber(subscriptionDto.getRequestedJerseyNumber());
         subscription.get().setInsuranceRequested(subscriptionDto.isInsuranceRequested());
         subscription.get().setEquipment(subscriptionDto.isEquipment());
         subscription.get().setReferee(subscriptionDto.isReferee());

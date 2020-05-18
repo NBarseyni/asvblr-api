@@ -91,7 +91,7 @@ public class Subscription {
 
     public Subscription(String firstName, String lastName, boolean gender, String address, int postcode, String city,
                         String email, String phoneNumber, Date birthDate, String nationality, ClothingSize topSize,
-                        ClothingSize pantsSize, boolean insuranceRequested, boolean equipment, boolean referee, boolean coach,
+                        ClothingSize pantsSize, int requestedJerseyNumber, boolean insuranceRequested, boolean equipment, boolean referee, boolean coach,
                         String comment, Season season, Category category, PaymentMode paymentMode) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -109,6 +109,7 @@ public class Subscription {
         this.referee = referee;
         this.coach = coach;
         this.validated = false;
+        this.requestedJerseyNumber = requestedJerseyNumber;
         this.insuranceRequested = insuranceRequested;
         this.comment = comment;
         this.creationDate = new Date();
