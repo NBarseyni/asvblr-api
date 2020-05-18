@@ -83,7 +83,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createCategoryIfNotFound("Femme 4vs4");
 
         // Create PaymentMode
-        createPaymentModeIfNotFound("Chèques classiques de Banque");
+        createPaymentModeIfNotFound("Chèque banquaire");
         createPaymentModeIfNotFound("Pass 92 : collégiens domiciliés aux Hauts-de-Seine");
         createPaymentModeIfNotFound("Coupons sport");
         createPaymentModeIfNotFound("Chèques vacances");
