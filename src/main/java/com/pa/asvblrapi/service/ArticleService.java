@@ -27,6 +27,10 @@ public class ArticleService {
         return this.articleRepository.findAll();
     }
 
+    public Optional<Article> getArticle(Long id) {
+        return this.articleRepository.findById(id);
+    }
+
     public Article createArticle(ArticleDto articleDto) {
         Article article = new Article(articleDto.getTitle(), articleDto.getContent());
         return this.articleRepository.save(article);

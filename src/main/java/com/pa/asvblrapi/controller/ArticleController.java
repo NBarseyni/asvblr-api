@@ -35,6 +35,12 @@ public class ArticleController {
         return ArticleListMapper.instance.toDto(this.articleService.getAllArticle());
     }
 
+    @GetMapping("/{id}")
+    public ArticleDto getArticle(@PathVariable Long id) {
+        return ArticleMapper.instance.toDto(this.articleService.getArticle(id)
+                .orElseThrow(() -> new ArticleNotFoundException(id)));
+    }
+
     @PostMapping("")
     public ResponseEntity<ArticleDto> createArticle(@Valid @RequestBody ArticleDto articleDto) {
         try {
