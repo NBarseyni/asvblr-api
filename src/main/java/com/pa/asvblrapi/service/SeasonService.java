@@ -31,7 +31,9 @@ public class SeasonService {
 
     public Season createSeason(SeasonDto seasonDto) {
         Season season = new Season(seasonDto.getName());
-        return this.seasonRepository.save(season);
+        Season newSeason = this.seasonRepository.save(season);
+        this.setCurrentSeason(newSeason.getId());
+        return newSeason;
     }
 
     public Season updateSeason(Long id, SeasonDto seasonDto) throws SeasonNotFoundException {
