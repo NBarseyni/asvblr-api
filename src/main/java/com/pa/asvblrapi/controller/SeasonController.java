@@ -41,6 +41,12 @@ public class SeasonController {
                 .orElseThrow(() -> new SeasonNotFoundException(id)));
     }
 
+    @GetMapping("/current-season")
+    public SeasonDto getCurrentSeason() {
+        return SeasonMapper.instance.toDto(this.seasonService.getCurrentSeason()
+        .orElseThrow(RuntimeException::new));
+    }
+
     @GetMapping("/{id}/subscriptions")
     public List<SubscriptionDto> getSubscriptionBySeason(@PathVariable Long id) {
         return SubscriptionMapper.instance.toDto(this.subscriptionService.getSubscriptionsBySeason(id));

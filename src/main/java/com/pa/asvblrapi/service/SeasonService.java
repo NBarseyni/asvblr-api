@@ -25,6 +25,10 @@ public class SeasonService {
         return this.seasonRepository.findById(id);
     }
 
+    public Optional<Season> getCurrentSeason() {
+        return this.seasonRepository.findCurrentSeason();
+    }
+
     public Season createSeason(SeasonDto seasonDto) {
         Season season = new Season(seasonDto.getName());
         return this.seasonRepository.save(season);
