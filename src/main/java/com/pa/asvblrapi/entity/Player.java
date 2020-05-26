@@ -47,9 +47,8 @@ public class Player {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "jersey_id")
-    private Jersey jersey;
+    @OneToMany(mappedBy = "player")
+    private List<Jersey> jerseys;
 
     @OneToMany(mappedBy = "player")
     private List<Subscription> subscriptions;

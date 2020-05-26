@@ -12,5 +12,6 @@ public interface JerseyMapper extends EntityMapper<JerseyDto, Jersey> {
 
     @Mapping(source = "team.id", target = "idTeam")
     @Mapping(source = "position.id", target = "idPosition")
+    @Mapping(source = "player.id", target = "idPlayer")
     JerseyDto toDto(Jersey jersey);
 }

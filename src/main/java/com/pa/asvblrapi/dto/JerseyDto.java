@@ -20,4 +20,6 @@ public class JerseyDto {
     private Long idTeam;
     @NotNull
     private Long idPosition;
+    @NotNull
+    private Long idPlayer;
 }

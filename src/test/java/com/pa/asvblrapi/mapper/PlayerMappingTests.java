@@ -8,7 +8,9 @@ import com.pa.asvblrapi.entity.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -19,8 +21,6 @@ public class PlayerMappingTests {
         ClothingSize clothingSize = new ClothingSize((long)1,"L");
         User user = new User();
         user.setId((long)2);
-        Jersey jersey = new Jersey();
-        jersey.setId((long)3);
         Player player = new Player();
         player.setId((long)4);
         player.setFirstName("firstName");
@@ -35,7 +35,6 @@ public class PlayerMappingTests {
         player.setTopSize(clothingSize);
         player.setPantsSize(clothingSize);
         player.setUser(user);
-        player.setJersey(jersey);
 
         PlayerDto playerDto = PlayerMapper.instance.toDto(player);
 
@@ -53,7 +52,6 @@ public class PlayerMappingTests {
         assertThat(playerDto.getIdTopSize()).isEqualTo(clothingSize.getId());
         assertThat(playerDto.getIdPantsSize()).isEqualTo(clothingSize.getId());
         assertThat(playerDto.getIdUser()).isEqualTo(player.getUser().getId());
-        assertThat(playerDto.getIdJersey()).isEqualTo(player.getJersey().getId());
     }
 
     /*

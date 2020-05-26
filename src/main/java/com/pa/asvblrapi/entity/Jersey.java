@@ -28,4 +28,8 @@ public class Jersey {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "position_id", referencedColumnName = "id")
     private Position position;
+
+    @ManyToOne
+    @JoinColumn(name = "player_id", nullable = false)
+    private Player player;
 }

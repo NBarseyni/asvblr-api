@@ -2,6 +2,7 @@ package com.pa.asvblrapi.mapper;
 
 import com.pa.asvblrapi.dto.JerseyDto;
 import com.pa.asvblrapi.entity.Jersey;
+import com.pa.asvblrapi.entity.Player;
 import com.pa.asvblrapi.entity.Position;
 import com.pa.asvblrapi.entity.Team;
 import org.junit.jupiter.api.Test;
@@ -18,7 +19,9 @@ public class JerseyMappingTests {
         position.setId((long)2);
         Team team = new Team();
         team.setId((long)3);
-        Jersey jersey = new Jersey((long)1, "1", team, position);
+        Player player = new Player();
+        player.setId((long)4);
+        Jersey jersey = new Jersey((long)1, "1", team, position, player);
 
         JerseyDto jerseyDto = JerseyMapper.instance.toDto(jersey);
 
@@ -27,5 +30,6 @@ public class JerseyMappingTests {
         assertThat(jerseyDto.getNumber()).isEqualTo(jersey.getNumber());
         assertThat(jerseyDto.getIdTeam()).isEqualTo(jersey.getTeam().getId());
         assertThat(jerseyDto.getIdPosition()).isEqualTo(jersey.getPosition().getId());
+        assertThat(jerseyDto.getIdPlayer()).isEqualTo(jersey.getPlayer().getId());
     }
 }

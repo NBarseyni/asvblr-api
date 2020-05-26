@@ -32,5 +32,4 @@ public class PlayerDto {
     private Long idPantsSize;
     @NotNull
     private Long idUser;
-    private Long idJersey;
 }
