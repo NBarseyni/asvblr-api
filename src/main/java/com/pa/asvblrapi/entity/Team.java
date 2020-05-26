@@ -33,6 +33,9 @@ public class Team {
     @OneToMany(mappedBy = "team")
     private List<Jersey> jerseys;
 
+    @OneToMany(mappedBy = "team")
+    private List<Match> matches;
+
     public Team(String name, Season season) {
         this.name = name;
         this.season = season;
