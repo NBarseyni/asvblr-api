@@ -59,7 +59,8 @@ public class UserService {
             List<Role> roles = new ArrayList<>(Arrays.asList(role));
             user.setRoles(roles);
 
-            UserDtoFirebase userDtoFirebase = new UserDtoFirebase(username, user.getFirstName(), user.getLastName(), user.getEmail());
+            UserDtoFirebase userDtoFirebase = new UserDtoFirebase(user.getId(), username, user.getFirstName(),
+                    user.getLastName(), user.getEmail());
             this.firebaseService.saveUserDetails(userDtoFirebase);
 
             this.emailService.sendMessageCreateUser(user, password);
@@ -81,8 +82,8 @@ public class UserService {
             user.get().setLastName(userDto.getLastName());
             user.get().setEmail(userDto.getEmail());
             User userSave = userRepository.save(user.get());
-            this.firebaseService.updateUserDetails(new UserDtoFirebase(userSave.getUsername(), userSave.getFirstName(),
-                    userSave.getLastName(), userSave.getEmail()));
+            this.firebaseService.updateUserDetails(new UserDtoFirebase(userSave.getId(), userSave.getUsername(),
+                    userSave.getFirstName(), userSave.getLastName(), userSave.getEmail()));
             return userSave;
         }
         catch (InterruptedException e) {

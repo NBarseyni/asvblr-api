@@ -10,6 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDtoFirebase {
+    private Long id;
     private String username;
     private String lastName;
     private String firstName;

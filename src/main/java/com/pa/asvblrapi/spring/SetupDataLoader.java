@@ -137,7 +137,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         user.setRoles(roles);
         user = userRepository.save(user);
         try {
-            this.firebaseService.saveUserDetails(new UserDtoFirebase(username, firstName, lastName, email));
+            this.firebaseService.saveUserDetails(new UserDtoFirebase(user.getId(), username, firstName, lastName, email));
         }
         catch (Exception e) {
             throw new Exception(e.getMessage());
