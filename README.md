@@ -4,10 +4,16 @@
 
 ### Application
 
+#### Database
 - Create a mysql database with the name db_asvblr
 - Create two environment variables with the credentials of the database :
     - MYSQL_DB_USERNAME
     - MYSQL_DB_PASSWORD
+    
+#### Email
+- Create two environment variables for email
+    - EMAIL_USERNAME
+    - EMAIL_PASSWORD
 
 ### Swagger
 
