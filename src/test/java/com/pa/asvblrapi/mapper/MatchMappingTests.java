@@ -17,7 +17,8 @@ public class MatchMappingTests {
     public void should_map_match_to_dto() {
         Team team = new Team();
         team.setId((long)2);
-        Match match = new Match((long)1, new Date(), "place", true, "oppositeTeam", team);
+        Match match = new Match((long)1, new Date(), "place", true, "oppositeTeam",
+                "comment", 10, team);
 
         MatchDto matchDto = MatchMapper.instance.toDto(match);
 
@@ -27,6 +28,8 @@ public class MatchMappingTests {
         assertThat(matchDto.getPlace()).isEqualTo(match.getPlace());
         assertThat(matchDto.isType()).isEqualTo(match.isType());
         assertThat(matchDto.getOppositeTeam()).isEqualTo(match.getOppositeTeam());
+        assertThat(matchDto.getComment()).isEqualTo(match.getComment());
+        assertThat(matchDto.getRate()).isEqualTo(match.getRate());
         assertThat(matchDto.getIdTeam()).isEqualTo(match.getTeam().getId());
     }
 }

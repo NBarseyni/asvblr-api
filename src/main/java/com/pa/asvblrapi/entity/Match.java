@@ -14,6 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Table(name = "matche")
 public class Match {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,6 +27,8 @@ public class Match {
     private boolean type;
     @NotNull
     private String oppositeTeam;
+    private String comment;
+    private int rate;
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;

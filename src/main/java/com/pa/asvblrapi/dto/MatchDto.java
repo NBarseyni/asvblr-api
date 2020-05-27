@@ -23,6 +23,8 @@ public class MatchDto {
     private boolean type;
     @NotBlank
     private String oppositeTeam;
+    private String comment;
+    private int rate;
     @NotNull
     private Long idTeam;
 }
