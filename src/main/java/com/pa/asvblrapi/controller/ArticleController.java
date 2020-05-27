@@ -7,12 +7,15 @@ import com.pa.asvblrapi.exception.ArticleNotFoundException;
 import com.pa.asvblrapi.mapper.ArticleListMapper;
 import com.pa.asvblrapi.mapper.ArticleMapper;
 import com.pa.asvblrapi.service.ArticleService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -26,7 +29,20 @@ public class ArticleController {
     private ArticleService articleService;
 
     @GetMapping("")
-    public Page<Article> getAllArticlePage(Pageable pageable) {
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query",
+                    value = "Results page you want to retrieve (0..N)", defaultValue = "0"),
+            @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query",
+                    value = "Number of records per page.", defaultValue = "5"),
+            @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query",
+                    value = "Sorting criteria in the format: property(,asc|desc). " +
+                            "Default sort order is ascending. " +
+                            "Multiple sort criteria are supported.")
+    })
+    public Page<Article> getAllArticlePage(@ApiIgnore(
+            "Ignored because swagger ui shows the wrong params, " +
+                    "instead they are explained in the implicit params"
+    )Pageable pageable) {
         return this.articleService.getAllArticle(pageable);
     }
 
