@@ -1,11 +1,1 @@
 language: java
-
-env:
-  - REQ_FILE=".serviceAccount.json"
-  global:
-    - secure: travisEncryptedMYSQL_HOST
-    - secure: travisEncryptedMYSQL_DB_NAME
-    - secure: travisEncryptedMYSQL_DB_USERNAME
-    - secure: travisEncryptedMYSQL_DB_PASSWORD
-    - secure: travisEncryptedEMAIL_USERNAME
-    - secure: travisEncrypterEMAIL_PASSWORD
