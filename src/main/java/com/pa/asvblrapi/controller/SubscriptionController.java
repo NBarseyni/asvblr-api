@@ -1,5 +1,6 @@
 package com.pa.asvblrapi.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pa.asvblrapi.dto.SubscriptionDto;
 import com.pa.asvblrapi.entity.Document;
 import com.pa.asvblrapi.entity.Player;
@@ -11,12 +12,14 @@ import com.pa.asvblrapi.exception.SubscriptionNotFoundException;
 import com.pa.asvblrapi.mapper.SubscriptionMapper;
 import com.pa.asvblrapi.service.*;
 import com.pa.asvblrapi.spring.EmailServiceImpl;
+import com.sun.mail.iap.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
@@ -54,8 +57,8 @@ public class SubscriptionController {
                 .orElseThrow(() -> new SubscriptionNotFoundException(id)));
     }
 
-    @PostMapping("")
-    public ResponseEntity<Object> createSubscription(@Valid @RequestBody SubscriptionDto subscriptionDto) {
+    // Old createSubscription
+    public ResponseEntity<Object> createSubscriptionOld(@Valid @RequestBody SubscriptionDto subscriptionDto) {
         try {
             Subscription subscription = this.subscriptionService.createSubscription(subscriptionDto);
             this.emailService.sendMessageCreateSubscription(subscription);
@@ -66,6 +69,28 @@ public class SubscriptionController {
         }
         catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
+    @PostMapping("")
+    public ResponseEntity<Object> createSubscription(@Valid @RequestParam String subscription,
+                                                     @RequestParam("cni") MultipartFile cniFile,
+                                                     @RequestParam("identityPhoto") MultipartFile identityPhotoFile,
+                                                     @RequestParam("medicalCertificate") MultipartFile medicalCertificateFile) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            SubscriptionDto subscriptionDto = mapper.readValue(subscription, SubscriptionDto.class);
+            Subscription subscriptionSave = this.subscriptionService.createSubscription(subscriptionDto);
+            Document cniDocument = this.documentService.createDocument(cniFile);
+            this.subscriptionService.addCNI(subscriptionSave.getId(), cniDocument);
+            Document identityPhotoDocument = this.documentService.createDocument(identityPhotoFile);
+            this.subscriptionService.addIdentityPhoto(subscriptionSave.getId(), identityPhotoDocument);
+            Document medicalCertificateDocument = this.documentService.createDocument(medicalCertificateFile);
+            this.subscriptionService.addMedicalCertificate(subscriptionSave.getId(), medicalCertificateDocument);
+            this.emailService.sendMessageCreateSubscription(subscriptionSave);
+            return ResponseEntity.status(HttpStatus.CREATED).body(SubscriptionMapper.instance.toDto(subscriptionSave));
+        } catch (IOException | MessagingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
