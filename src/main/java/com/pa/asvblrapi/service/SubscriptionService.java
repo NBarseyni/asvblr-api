@@ -103,6 +103,12 @@ public class SubscriptionService {
                 subscriptionDto.isCoach(),
                 subscriptionDto.isCalendar(),
                 subscriptionDto.getComment(),
+                subscriptionDto.isPc_allowToLeaveAlone(),
+                subscriptionDto.isPc_allowClubToRescue(),
+                subscriptionDto.isPc_allowToTravelWithTeamMate(),
+                subscriptionDto.isPc_allowToPublish(),
+                subscriptionDto.isPc_unaccountability(),
+                subscriptionDto.isPc_allowToWhatsapp(),
                 season.get(),
                 category.get(),
                 paymentMode.get()
@@ -150,6 +156,13 @@ public class SubscriptionService {
         subscription.get().setReferee(subscriptionDto.isReferee());
         subscription.get().setCoach(subscriptionDto.isCoach());
         subscription.get().setCalendar(subscriptionDto.isCalendar());
+        subscription.get().setComment(subscriptionDto.getComment());
+        subscription.get().setPc_allowToLeaveAlone(subscriptionDto.isPc_allowToLeaveAlone());
+        subscription.get().setPc_allowClubToRescue(subscriptionDto.isPc_allowClubToRescue());
+        subscription.get().setPc_allowToTravelWithTeamMate(subscriptionDto.isPc_allowToTravelWithTeamMate());
+        subscription.get().setPc_allowToPublish(subscriptionDto.isPc_allowToPublish());
+        subscription.get().setPc_unaccountability(subscriptionDto.isPc_unaccountability());
+        subscription.get().setPc_allowToWhatsapp(subscriptionDto.isPc_allowToWhatsapp());
         subscription.get().setCategory(category.get());
         subscription.get().setPaymentMode(paymentMode.get());
         return this.subscriptionRepository.save(subscription.get());

@@ -45,6 +45,13 @@ public class SubscriptionDto {
     private boolean validated;
     @NotNull
     private boolean calendar;
+    // Parental authorisation
+    private boolean pc_allowToLeaveAlone;
+    private boolean pc_allowClubToRescue;
+    private boolean pc_allowToTravelWithTeamMate;
+    private boolean pc_allowToPublish;
+    private boolean pc_unaccountability;
+    private boolean pc_allowToWhatsapp;
     private Date creationDate;
     private Date validationDate;
     private Long idPlayer;

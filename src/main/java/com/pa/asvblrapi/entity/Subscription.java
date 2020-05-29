@@ -60,6 +60,12 @@ public class Subscription {
     @NotNull
     private boolean calendar;
     private String comment;
+    private boolean pc_allowToLeaveAlone;
+    private boolean pc_allowClubToRescue;
+    private boolean pc_allowToTravelWithTeamMate;
+    private boolean pc_allowToPublish;
+    private boolean pc_unaccountability;
+    private boolean pc_allowToWhatsapp;
     private Date creationDate;
     private Date validationDate;
     @ManyToOne
@@ -94,7 +100,9 @@ public class Subscription {
     public Subscription(String firstName, String lastName, boolean gender, String address, int postcode, String city,
                         String email, String phoneNumber, Date birthDate, String nationality, ClothingSize topSize,
                         ClothingSize pantsSize, int requestedJerseyNumber, boolean insuranceRequested, boolean equipment,
-                        boolean referee, boolean coach, boolean calendar, String comment, Season season, Category category,
+                        boolean referee, boolean coach, boolean calendar, String comment, boolean pc_allowToLeaveAlone,
+                        boolean pc_allowClubToRescue, boolean pc_allowToTravelWithTeamMate, boolean pc_allowToPublish,
+                        boolean pc_unaccountability, boolean pc_allowToWhatsapp, Season season, Category category,
                         PaymentMode paymentMode) {
         this.firstName = firstName;
         this.lastName = lastName;
@@ -116,6 +124,12 @@ public class Subscription {
         this.requestedJerseyNumber = requestedJerseyNumber;
         this.insuranceRequested = insuranceRequested;
         this.comment = comment;
+        this.pc_allowToLeaveAlone = pc_allowToLeaveAlone;
+        this.pc_allowClubToRescue = pc_allowClubToRescue;
+        this.pc_allowToTravelWithTeamMate = pc_allowToTravelWithTeamMate;
+        this.pc_allowToPublish = pc_allowToPublish;
+        this.pc_unaccountability = pc_unaccountability;
+        this.pc_allowToWhatsapp = pc_allowToWhatsapp;
         this.creationDate = new Date();
         this.season = season;
         this.category = category;
