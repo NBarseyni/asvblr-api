@@ -1,11 +1,13 @@
 # Association Sportive de Volley-ball de Bourg-La-Reine API
 
+[![Build Status](https://travis-ci.org/NBarseyni/asvblr-api.svg?branch=master)](https://travis-ci.org/NBarseyni/asvblr-api)
+
 ## Installation
 
 ### Application
 
 #### Database
-- Create a mysql database with the name db_asvblr
+- Create a mysql database and set environment variable MYSQL_DB_NAME with its name 
 - Create two environment variables with the credentials of the database :
     - MYSQL_DB_USERNAME
     - MYSQL_DB_PASSWORD
