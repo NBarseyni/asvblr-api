@@ -101,6 +101,7 @@ public class SubscriptionService {
                 subscriptionDto.isEquipment(),
                 subscriptionDto.isReferee(),
                 subscriptionDto.isCoach(),
+                subscriptionDto.isCalendar(),
                 subscriptionDto.getComment(),
                 season.get(),
                 category.get(),
@@ -148,6 +149,7 @@ public class SubscriptionService {
         subscription.get().setEquipment(subscriptionDto.isEquipment());
         subscription.get().setReferee(subscriptionDto.isReferee());
         subscription.get().setCoach(subscriptionDto.isCoach());
+        subscription.get().setCalendar(subscriptionDto.isCalendar());
         subscription.get().setCategory(category.get());
         subscription.get().setPaymentMode(paymentMode.get());
         return this.subscriptionRepository.save(subscription.get());
