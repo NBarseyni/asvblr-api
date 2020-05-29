@@ -5,7 +5,9 @@ import com.pa.asvblrapi.entity.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -20,21 +22,27 @@ public class SubscriptionMappingTests {
         season.setId((long)3);
         Category category = new Category();
         category.setId((long)4);
-        PaymentMode paymentMode = new PaymentMode();
-        paymentMode.setId((long)5);
+        List<PaymentMode> paymentModes = new ArrayList<>();
+        PaymentMode paymentMode1 = new PaymentMode();
+        paymentMode1.setId((long)5);
+        PaymentMode paymentMode2 = new PaymentMode();
+        paymentMode2.setId((long)6);
+        paymentModes.add(paymentMode1);
+        paymentModes.add(paymentMode2);
         Document cni = new Document();
-        cni.setId((long)6);
+        cni.setId((long)7);
         Document identityPhoto = new Document();
-        identityPhoto.setId((long)7);
+        identityPhoto.setId((long)8);
         Document medicalCertificate = new Document();
-        medicalCertificate.setId((long)8);
+        medicalCertificate.setId((long)9);
 
         Subscription subscription = new Subscription((long)1, "firstName", "lastName",
                 true, "address", 75001, "city", "email",
                 "phoneNumber", new Date(), "France", clothingSize, clothingSize,
-                0, true, true, true, true,
-                true, "comment", new Date(), new Date(), player, season, category,
-                paymentMode, cni, identityPhoto, medicalCertificate);
+                0, true, true, true, true, false,
+                true, "comment", true, true,
+                true, false, false, false,
+                new Date(), new Date(), player, season, category, paymentModes, cni, identityPhoto, medicalCertificate);
 
         SubscriptionDto subscriptionDto = SubscriptionMapper.instance.toDto(subscription);
 
@@ -58,13 +66,20 @@ public class SubscriptionMappingTests {
         assertThat(subscriptionDto.isReferee()).isEqualTo(subscription.isReferee());
         assertThat(subscriptionDto.isCoach()).isEqualTo(subscription.isCoach());
         assertThat(subscriptionDto.isValidated()).isEqualTo(subscription.isValidated());
+        assertThat(subscriptionDto.isCalendar()).isEqualTo(subscription.isCalendar());
         assertThat(subscriptionDto.getComment()).isEqualTo(subscription.getComment());
+        assertThat(subscriptionDto.isPc_allowToLeaveAlone()).isEqualTo(subscription.isPc_allowToLeaveAlone());
+        assertThat(subscriptionDto.isPc_allowClubToRescue()).isEqualTo(subscription.isPc_allowClubToRescue());
+        assertThat(subscriptionDto.isPc_allowToTravelWithTeamMate()).isEqualTo(subscription.isPc_allowToTravelWithTeamMate());
+        assertThat(subscriptionDto.isPc_allowToPublish()).isEqualTo(subscription.isPc_allowToPublish());
+        assertThat(subscriptionDto.isPc_unaccountability()).isEqualTo(subscription.isPc_unaccountability());
+        assertThat(subscriptionDto.isPc_allowToWhatsapp()).isEqualTo(subscription.isPc_allowToWhatsapp());
         assertThat(subscriptionDto.getCreationDate()).isEqualTo(subscription.getCreationDate());
         assertThat(subscriptionDto.getValidationDate()).isEqualTo(subscription.getValidationDate());
         assertThat(subscriptionDto.getIdPlayer()).isEqualTo(player.getId());
         assertThat(subscriptionDto.getIdSeason()).isEqualTo(season.getId());
         assertThat(subscriptionDto.getIdCategory()).isEqualTo(category.getId());
-        assertThat(subscriptionDto.getIdPaymentMode()).isEqualTo(paymentMode.getId());
+        assertThat(subscriptionDto.getIdsPaymentMode().size()).isEqualTo(subscriptionDto.getIdsPaymentMode().size());
         assertThat(subscriptionDto.getIdCNI()).isEqualTo(cni.getId());
         assertThat(subscriptionDto.getIdIdentityPhoto()).isEqualTo(identityPhoto.getId());
         assertThat(subscriptionDto.getIdMedicalCertificate()).isEqualTo(medicalCertificate.getId());

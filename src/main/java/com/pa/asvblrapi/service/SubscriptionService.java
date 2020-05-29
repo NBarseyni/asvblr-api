@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -57,9 +58,13 @@ public class SubscriptionService {
             throw new CategoryNotFoundException(subscriptionDto.getIdCategory());
         }
 
-        Optional<PaymentMode> paymentMode = this.paymentModeRepository.findById(subscriptionDto.getIdPaymentMode());
-        if(!paymentMode.isPresent()) {
-            throw new PaymentModeNotFoundException(subscriptionDto.getIdPaymentMode());
+        List<PaymentMode> paymentModes = new ArrayList<>();
+        for(int i = 0; i < subscriptionDto.getIdsPaymentMode().size(); i++) {
+            Optional<PaymentMode> paymentMode = this.paymentModeRepository.findById(subscriptionDto.getIdsPaymentMode().get(i));
+            if(!paymentMode.isPresent()) {
+                throw new PaymentModeNotFoundException(subscriptionDto.getIdsPaymentMode().get(i));
+            }
+            paymentModes.add(paymentMode.get());
         }
 
         ClothingSize topSize;
@@ -111,7 +116,7 @@ public class SubscriptionService {
                 subscriptionDto.isPc_allowToWhatsapp(),
                 season.get(),
                 category.get(),
-                paymentMode.get()
+                paymentModes
         );
         return this.subscriptionRepository.save(subscription);
     }
@@ -126,10 +131,16 @@ public class SubscriptionService {
         if(!category.isPresent()) {
             throw new CategoryNotFoundException(subscriptionDto.getIdCategory());
         }
-        Optional<PaymentMode> paymentMode = this.paymentModeRepository.findById(subscriptionDto.getIdPaymentMode());
-        if(!paymentMode.isPresent()) {
-            throw new PaymentModeNotFoundException(subscriptionDto.getIdPaymentMode());
+
+        List<PaymentMode> paymentModes = new ArrayList<>();
+        for (int i = 0; i < subscriptionDto.getIdsPaymentMode().size(); i++) {
+            Optional<PaymentMode> paymentMode = this.paymentModeRepository.findById(subscriptionDto.getIdsPaymentMode().get(i));
+            if(!paymentMode.isPresent()) {
+                throw new PaymentModeNotFoundException(subscriptionDto.getIdsPaymentMode().get(i));
+            }
+            paymentModes.add(paymentMode.get());
         }
+
         Optional<ClothingSize> topSize = this.clothingSizeRepository.findById(subscriptionDto.getIdTopSize());
         if(!topSize.isPresent()) {
             throw new ClothingSizeNotFoundException(subscriptionDto.getIdTopSize());
@@ -164,7 +175,7 @@ public class SubscriptionService {
         subscription.get().setPc_unaccountability(subscriptionDto.isPc_unaccountability());
         subscription.get().setPc_allowToWhatsapp(subscriptionDto.isPc_allowToWhatsapp());
         subscription.get().setCategory(category.get());
-        subscription.get().setPaymentMode(paymentMode.get());
+        subscription.get().setPaymentModes(paymentModes);
         return this.subscriptionRepository.save(subscription.get());
     }
 

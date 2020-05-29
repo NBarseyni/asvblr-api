@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -59,7 +60,7 @@ public class SubscriptionDto {
     @NotNull
     private Long idCategory;
     @NotNull
-    private Long idPaymentMode;
+    private List<Long> idsPaymentMode;
     private Long idCNI;
     private Long idIdentityPhoto;
     private Long idMedicalCertificate;
