@@ -21,7 +21,7 @@ public class JerseyMappingTests {
         team.setId((long)3);
         Player player = new Player();
         player.setId((long)4);
-        Jersey jersey = new Jersey((long)1, "1", team, position, player);
+        Jersey jersey = new Jersey((long)1, 1, team, position, player);
 
         JerseyDto jerseyDto = JerseyMapper.instance.toDto(jersey);
 

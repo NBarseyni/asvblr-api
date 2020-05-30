@@ -19,17 +19,24 @@ public class Jersey {
     private Long id;
 
     @NotNull
-    private String number;
+    private int number;
 
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "position_id", referencedColumnName = "id")
+    @ManyToOne
+    @JoinColumn(name = "position_id", nullable = false)
     private Position position;
 
     @ManyToOne
     @JoinColumn(name = "player_id", nullable = false)
     private Player player;
+
+    public Jersey(int number, Team team, Position position, Player player) {
+        this.number = number;
+        this.team = team;
+        this.position = position;
+        this.player = player;
+    }
 }

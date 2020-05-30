@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 public class JerseyDto {
     private Long id;
     @NotBlank
-    private String number;
+    private int number;
     @NotNull
     private Long idTeam;
     @NotNull
