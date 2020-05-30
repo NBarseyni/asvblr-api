@@ -8,4 +8,8 @@ public class SeasonNotFoundException extends RuntimeException {
     public SeasonNotFoundException(Long id) {
         super("Could not find season with id = " + id);
     }
+
+    public SeasonNotFoundException() {
+        super("No current season");
+    }
 }

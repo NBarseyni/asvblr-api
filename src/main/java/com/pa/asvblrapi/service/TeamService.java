@@ -3,10 +3,13 @@ package com.pa.asvblrapi.service;
 import com.pa.asvblrapi.dto.TeamDto;
 import com.pa.asvblrapi.entity.Season;
 import com.pa.asvblrapi.entity.Team;
+import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.SeasonNotFoundException;
 import com.pa.asvblrapi.exception.TeamNotFoundException;
+import com.pa.asvblrapi.exception.UserNotFoundException;
 import com.pa.asvblrapi.repository.SeasonRepository;
 import com.pa.asvblrapi.repository.TeamRepository;
+import com.pa.asvblrapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,9 +35,9 @@ public class TeamService {
     }
 
     public Team createTeam(TeamDto teamDto) throws SeasonNotFoundException {
-        Optional<Season> season = this.seasonRepository.findById(teamDto.getIdSeason());
+        Optional<Season> season = this.seasonRepository.findCurrentSeason();
         if(!season.isPresent()) {
-            throw new SeasonNotFoundException(teamDto.getIdSeason());
+            throw new SeasonNotFoundException();
         }
         Team team = new Team(teamDto.getName(), season.get());
         return this.teamRepository.save(team);
@@ -45,12 +48,7 @@ public class TeamService {
         if(!team.isPresent()) {
             throw new TeamNotFoundException(id);
         }
-        Optional<Season> season = this.seasonRepository.findById(teamDto.getIdSeason());
-        if(!season.isPresent()) {
-            throw new SeasonNotFoundException(teamDto.getIdSeason());
-        }
         team.get().setName(teamDto.getName());
-        team.get().setSeason(season.get());
         return this.teamRepository.save(team.get());
     }
 
