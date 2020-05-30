@@ -24,4 +24,9 @@ public class Position {
     private String name;
     @NotNull
     private String shortName;
+
+    public Position(String name, String shortName) {
+        this.name = name;
+        this.shortName = shortName;
+    }
 }

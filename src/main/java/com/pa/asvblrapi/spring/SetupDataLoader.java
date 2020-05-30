@@ -40,6 +40,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private ClothingSizeRepository clothingSizeRepository;
 
     @Autowired
+    private PositionRepository positionRepository;
+
+    @Autowired
     private PasswordEncoder encoder;
 
     @Autowired
@@ -97,6 +100,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createClothingSizeIfNotFound("L");
         createClothingSizeIfNotFound("XL");
         createClothingSizeIfNotFound("XXL");
+
+        // Create Position
+        createPositionIfNotFound("test 1", "t1");
+        createPositionIfNotFound("test 2", "t2");
 
         alreadySetup = true;
     }
@@ -170,5 +177,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             clothingSize = this.clothingSizeRepository.save(clothingSize);
         }
         return clothingSize;
+    }
+
+    private Position createPositionIfNotFound(final String name, final String shortName) {
+        Position position = this.positionRepository.findByName(name);
+        if (position == null) {
+            position = new Position(name, shortName);
+            position = this.positionRepository.save(position);
+        }
+        return position;
     }
 }
