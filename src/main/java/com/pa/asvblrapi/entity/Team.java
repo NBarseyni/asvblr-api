@@ -1,6 +1,5 @@
 package com.pa.asvblrapi.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,8 +26,11 @@ public class Team {
 
     @ManyToOne
     @JoinColumn(name = "season_id", nullable = false)
-    @JsonBackReference
     private Season season;
+
+    @ManyToOne
+    @JoinColumn(name = "coach_id")
+    private User coach;
 
     @OneToMany(mappedBy = "team")
     private List<Jersey> jerseys;

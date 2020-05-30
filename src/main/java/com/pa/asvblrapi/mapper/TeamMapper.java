@@ -13,6 +13,7 @@ public interface TeamMapper extends EntityMapper<TeamDto, Team> {
     TeamMapper instance = Mappers.getMapper(TeamMapper.class);
 
     @Mapping(source = "season.id", target = "idSeason")
+    @Mapping(source = "coach.id", target = "idCoach")
     TeamDto toDto(Team team);
 
     List<TeamDto> toDto(List<Team> teams);

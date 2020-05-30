@@ -14,4 +14,5 @@ public class TeamDto {
     private String name;
     @NotNull
     private Long idSeason;
+    private Long idCoach;
 }
