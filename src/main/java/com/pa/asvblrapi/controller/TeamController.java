@@ -4,9 +4,7 @@ import com.pa.asvblrapi.dto.AddPlayerTeamDto;
 import com.pa.asvblrapi.dto.TeamDto;
 import com.pa.asvblrapi.entity.Photo;
 import com.pa.asvblrapi.entity.Team;
-import com.pa.asvblrapi.exception.SeasonNotFoundException;
-import com.pa.asvblrapi.exception.TeamNotFoundException;
-import com.pa.asvblrapi.exception.UserNotFoundException;
+import com.pa.asvblrapi.exception.*;
 import com.pa.asvblrapi.mapper.TeamMapper;
 import com.pa.asvblrapi.service.PhotoService;
 import com.pa.asvblrapi.service.TeamService;
@@ -99,13 +97,25 @@ public class TeamController {
         }
     }
 
-    @PatchMapping("/{id}/add-player")
+    @PostMapping("/{id}/add-player")
     public ResponseEntity<Object> addPlayer(@PathVariable Long id, @Valid @RequestBody AddPlayerTeamDto dto) {
         try {
             this.teamService.addPlayer(id, dto);
             return ResponseEntity.status(HttpStatus.OK).body(null);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @DeleteMapping("/{idTeam}/remove-player/{idPlayer}")
+    public ResponseEntity<Object> removePlayer(@PathVariable Long idTeam, @PathVariable Long idPlayer) {
+        try {
+            this.teamService.removePlayer(idTeam, idPlayer);
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        } catch (TeamNotFoundException | PlayerNotFoundException | JerseyNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
         }
     }
 

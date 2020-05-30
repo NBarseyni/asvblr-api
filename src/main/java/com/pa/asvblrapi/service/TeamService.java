@@ -99,6 +99,22 @@ public class TeamService {
         this.jerseyRepository.save(jersey);
     }
 
+    public void removePlayer(Long idTeam, Long idPlayer) throws TeamNotFoundException, PlayerNotFoundException {
+        Optional<Team> team = this.teamRepository.findById(idTeam);
+        if (!team.isPresent()) {
+            throw new TeamNotFoundException(idTeam);
+        }
+        Optional<Player> player = this.playerRepository.findById(idPlayer);
+        if (!player.isPresent()) {
+            throw new PlayerNotFoundException(idTeam);
+        }
+        Optional<Jersey> jersey = this.jerseyRepository.findByIdTeamAndIdPlayer(idTeam, idPlayer);
+        if (!jersey.isPresent()) {
+            throw new JerseyNotFoundException(idTeam, idPlayer);
+        }
+        this.jerseyRepository.delete(jersey.get());
+    }
+
     public void deleteTeam(Long id) throws TeamNotFoundException, AccessDeniedException {
         Optional<Team> team = this.teamRepository.findById(id);
         if (!team.isPresent()) {
