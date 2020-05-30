@@ -26,6 +26,9 @@ public class TeamService {
     @Autowired
     private SeasonRepository seasonRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public List<Team> getAllTeam() {
         return this.teamRepository.findAll();
     }
@@ -50,6 +53,28 @@ public class TeamService {
         }
         team.get().setName(teamDto.getName());
         return this.teamRepository.save(team.get());
+    }
+
+    public void addCoach(Long id, Long idCoach) throws TeamNotFoundException, UserNotFoundException {
+        Optional<Team> team = this.teamRepository.findById(id);
+        if(!team.isPresent()) {
+            throw new TeamNotFoundException(id);
+        }
+        Optional<User> user = this.userRepository.findById(idCoach);
+        if(!user.isPresent()) {
+            throw new UserNotFoundException(idCoach);
+        }
+        team.get().setCoach(user.get());
+        this.teamRepository.save(team.get());
+    }
+
+    public void removeCoach(Long id) throws TeamNotFoundException {
+        Optional<Team> team = this.teamRepository.findById(id);
+        if(!team.isPresent()) {
+            throw new TeamNotFoundException(id);
+        }
+        team.get().setCoach(null);
+        this.teamRepository.save(team.get());
     }
 
     public void deleteTeam(Long id) throws TeamNotFoundException, AccessDeniedException {

@@ -5,6 +5,7 @@ import com.pa.asvblrapi.entity.Photo;
 import com.pa.asvblrapi.entity.Team;
 import com.pa.asvblrapi.exception.SeasonNotFoundException;
 import com.pa.asvblrapi.exception.TeamNotFoundException;
+import com.pa.asvblrapi.exception.UserNotFoundException;
 import com.pa.asvblrapi.mapper.TeamMapper;
 import com.pa.asvblrapi.service.PhotoService;
 import com.pa.asvblrapi.service.TeamService;
@@ -74,6 +75,26 @@ public class TeamController {
         }
         catch (SeasonNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PatchMapping("/{id}/coach/{idCoach}")
+    public ResponseEntity<Object> addCoach(@PathVariable Long id, @PathVariable Long idCoach) {
+        try {
+            this.teamService.addCoach(id, idCoach);
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        } catch (TeamNotFoundException | UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
+        }
+    }
+
+    @PatchMapping("/{id}/remove-coach")
+    public ResponseEntity<Object> removeCoach(@PathVariable Long id) {
+        try {
+            this.teamService.removeCoach(id);
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        } catch (TeamNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
         }
     }
 
