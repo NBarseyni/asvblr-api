@@ -1,15 +1,10 @@
 package com.pa.asvblrapi.service;
 
+import com.pa.asvblrapi.dto.AddPlayerTeamDto;
 import com.pa.asvblrapi.dto.TeamDto;
-import com.pa.asvblrapi.entity.Season;
-import com.pa.asvblrapi.entity.Team;
-import com.pa.asvblrapi.entity.User;
-import com.pa.asvblrapi.exception.SeasonNotFoundException;
-import com.pa.asvblrapi.exception.TeamNotFoundException;
-import com.pa.asvblrapi.exception.UserNotFoundException;
-import com.pa.asvblrapi.repository.SeasonRepository;
-import com.pa.asvblrapi.repository.TeamRepository;
-import com.pa.asvblrapi.repository.UserRepository;
+import com.pa.asvblrapi.entity.*;
+import com.pa.asvblrapi.exception.*;
+import com.pa.asvblrapi.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +24,15 @@ public class TeamService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private PlayerRepository playerRepository;
+
+    @Autowired
+    private PositionRepository positionRepository;
+
+    @Autowired
+    private JerseyRepository jerseyRepository;
+
     public List<Team> getAllTeam() {
         return this.teamRepository.findAll();
     }
@@ -39,7 +43,7 @@ public class TeamService {
 
     public Team createTeam(TeamDto teamDto) throws SeasonNotFoundException {
         Optional<Season> season = this.seasonRepository.findCurrentSeason();
-        if(!season.isPresent()) {
+        if (!season.isPresent()) {
             throw new SeasonNotFoundException();
         }
         Team team = new Team(teamDto.getName(), season.get());
@@ -48,7 +52,7 @@ public class TeamService {
 
     public Team updateTeam(Long id, TeamDto teamDto) throws TeamNotFoundException, SeasonNotFoundException {
         Optional<Team> team = this.teamRepository.findById(id);
-        if(!team.isPresent()) {
+        if (!team.isPresent()) {
             throw new TeamNotFoundException(id);
         }
         team.get().setName(teamDto.getName());
@@ -57,11 +61,11 @@ public class TeamService {
 
     public void addCoach(Long id, Long idCoach) throws TeamNotFoundException, UserNotFoundException {
         Optional<Team> team = this.teamRepository.findById(id);
-        if(!team.isPresent()) {
+        if (!team.isPresent()) {
             throw new TeamNotFoundException(id);
         }
         Optional<User> user = this.userRepository.findById(idCoach);
-        if(!user.isPresent()) {
+        if (!user.isPresent()) {
             throw new UserNotFoundException(idCoach);
         }
         team.get().setCoach(user.get());
@@ -70,16 +74,34 @@ public class TeamService {
 
     public void removeCoach(Long id) throws TeamNotFoundException {
         Optional<Team> team = this.teamRepository.findById(id);
-        if(!team.isPresent()) {
+        if (!team.isPresent()) {
             throw new TeamNotFoundException(id);
         }
         team.get().setCoach(null);
         this.teamRepository.save(team.get());
     }
 
+    public void addPlayer(Long id, AddPlayerTeamDto dto) throws TeamNotFoundException, PlayerNotFoundException,
+            PositionNotFoundException {
+        Optional<Team> team = this.teamRepository.findById(id);
+        if (!team.isPresent()) {
+            throw new TeamNotFoundException(id);
+        }
+        Optional<Player> player = this.playerRepository.findById(dto.getIdPlayer());
+        if (!player.isPresent()) {
+            throw new PlayerNotFoundException(dto.getIdPlayer());
+        }
+        Optional<Position> position = this.positionRepository.findById(dto.getIdPosition());
+        if (!position.isPresent()) {
+            throw new PositionNotFoundException(dto.getIdPosition());
+        }
+        Jersey jersey = new Jersey(dto.getNumber(), team.get(), position.get(), player.get());
+        this.jerseyRepository.save(jersey);
+    }
+
     public void deleteTeam(Long id) throws TeamNotFoundException, AccessDeniedException {
         Optional<Team> team = this.teamRepository.findById(id);
-        if(!team.isPresent()) {
+        if (!team.isPresent()) {
             throw new TeamNotFoundException(id);
         }
         this.teamRepository.delete(team.get());
