@@ -1,12 +1,16 @@
 package com.pa.asvblrapi.controller;
 
 import com.pa.asvblrapi.dto.AddPlayerTeamDto;
+import com.pa.asvblrapi.dto.MatchDto;
 import com.pa.asvblrapi.dto.TeamDto;
 import com.pa.asvblrapi.dto.TeamPlayerDto;
+import com.pa.asvblrapi.entity.Match;
 import com.pa.asvblrapi.entity.Photo;
 import com.pa.asvblrapi.entity.Team;
 import com.pa.asvblrapi.exception.*;
+import com.pa.asvblrapi.mapper.MatchMapper;
 import com.pa.asvblrapi.mapper.TeamMapper;
+import com.pa.asvblrapi.service.MatchService;
 import com.pa.asvblrapi.service.PhotoService;
 import com.pa.asvblrapi.service.TeamService;
 import org.springframework.http.HttpStatus;
@@ -26,10 +30,12 @@ public class TeamController {
 
     private final TeamService teamService;
     private final PhotoService photoService;
+    private final MatchService matchService;
 
-    TeamController(TeamService teamService, PhotoService photoService) {
+    TeamController(TeamService teamService, PhotoService photoService, MatchService matchService) {
         this.teamService = teamService;
         this.photoService = photoService;
+        this.matchService = matchService;
     }
 
     @GetMapping("")
@@ -41,6 +47,11 @@ public class TeamController {
     public TeamDto getTeam(@PathVariable Long id) {
         return TeamMapper.instance.toDto(this.teamService.getTeam(id)
                 .orElseThrow(() -> new TeamNotFoundException(id)));
+    }
+
+    @GetMapping("/{id}/matches")
+    public List<MatchDto> getMatchesByIdTeam(@PathVariable Long id) {
+        return this.matchService.getAllMatchesByIdTeam(id);
     }
 
     @PostMapping("")

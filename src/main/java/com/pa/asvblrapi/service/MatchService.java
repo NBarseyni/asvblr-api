@@ -31,8 +31,8 @@ public class MatchService {
                 .orElseThrow(() -> new MatchNotFoundException(id)));
     }
 
-    public List<Match> getAllMatchesByIdTeam(Long idTeam) {
-        return this.matchRepository.findAllByIdTeam(idTeam);
+    public List<MatchDto> getAllMatchesByIdTeam(Long idTeam) {
+        return MatchMapper.instance.toDto(this.matchRepository.findAllByIdTeam(idTeam));
     }
 
     public MatchDto createMatch(MatchDto matchDto) throws TeamNotFoundException {
