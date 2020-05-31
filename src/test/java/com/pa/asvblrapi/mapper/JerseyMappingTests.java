@@ -8,6 +8,8 @@ import com.pa.asvblrapi.entity.Team;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -21,7 +23,7 @@ public class JerseyMappingTests {
         team.setId((long)3);
         Player player = new Player();
         player.setId((long)4);
-        Jersey jersey = new Jersey((long)1, 1, team, position, player);
+        Jersey jersey = new Jersey((long)1, 1, team, position, player, new ArrayList<>());
 
         JerseyDto jerseyDto = JerseyMapper.instance.toDto(jersey);
 

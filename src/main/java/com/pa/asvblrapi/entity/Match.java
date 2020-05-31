@@ -8,6 +8,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,4 +33,6 @@ public class Match {
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
+    @OneToMany(mappedBy = "match")
+    private List<CommentPlayer> commentsPlayer;
 }

@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,6 +33,9 @@ public class Jersey {
     @ManyToOne
     @JoinColumn(name = "player_id", nullable = false)
     private Player player;
+
+    @OneToMany(mappedBy = "jersey")
+    private List<CommentPlayer> commentsPlayer;
 
     public Jersey(int number, Team team, Position position, Player player) {
         this.number = number;

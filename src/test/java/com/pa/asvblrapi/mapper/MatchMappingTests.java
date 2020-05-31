@@ -6,6 +6,7 @@ import com.pa.asvblrapi.entity.Team;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,7 +19,7 @@ public class MatchMappingTests {
         Team team = new Team();
         team.setId((long)2);
         Match match = new Match((long)1, new Date(), "place", true, "oppositeTeam",
-                "comment", 10, team);
+                "comment", 10, team, new ArrayList<>());
 
         MatchDto matchDto = MatchMapper.instance.toDto(match);
 
