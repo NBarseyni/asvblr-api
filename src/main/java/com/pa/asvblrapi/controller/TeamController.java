@@ -2,6 +2,7 @@ package com.pa.asvblrapi.controller;
 
 import com.pa.asvblrapi.dto.AddPlayerTeamDto;
 import com.pa.asvblrapi.dto.TeamDto;
+import com.pa.asvblrapi.dto.TeamPlayerDto;
 import com.pa.asvblrapi.entity.Photo;
 import com.pa.asvblrapi.entity.Team;
 import com.pa.asvblrapi.exception.*;
@@ -94,6 +95,18 @@ public class TeamController {
             return ResponseEntity.status(HttpStatus.OK).body(null);
         } catch (TeamNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
+        }
+    }
+
+    @GetMapping("/{id}/players")
+    public ResponseEntity<Object> getPlayers(@PathVariable Long id) {
+        try {
+            List<TeamPlayerDto> teamPlayerDto = this.teamService.getTeamPlayers(id);
+            return ResponseEntity.status(HttpStatus.OK).body(teamPlayerDto);
+        } catch (TeamNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e);
         }
     }
 

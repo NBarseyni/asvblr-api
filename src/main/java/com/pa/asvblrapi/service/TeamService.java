@@ -2,6 +2,7 @@ package com.pa.asvblrapi.service;
 
 import com.pa.asvblrapi.dto.AddPlayerTeamDto;
 import com.pa.asvblrapi.dto.TeamDto;
+import com.pa.asvblrapi.dto.TeamPlayerDto;
 import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.exception.*;
 import com.pa.asvblrapi.repository.*;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.AccessDeniedException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,6 +81,37 @@ public class TeamService {
         }
         team.get().setCoach(null);
         this.teamRepository.save(team.get());
+    }
+
+    public List<TeamPlayerDto> getTeamPlayers(Long id) throws TeamNotFoundException {
+        Optional<Team> team = this.teamRepository.findById(id);
+        if (!team.isPresent()) {
+            throw new TeamNotFoundException(id);
+        }
+        List<TeamPlayerDto> teamPlayerDtoList = new ArrayList<>();
+
+        List<Jersey> jerseys = this.jerseyRepository.findByIdTeam(id);
+        for (Jersey jersey : jerseys) {
+            Player player = jersey.getPlayer();
+            Position position = jersey.getPosition();
+            TeamPlayerDto teamPlayerDto = new TeamPlayerDto(
+                    player.getId(),
+                    player.getFirstName(),
+                    player.getLastName(),
+                    player.getAddress(),
+                    player.getPostcode(),
+                    player.getCity(),
+                    player.getEmail(),
+                    player.getPhoneNumber(),
+                    player.getBirthDate(),
+                    player.getLicenceNumber(),
+                    jersey.getNumber(),
+                    position.getName(),
+                    position.getShortName()
+            );
+            teamPlayerDtoList.add(teamPlayerDto);
+        }
+        return teamPlayerDtoList;
     }
 
     public void addPlayer(Long id, AddPlayerTeamDto dto) throws TeamNotFoundException, PlayerNotFoundException,

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -14,4 +15,8 @@ public interface JerseyRepository extends JpaRepository<Jersey, Long> {
             nativeQuery = true
     )
     Optional<Jersey> findByIdTeamAndIdPlayer(@Param("idTeam") Long idTeam, @Param("idPlayer") Long idPlayer);
+
+    @Query(value = "select j.* from jersey j where j.team_id = :idTeam",
+            nativeQuery = true)
+    List<Jersey> findByIdTeam(@Param("idTeam") Long idTeam);
 }
