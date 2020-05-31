@@ -56,9 +56,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/api/articles/**", "/api/auth/**", "/api/documents/**", "/api/categories/**", "/api/clothing-sizes/**", "/api/payment-modes/**",
-                        "/api/photos/**", "/api/players/**", "/api/positions/**", "/api/seasons/**",
-                        "/api/subscriptions/**", "/api/teams/**").permitAll()
+                .antMatchers("/api/articles/**", "/api/auth/**", "/api/documents/**", "/api/categories/**",
+                        "/api/clothing-sizes/**", "/api/matches/**", "/api/payment-modes/**", "/api/photos/**",
+                        "/api/players/**", "/api/positions/**", "/api/seasons/**", "/api/subscriptions/**",
+                        "/api/teams/**").permitAll()
                 .antMatchers("/api/test/**").hasAuthority("SUBSCRIPTION_MANAGEMENT")
                 .antMatchers("/api/users/**").hasAuthority("READ_PRIVILEGE")
                 .anyRequest().authenticated();

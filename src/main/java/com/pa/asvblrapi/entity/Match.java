@@ -35,4 +35,12 @@ public class Match {
     private Team team;
     @OneToMany(mappedBy = "match")
     private List<CommentPlayer> commentsPlayer;
+
+    public Match(Date date, String place, boolean type, String oppositeTeam, Team team) {
+        this.date = date;
+        this.place = place;
+        this.type = type;
+        this.oppositeTeam = oppositeTeam;
+        this.team = team;
+    }
 }
