@@ -45,7 +45,7 @@ public class SubscriptionDto {
     private boolean coach;
     private boolean validated;
     @NotNull
-    private boolean calendar;
+    private boolean calendarRequested;
     // Parental authorisation
     private boolean pc_allowToLeaveAlone;
     private boolean pc_allowClubToRescue;

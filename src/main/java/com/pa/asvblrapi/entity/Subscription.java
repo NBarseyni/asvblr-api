@@ -57,7 +57,7 @@ public class Subscription {
     @NotNull
     private boolean validated;
     @NotNull
-    private boolean calendar;
+    private boolean calendarRequested;
     private String comment;
     private boolean pc_allowToLeaveAlone;
     private boolean pc_allowClubToRescue;
@@ -101,7 +101,7 @@ public class Subscription {
     public Subscription(String firstName, String lastName, boolean gender, String address, int postcode, String city,
                         String email, String phoneNumber, Date birthDate, String nationality, ClothingSize topSize,
                         ClothingSize pantsSize, int requestedJerseyNumber, boolean insuranceRequested, boolean equipment,
-                        boolean referee, boolean coach, boolean calendar, String comment, boolean pc_allowToLeaveAlone,
+                        boolean referee, boolean coach, boolean calendarRequested, String comment, boolean pc_allowToLeaveAlone,
                         boolean pc_allowClubToRescue, boolean pc_allowToTravelWithTeamMate, boolean pc_allowToPublish,
                         boolean pc_unaccountability, boolean pc_allowToWhatsapp, Season season, Category category,
                         List<PaymentMode> paymentModes) {
@@ -120,7 +120,7 @@ public class Subscription {
         this.equipment = equipment;
         this.referee = referee;
         this.coach = coach;
-        this.calendar = calendar;
+        this.calendarRequested = calendarRequested;
         this.validated = false;
         this.requestedJerseyNumber = requestedJerseyNumber;
         this.insuranceRequested = insuranceRequested;

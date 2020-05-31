@@ -106,7 +106,7 @@ public class SubscriptionService {
                 subscriptionDto.isEquipment(),
                 subscriptionDto.isReferee(),
                 subscriptionDto.isCoach(),
-                subscriptionDto.isCalendar(),
+                subscriptionDto.isCalendarRequested(),
                 subscriptionDto.getComment(),
                 subscriptionDto.isPc_allowToLeaveAlone(),
                 subscriptionDto.isPc_allowClubToRescue(),
@@ -166,7 +166,7 @@ public class SubscriptionService {
         subscription.get().setEquipment(subscriptionDto.isEquipment());
         subscription.get().setReferee(subscriptionDto.isReferee());
         subscription.get().setCoach(subscriptionDto.isCoach());
-        subscription.get().setCalendar(subscriptionDto.isCalendar());
+        subscription.get().setCalendarRequested(subscriptionDto.isCalendarRequested());
         subscription.get().setComment(subscriptionDto.getComment());
         subscription.get().setPc_allowToLeaveAlone(subscriptionDto.isPc_allowToLeaveAlone());
         subscription.get().setPc_allowClubToRescue(subscriptionDto.isPc_allowClubToRescue());
