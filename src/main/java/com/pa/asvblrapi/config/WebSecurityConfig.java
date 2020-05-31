@@ -59,7 +59,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/articles/**", "/api/auth/**", "/api/documents/**", "/api/categories/**",
                         "/api/clothing-sizes/**", "/api/matches/**", "/api/payment-modes/**", "/api/photos/**",
                         "/api/players/**", "/api/positions/**", "/api/seasons/**", "/api/subscriptions/**",
-                        "/api/teams/**").permitAll()
+                        "/api/teams/**", "/api/users/**").permitAll()
                 .antMatchers("/api/test/**").hasAuthority("SUBSCRIPTION_MANAGEMENT")
                 .antMatchers("/api/users/**").hasAuthority("READ_PRIVILEGE")
                 .anyRequest().authenticated();

@@ -45,6 +45,10 @@ public class UserService {
         return this.userRepository.findById(id);
     }
 
+    public User getUserByUsername(String username) {
+        return this.userRepository.findByUsername(username);
+    }
+
     public User createUser(String firstName, String lastName, String email) throws Exception {
         try {
             String username = String.format("%s%s", firstName, lastName);
@@ -92,6 +96,15 @@ public class UserService {
         catch (ExecutionException e) {
             throw new ExecutionException(e.getCause());
         }
+    }
+
+    public boolean checkIfValidOldPassword(User user, String oldPassword) {
+        return this.encoder.matches(oldPassword, user.getPassword());
+    }
+
+    public void changeUserPassword(User user, String password) {
+        user.setPassword(this.encoder.encode(password));
+        this.userRepository.save(user);
     }
 
     public void deleteUser(Long id) throws UserNotFoundException {
