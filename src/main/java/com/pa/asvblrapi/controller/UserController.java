@@ -7,7 +7,9 @@ import com.pa.asvblrapi.exception.InvalidOldPasswordException;
 import com.pa.asvblrapi.exception.UserNotFoundException;
 import com.pa.asvblrapi.repository.UserRepository;
 import com.pa.asvblrapi.service.FirebaseService;
+import com.pa.asvblrapi.service.UserSecurityService;
 import com.pa.asvblrapi.service.UserService;
+import com.pa.asvblrapi.spring.EmailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,10 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
+import java.util.UUID;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -24,6 +29,12 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private EmailServiceImpl emailService;
+
+    @Autowired
+    private UserSecurityService userSecurityService;
 
     @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
@@ -44,13 +55,57 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
+    @PostMapping("/reset-password")
+    public ResponseEntity<Object> resetPassword(HttpServletRequest request, @RequestParam("email") String email) {
+        try {
+            User user = this.userService.getUserByEmail(email);
+            if (user == null) {
+                throw new UserNotFoundException(email);
+            }
+            String token = UUID.randomUUID().toString();
+            this.userService.createPasswordResetTokenForUser(user, token);
+            this.emailService.sendMessageResetPassword(getAppUrl(request), token, user);
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        } catch (MessagingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/change-password")
+    public ResponseEntity<Object> changePassword(@RequestParam("token") String token) {
+        String result = this.userSecurityService.validatePasswordResetToken(token);
+        if (result != null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("This token is invalid");
+        } else {
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        }
+    }
+
+    @PostMapping("/save-password")
+    public ResponseEntity<Object> savePassword(
+            @RequestParam("token") String token,
+            @RequestParam("password") String password) {
+        String result = this.userSecurityService.validatePasswordResetToken(token);
+
+        if (result != null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("This token is invalid");
+        }
+
+        Optional<User> user = this.userSecurityService.getUserByPasswordResetToken(token);
+        if (user.isPresent()) {
+            this.userService.changeUserPassword(user.get(), password);
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
         try {
             User user = this.userService.updateUser(id, userDto);
             return ResponseEntity.status(HttpStatus.OK).body(user);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
@@ -58,5 +113,11 @@ public class UserController {
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         this.userService.deleteUser(id);
+    }
+
+    // ===== NON-API =====
+
+    private String getAppUrl(HttpServletRequest request) {
+        return "http://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath();
     }
 }

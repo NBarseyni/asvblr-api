@@ -2,10 +2,12 @@ package com.pa.asvblrapi.service;
 
 import com.pa.asvblrapi.dto.UserDto;
 import com.pa.asvblrapi.dto.UserDtoFirebase;
+import com.pa.asvblrapi.entity.PasswordResetToken;
 import com.pa.asvblrapi.entity.Privilege;
 import com.pa.asvblrapi.entity.Role;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.UserNotFoundException;
+import com.pa.asvblrapi.repository.PasswordResetTokenRepository;
 import com.pa.asvblrapi.repository.PrivilegeRepository;
 import com.pa.asvblrapi.repository.RoleRepository;
 import com.pa.asvblrapi.repository.UserRepository;
@@ -41,6 +43,9 @@ public class UserService {
     @Autowired
     private FirebaseService firebaseService;
 
+    @Autowired
+    private PasswordResetTokenRepository passwordResetTokenRepository;
+
     public Optional<User> getUser(Long id) {
         return this.userRepository.findById(id);
     }
@@ -49,11 +54,15 @@ public class UserService {
         return this.userRepository.findByUsername(username);
     }
 
+    public User getUserByEmail(String email) {
+        return this.userRepository.findByEmail(email);
+    }
+
     public User createUser(String firstName, String lastName, String email) throws Exception {
         try {
             String username = String.format("%s%s", firstName, lastName);
             int i = 1;
-            while(userRepository.existsByUsername(username)) {
+            while (userRepository.existsByUsername(username)) {
                 username += i;
             }
             String password = randomPasswordGenerator.generatePassword();
@@ -70,15 +79,14 @@ public class UserService {
             this.emailService.sendMessageCreateUser(user, password);
 
             return user;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
     }
 
     public User updateUser(Long id, UserDto userDto) throws UserNotFoundException, InterruptedException, ExecutionException {
         Optional<User> user = userRepository.findById(id);
-        if(!user.isPresent()) {
+        if (!user.isPresent()) {
             throw new UserNotFoundException(id);
         }
         try {
@@ -89,11 +97,9 @@ public class UserService {
             this.firebaseService.updateUserDetails(new UserDtoFirebase(userSave.getId(), userSave.getUsername(),
                     userSave.getFirstName(), userSave.getLastName(), userSave.getEmail()));
             return userSave;
-        }
-        catch (InterruptedException e) {
+        } catch (InterruptedException e) {
             throw new InterruptedException(e.getMessage());
-        }
-        catch (ExecutionException e) {
+        } catch (ExecutionException e) {
             throw new ExecutionException(e.getCause());
         }
     }
@@ -107,9 +113,14 @@ public class UserService {
         this.userRepository.save(user);
     }
 
+    public void createPasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken myToken = new PasswordResetToken(token, user);
+        this.passwordResetTokenRepository.save(myToken);
+    }
+
     public void deleteUser(Long id) throws UserNotFoundException {
         Optional<User> user = userRepository.findById(id);
-        if(!user.isPresent()) {
+        if (!user.isPresent()) {
             throw new UserNotFoundException(id);
         }
         this.userRepository.delete(user.get());
