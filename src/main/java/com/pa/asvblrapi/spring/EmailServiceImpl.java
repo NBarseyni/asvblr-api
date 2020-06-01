@@ -68,6 +68,19 @@ public class EmailServiceImpl {
         sendHtmlMessage(user.getEmail(), "Inscription validée", htmlBody);
     }
 
+    public void sendMessageResetPassword(String contextPath, String token, User user) throws MessagingException {
+        Context thymeleafContext = new Context();
+
+        String url = contextPath + "/users/change-password?token=" + token;
+        Map<String, Object> templateModel = new HashMap<>();
+        templateModel.put("url", url);
+
+        thymeleafContext.setVariables(templateModel);
+        String htmlBody = thymeleafTemplateEngine.process("template-reset-password.html", thymeleafContext);
+
+        sendHtmlMessage(user.getEmail(), "Réinitialisation mot de passe", htmlBody);
+    }
+
     public void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel)
         throws MessagingException {
 
