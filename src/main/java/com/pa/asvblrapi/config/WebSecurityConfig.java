@@ -61,7 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/players/**", "/api/positions/**", "/api/seasons/**", "/api/subscriptions/**",
                         "/api/teams/**", "/api/users/**").permitAll()
                 .antMatchers("/api/test/**").hasAuthority("SUBSCRIPTION_MANAGEMENT")
-                .antMatchers("/api/users/**").hasAuthority("READ_PRIVILEGE")
+                //.antMatchers("/api/users/**").hasAuthority("READ_PRIVILEGE")
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationFiler(), UsernamePasswordAuthenticationFilter.class);
