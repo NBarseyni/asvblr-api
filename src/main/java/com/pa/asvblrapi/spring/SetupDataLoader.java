@@ -102,8 +102,12 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createClothingSizeIfNotFound("XXL");
 
         // Create Position
-        createPositionIfNotFound("test 1", "t1");
-        createPositionIfNotFound("test 2", "t2");
+        createPositionIfNotFound("Attaquant ailier", "R4");
+        createPositionIfNotFound("Centrale", "C");
+        createPositionIfNotFound("Passeur", "Pa");
+        createPositionIfNotFound("Pointu", "Pt");
+        createPositionIfNotFound("Libéro", "L");
+        createPositionIfNotFound("Non défini", "");
 
         alreadySetup = true;
     }
