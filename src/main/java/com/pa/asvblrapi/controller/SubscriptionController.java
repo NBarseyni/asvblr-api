@@ -58,7 +58,8 @@ public class SubscriptionController {
     }
 
     // Old createSubscription
-    public ResponseEntity<Object> createSubscriptionOld(@Valid @RequestBody SubscriptionDto subscriptionDto) {
+    @PostMapping("")
+    public ResponseEntity<Object> createSubscription(@Valid @RequestBody SubscriptionDto subscriptionDto) {
         try {
             Subscription subscription = this.subscriptionService.createSubscription(subscriptionDto);
             this.emailService.sendMessageCreateSubscription(subscription);
@@ -72,8 +73,8 @@ public class SubscriptionController {
         }
     }
 
-    @PostMapping("")
-    public ResponseEntity<Object> createSubscription(@Valid @RequestParam String subscription,
+    //@PostMapping("")
+    public ResponseEntity<Object> createSubscriptionWithDocuments(@Valid @RequestParam String subscription,
                                                      @RequestParam("cni") MultipartFile cniFile,
                                                      @RequestParam("identityPhoto") MultipartFile identityPhotoFile,
                                                      @RequestParam("medicalCertificate") MultipartFile medicalCertificateFile) {
