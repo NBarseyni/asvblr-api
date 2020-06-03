@@ -79,11 +79,11 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             new Exception(e.getMessage());
         }
 
-        // Create fake Categories
-        createCategoryIfNotFound("Homme 6vs6");
-        createCategoryIfNotFound("Homme 4vs4");
-        createCategoryIfNotFound("Femme 6vs6");
-        createCategoryIfNotFound("Femme 4vs4");
+        // Create Categories subscription
+        createCategoryIfNotFound("Loisir");
+        createCategoryIfNotFound("Loisir compétition");
+        createCategoryIfNotFound("Départementale compétition");
+        createCategoryIfNotFound("Régional compétition");
 
         // Create PaymentMode
         createPaymentModeIfNotFound("Chèque banquaire");
