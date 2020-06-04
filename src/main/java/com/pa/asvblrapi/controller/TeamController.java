@@ -111,7 +111,7 @@ public class TeamController {
         }
     }
 
-    @PostMapping("/{id}/add-player")
+    @PostMapping("/{id}/players")
     public ResponseEntity<Object> addPlayer(@PathVariable Long id, @Valid @RequestBody AddPlayerTeamDto dto) {
         try {
             this.teamService.addPlayer(id, dto);
@@ -121,7 +121,7 @@ public class TeamController {
         }
     }
 
-    @DeleteMapping("/{idTeam}/remove-player/{idPlayer}")
+    @DeleteMapping("/{idTeam}/players/{idPlayer}")
     public ResponseEntity<Object> removePlayer(@PathVariable Long idTeam, @PathVariable Long idPlayer) {
         try {
             this.teamService.removePlayer(idTeam, idPlayer);
