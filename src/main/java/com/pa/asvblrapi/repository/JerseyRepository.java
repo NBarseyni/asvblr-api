@@ -19,4 +19,8 @@ public interface JerseyRepository extends JpaRepository<Jersey, Long> {
     @Query(value = "select j.* from jersey j where j.team_id = :idTeam",
             nativeQuery = true)
     List<Jersey> findByIdTeam(@Param("idTeam") Long idTeam);
+
+    @Query(value = "select count(j.id) from jersey j where j.team_id = :idTeam",
+            nativeQuery = true)
+    int nbPlayerByIdTeam(@Param("idTeam") Long idTeam);
 }

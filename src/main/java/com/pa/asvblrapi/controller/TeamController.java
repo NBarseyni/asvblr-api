@@ -1,9 +1,6 @@
 package com.pa.asvblrapi.controller;
 
-import com.pa.asvblrapi.dto.AddPlayerTeamDto;
-import com.pa.asvblrapi.dto.MatchDto;
-import com.pa.asvblrapi.dto.TeamDto;
-import com.pa.asvblrapi.dto.TeamPlayerDto;
+import com.pa.asvblrapi.dto.*;
 import com.pa.asvblrapi.entity.Match;
 import com.pa.asvblrapi.entity.Photo;
 import com.pa.asvblrapi.entity.Team;
@@ -47,6 +44,11 @@ public class TeamController {
     public TeamDto getTeam(@PathVariable Long id) {
         return TeamMapper.instance.toDto(this.teamService.getTeam(id)
                 .orElseThrow(() -> new TeamNotFoundException(id)));
+    }
+
+    @GetMapping("/team-list")
+    public List<TeamListDto> getTeamList() {
+        return this.teamService.getTeamList();
     }
 
     @GetMapping("/{id}/matches")

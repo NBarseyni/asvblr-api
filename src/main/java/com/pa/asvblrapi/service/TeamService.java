@@ -2,6 +2,7 @@ package com.pa.asvblrapi.service;
 
 import com.pa.asvblrapi.dto.AddPlayerTeamDto;
 import com.pa.asvblrapi.dto.TeamDto;
+import com.pa.asvblrapi.dto.TeamListDto;
 import com.pa.asvblrapi.dto.TeamPlayerDto;
 import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.exception.*;
@@ -124,6 +125,27 @@ public class TeamService {
             teamPlayerDtoList.add(teamPlayerDto);
         }
         return teamPlayerDtoList;
+    }
+
+    public List<TeamListDto> getTeamList() {
+        List<TeamListDto> teamListDtoList = new ArrayList<>();
+        List<Team> teams = this.teamRepository.findAll();
+        for (Team team : teams) {
+            String coachName;
+            if (team.getCoach() != null) {
+                coachName = String.format("%s %s", team.getCoach().getFirstName(), team.getCoach().getLastName());
+            } else {
+                coachName = "";
+            }
+            TeamListDto teamListDto = new TeamListDto(
+                    team.getId(),
+                    team.getTeamCategory().getName(),
+                    coachName,
+                    this.jerseyRepository.nbPlayerByIdTeam(team.getId())
+            );
+            teamListDtoList.add(teamListDto);
+        }
+        return teamListDtoList;
     }
 
     public void addPlayer(Long id, AddPlayerTeamDto dto) throws TeamNotFoundException, PlayerNotFoundException,
