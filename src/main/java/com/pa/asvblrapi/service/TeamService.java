@@ -96,6 +96,23 @@ public class TeamService {
         return TeamMapper.instance.toDto(this.teamRepository.save(team.get()));
     }
 
+    public TeamDto setLeader(Long id, Long idLeader) throws TeamNotFoundException, PlayerNotFoundException, JerseyNotFoundException {
+        Optional<Team> team = this.teamRepository.findById(id);
+        if (!team.isPresent()) {
+            throw new TeamNotFoundException(id);
+        }
+        Optional<Player> player = this.playerRepository.findById(idLeader);
+        if (!player.isPresent()) {
+            throw new PlayerNotFoundException(idLeader);
+        }
+        Optional<Jersey> jersey = this.jerseyRepository.findByIdTeamAndIdPlayer(id, idLeader);
+        if (!jersey.isPresent()) {
+            throw new JerseyNotFoundException(id, idLeader);
+        }
+        team.get().setLeader(jersey.get());
+        return TeamMapper.instance.toDto(this.teamRepository.save(team.get()));
+    }
+
     public List<TeamPlayerDto> getTeamPlayers(Long id) throws TeamNotFoundException {
         Optional<Team> team = this.teamRepository.findById(id);
         if (!team.isPresent()) {

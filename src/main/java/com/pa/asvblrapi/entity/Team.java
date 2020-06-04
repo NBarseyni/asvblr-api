@@ -32,6 +32,10 @@ public class Team {
     @JoinColumn(name = "coach_id")
     private User coach;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "leader_id", referencedColumnName = "id")
+    private Jersey leader;
+
     @ManyToOne
     @JoinColumn(name = "team_category_id", nullable = false)
     private TeamCategory teamCategory;

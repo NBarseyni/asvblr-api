@@ -101,6 +101,16 @@ public class TeamController {
         }
     }
 
+    @PostMapping("/{id}/leader/{idLeader}")
+    public ResponseEntity<Object> setLeader(@PathVariable Long id, @PathVariable Long idLeader) {
+        try {
+            TeamDto teamDto = this.teamService.setLeader(id, idLeader);
+            return ResponseEntity.status(HttpStatus.OK).body(teamDto);
+        } catch (TeamNotFoundException | PlayerNotFoundException | JerseyNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @GetMapping("/{id}/players")
     public ResponseEntity<Object> getPlayers(@PathVariable Long id) {
         try {
