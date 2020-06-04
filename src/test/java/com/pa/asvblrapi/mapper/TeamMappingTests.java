@@ -3,6 +3,7 @@ package com.pa.asvblrapi.mapper;
 import com.pa.asvblrapi.dto.TeamDto;
 import com.pa.asvblrapi.entity.Season;
 import com.pa.asvblrapi.entity.Team;
+import com.pa.asvblrapi.entity.TeamCategory;
 import com.pa.asvblrapi.entity.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,11 +18,14 @@ public class TeamMappingTests {
         season.setId((long)1);
         User coach = new User();
         coach.setId((long)3);
+        TeamCategory teamCategory = new TeamCategory();
+        teamCategory.setId((long)4);
         Team team = new Team();
         team.setId((long)2);
         team.setName("team");
         team.setSeason(season);
         team.setCoach(coach);
+        team.setTeamCategory(teamCategory);
 
         TeamDto teamDto = TeamMapper.instance.toDto(team);
 
@@ -30,5 +34,6 @@ public class TeamMappingTests {
         assertThat(teamDto.getName()).isEqualTo(team.getName());
         assertThat(teamDto.getIdSeason()).isEqualTo(season.getId());
         assertThat(teamDto.getIdCoach()).isEqualTo(coach.getId());
+        assertThat(teamDto.getIdTeamCategory()).isEqualTo(teamCategory.getId());
     }
 }

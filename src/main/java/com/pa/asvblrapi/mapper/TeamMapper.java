@@ -14,6 +14,7 @@ public interface TeamMapper extends EntityMapper<TeamDto, Team> {
 
     @Mapping(source = "season.id", target = "idSeason")
     @Mapping(source = "coach.id", target = "idCoach")
+    @Mapping(source = "teamCategory.id", target = "idTeamCategory")
     TeamDto toDto(Team team);
 
     List<TeamDto> toDto(List<Team> teams);

@@ -37,6 +37,9 @@ public class TeamService {
     @Autowired
     private JerseyRepository jerseyRepository;
 
+    @Autowired
+    private TeamCategoryRepository teamCategoryRepository;
+
     public List<Team> getAllTeam() {
         return this.teamRepository.findAll();
     }
@@ -45,12 +48,16 @@ public class TeamService {
         return this.teamRepository.findById(id);
     }
 
-    public Team createTeam(TeamDto teamDto) throws SeasonNotFoundException {
+    public TeamDto createTeam(TeamDto teamDto) throws SeasonNotFoundException, TeamCategoryNotFoundException, UserNotFoundException {
         Optional<Season> season = this.seasonRepository.findCurrentSeason();
         if (!season.isPresent()) {
             throw new SeasonNotFoundException();
         }
-        Team team = new Team(teamDto.getName(), season.get());
+        Optional<TeamCategory> teamCategory = this.teamCategoryRepository.findById(teamDto.getIdTeamCategory());
+        if (!teamCategory.isPresent()) {
+            throw new TeamCategoryNotFoundException(teamDto.getIdTeamCategory());
+        }
+        Team team = new Team(teamDto.getName(), season.get(), teamCategory.get());
         if (teamDto.getIdCoach() != null) {
             Optional<User> coach = this.userRepository.findById(teamDto.getIdCoach());
             if(!coach.isPresent()) {
@@ -58,16 +65,21 @@ public class TeamService {
             }
             team.setCoach(coach.get());
         }
-        return this.teamRepository.save(team);
+        return TeamMapper.instance.toDto(this.teamRepository.save(team));
     }
 
-    public Team updateTeam(Long id, TeamDto teamDto) throws TeamNotFoundException, SeasonNotFoundException {
+    public TeamDto updateTeam(Long id, TeamDto teamDto) throws TeamNotFoundException, TeamCategoryNotFoundException {
         Optional<Team> team = this.teamRepository.findById(id);
         if (!team.isPresent()) {
             throw new TeamNotFoundException(id);
         }
+        Optional<TeamCategory> teamCategory = this.teamCategoryRepository.findById(teamDto.getIdTeamCategory());
+        if (!teamCategory.isPresent()) {
+            throw new TeamCategoryNotFoundException(teamDto.getIdTeamCategory());
+        }
         team.get().setName(teamDto.getName());
-        return this.teamRepository.save(team.get());
+        team.get().setTeamCategory(teamCategory.get());
+        return TeamMapper.instance.toDto(this.teamRepository.save(team.get()));
     }
 
     public TeamDto setCoach(Long id, Long idCoach) throws TeamNotFoundException, UserNotFoundException {

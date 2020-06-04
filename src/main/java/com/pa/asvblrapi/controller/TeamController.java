@@ -55,13 +55,13 @@ public class TeamController {
     }
 
     @PostMapping("")
-    public ResponseEntity<TeamDto> createTeam(@Valid @RequestBody TeamDto teamDto) {
+    public ResponseEntity<Object> createTeam(@Valid @RequestBody TeamDto teamDto) {
         try {
-            Team team = this.teamService.createTeam(teamDto);
-            return ResponseEntity.status(HttpStatus.CREATED).body(TeamMapper.instance.toDto(team));
+            TeamDto team = this.teamService.createTeam(teamDto);
+            return ResponseEntity.status(HttpStatus.CREATED).body(team);
         }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        catch (SeasonNotFoundException | TeamCategoryNotFoundException | UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
@@ -81,8 +81,8 @@ public class TeamController {
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateTeam(@PathVariable Long id, @Valid @RequestBody TeamDto teamDto) {
         try {
-            Team team = this.teamService.updateTeam(id, teamDto);
-            return ResponseEntity.status(HttpStatus.OK).body(TeamMapper.instance.toDto(team));
+            TeamDto team = this.teamService.updateTeam(id, teamDto);
+            return ResponseEntity.status(HttpStatus.OK).body(team);
         }
         catch (SeasonNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);

@@ -32,14 +32,19 @@ public class Team {
     @JoinColumn(name = "coach_id")
     private User coach;
 
+    @ManyToOne
+    @JoinColumn(name = "team_category_id", nullable = false)
+    private TeamCategory teamCategory;
+
     @OneToMany(mappedBy = "team")
     private List<Jersey> jerseys;
 
     @OneToMany(mappedBy = "team")
     private List<Match> matches;
 
-    public Team(String name, Season season) {
+    public Team(String name, Season season, TeamCategory teamCategory) {
         this.name = name;
         this.season = season;
+        this.teamCategory = teamCategory;
     }
 }
