@@ -134,9 +134,11 @@ public class TeamController {
     }
 
     @PostMapping("/{id}/players")
-    public ResponseEntity<Object> addPlayer(@PathVariable Long id, @Valid @RequestBody AddPlayerTeamDto dto) {
+    public ResponseEntity<Object> addPlayer(@PathVariable Long id, @Valid @RequestBody List<AddPlayerTeamDto> dtos) {
         try {
-            this.teamService.addPlayer(id, dto);
+            for (AddPlayerTeamDto dto : dtos) {
+                this.teamService.addPlayer(id, dto);
+            }
             return ResponseEntity.status(HttpStatus.OK).body(null);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
