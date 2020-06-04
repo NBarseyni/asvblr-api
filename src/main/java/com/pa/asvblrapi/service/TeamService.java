@@ -1,11 +1,9 @@
 package com.pa.asvblrapi.service;
 
-import com.pa.asvblrapi.dto.AddPlayerTeamDto;
-import com.pa.asvblrapi.dto.TeamDto;
-import com.pa.asvblrapi.dto.TeamListDto;
-import com.pa.asvblrapi.dto.TeamPlayerDto;
+import com.pa.asvblrapi.dto.*;
 import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.exception.*;
+import com.pa.asvblrapi.mapper.PlayerMapper;
 import com.pa.asvblrapi.mapper.TeamMapper;
 import com.pa.asvblrapi.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -142,6 +140,21 @@ public class TeamService {
             teamPlayerDtoList.add(teamPlayerDto);
         }
         return teamPlayerDtoList;
+    }
+
+    public List<PlayerDto> getPlayersNotInTeam(Long id) throws TeamNotFoundException {
+        Optional<Team> team = this.teamRepository.findById(id);
+        if (!team.isPresent()) {
+            throw new TeamNotFoundException(id);
+        }
+        List<Player> players = new ArrayList<>();
+
+        List<Jersey> jerseys = this.jerseyRepository.findByNotIdTeam(id);
+        for (Jersey jersey : jerseys) {
+            Player player = jersey.getPlayer();
+            players.add(player);
+        }
+        return PlayerMapper.instance.toDto(players);
     }
 
     public List<TeamListDto> getTeamList() {

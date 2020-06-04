@@ -51,6 +51,16 @@ public class TeamController {
         return this.teamService.getTeamList();
     }
 
+    @GetMapping("/{id}/add-player")
+    public ResponseEntity<Object> getPlayersNotInTeam(@PathVariable Long id) {
+        try {
+            List<PlayerDto> players = this.teamService.getPlayersNotInTeam(id);
+            return ResponseEntity.status(HttpStatus.OK).body(players);
+        } catch (TeamNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @GetMapping("/{id}/matches")
     public List<MatchDto> getMatchesByIdTeam(@PathVariable Long id) {
         return this.matchService.getAllMatchesByIdTeam(id);
