@@ -23,7 +23,7 @@ public class SubscriptionService {
     private SeasonRepository seasonRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private SubscriptionCategoryRepository subscriptionCategoryRepository;
 
     @Autowired
     private PaymentModeRepository paymentModeRepository;
@@ -47,15 +47,15 @@ public class SubscriptionService {
         return this.subscriptionRepository.findById(id);
     }
 
-    public Subscription createSubscription(SubscriptionDto subscriptionDto) throws SeasonNotFoundException, CategoryNotFoundException, PaymentModeNotFoundException{
+    public Subscription createSubscription(SubscriptionDto subscriptionDto) throws SeasonNotFoundException, SubscriptionCategoryNotFoundException, PaymentModeNotFoundException{
         Optional<Season> season = this.seasonRepository.findCurrentSeason();
         if(!season.isPresent()) {
             throw new SeasonNotFoundException(subscriptionDto.getIdSeason());
         }
 
-        Optional<Category> category = this.categoryRepository.findById(subscriptionDto.getIdCategory());
+        Optional<SubscriptionCategory> category = this.subscriptionCategoryRepository.findById(subscriptionDto.getIdSubscriptionCategory());
         if(!category.isPresent()) {
-            throw new CategoryNotFoundException(subscriptionDto.getIdCategory());
+            throw new SubscriptionCategoryNotFoundException(subscriptionDto.getIdSubscriptionCategory());
         }
 
         List<PaymentMode> paymentModes = new ArrayList<>();
@@ -122,14 +122,14 @@ public class SubscriptionService {
     }
 
     public Subscription updateSubscription(Long id, SubscriptionDto subscriptionDto) throws SubscriptionNotFoundException,
-            SeasonNotFoundException, CategoryNotFoundException, PaymentModeNotFoundException {
+            SeasonNotFoundException, SubscriptionCategoryNotFoundException, PaymentModeNotFoundException {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
         if(!subscription.isPresent()) {
             throw new SubscriptionNotFoundException(id);
         }
-        Optional<Category> category = this.categoryRepository.findById(subscriptionDto.getIdCategory());
+        Optional<SubscriptionCategory> category = this.subscriptionCategoryRepository.findById(subscriptionDto.getIdSubscriptionCategory());
         if(!category.isPresent()) {
-            throw new CategoryNotFoundException(subscriptionDto.getIdCategory());
+            throw new SubscriptionCategoryNotFoundException(subscriptionDto.getIdSubscriptionCategory());
         }
 
         List<PaymentMode> paymentModes = new ArrayList<>();
@@ -174,7 +174,7 @@ public class SubscriptionService {
         subscription.get().setPc_allowToPublish(subscriptionDto.isPc_allowToPublish());
         subscription.get().setPc_unaccountability(subscriptionDto.isPc_unaccountability());
         subscription.get().setPc_allowToWhatsapp(subscriptionDto.isPc_allowToWhatsapp());
-        subscription.get().setCategory(category.get());
+        subscription.get().setSubscriptionCategory(category.get());
         subscription.get().setPaymentModes(paymentModes);
         return this.subscriptionRepository.save(subscription.get());
     }

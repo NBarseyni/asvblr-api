@@ -20,8 +20,8 @@ public class SubscriptionMappingTests {
         player.setId((long)2);
         Season season = new Season();
         season.setId((long)3);
-        Category category = new Category();
-        category.setId((long)4);
+        SubscriptionCategory subscriptionCategory = new SubscriptionCategory();
+        subscriptionCategory.setId((long)4);
         List<PaymentMode> paymentModes = new ArrayList<>();
         PaymentMode paymentMode1 = new PaymentMode();
         paymentMode1.setId((long)5);
@@ -42,7 +42,7 @@ public class SubscriptionMappingTests {
                 0, true, true, true, true, false,
                 true, "comment", true, true,
                 true, false, false, false,
-                new Date(), new Date(), player, season, category, paymentModes, cni, identityPhoto, medicalCertificate);
+                new Date(), new Date(), player, season, subscriptionCategory, paymentModes, cni, identityPhoto, medicalCertificate);
 
         SubscriptionDto subscriptionDto = SubscriptionMapper.instance.toDto(subscription);
 
@@ -78,7 +78,7 @@ public class SubscriptionMappingTests {
         assertThat(subscriptionDto.getValidationDate()).isEqualTo(subscription.getValidationDate());
         assertThat(subscriptionDto.getIdPlayer()).isEqualTo(player.getId());
         assertThat(subscriptionDto.getIdSeason()).isEqualTo(season.getId());
-        assertThat(subscriptionDto.getIdCategory()).isEqualTo(category.getId());
+        assertThat(subscriptionDto.getIdSubscriptionCategory()).isEqualTo(subscriptionCategory.getId());
         assertThat(subscriptionDto.getIdsPaymentMode().size()).isEqualTo(subscriptionDto.getIdsPaymentMode().size());
         assertThat(subscriptionDto.getIdCNI()).isEqualTo(cni.getId());
         assertThat(subscriptionDto.getIdIdentityPhoto()).isEqualTo(identityPhoto.getId());

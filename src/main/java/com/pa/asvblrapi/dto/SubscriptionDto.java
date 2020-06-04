@@ -58,7 +58,7 @@ public class SubscriptionDto {
     private Long idPlayer;
     private Long idSeason;
     @NotNull
-    private Long idCategory;
+    private Long idSubscriptionCategory;
     @NotNull
     private List<Long> idsPaymentMode;
     private Long idCNI;

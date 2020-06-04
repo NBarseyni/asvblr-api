@@ -15,13 +15,13 @@ import javax.persistence.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Category {
+public class SubscriptionCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
 
-    public Category(String name) {
+    public SubscriptionCategory(String name) {
         this.name = name;
     }
 }

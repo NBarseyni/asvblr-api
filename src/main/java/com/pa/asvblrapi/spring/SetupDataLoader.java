@@ -34,7 +34,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private PaymentModeRepository paymentModeRepository;
 
     @Autowired
-    private CategoryRepository categoryRepository;
+    private SubscriptionCategoryRepository subscriptionCategoryRepository;
 
     @Autowired
     private ClothingSizeRepository clothingSizeRepository;
@@ -79,11 +79,11 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             new Exception(e.getMessage());
         }
 
-        // Create Categories subscription
-        createCategoryIfNotFound("Loisir");
-        createCategoryIfNotFound("Loisir compétition");
-        createCategoryIfNotFound("Départementale compétition");
-        createCategoryIfNotFound("Régional compétition");
+        // Create SubscriptionCategories
+        createSubscriptionCategoryIfNotFound("Loisir");
+        createSubscriptionCategoryIfNotFound("Loisir compétition");
+        createSubscriptionCategoryIfNotFound("Départementale compétition");
+        createSubscriptionCategoryIfNotFound("Régional compétition");
 
         // Create PaymentMode
         createPaymentModeIfNotFound("Chèque banquaire");
@@ -93,7 +93,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createPaymentModeIfNotFound("Bons C.A.F");
         createPaymentModeIfNotFound("Espèces");
 
-        // Create CloshingSize
+        // Create ClothingSize
         createClothingSizeIfNotFound("XS");
         createClothingSizeIfNotFound("S");
         createClothingSizeIfNotFound("M");
@@ -113,7 +113,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
 
-    private final Privilege createPrivilegeIfNotFound(final String name) {
+    private Privilege createPrivilegeIfNotFound(final String name) {
         Privilege privilege = privilegeRepository.findByName(name);
         if (privilege == null) {
             privilege = new Privilege(name);
@@ -122,7 +122,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         return privilege;
     }
 
-    private final Role createRoleIfNotFound(final String name, final Collection<Privilege> privileges) {
+    private Role createRoleIfNotFound(final String name, final Collection<Privilege> privileges) {
         Role role = roleRepository.findByName(name);
         if (role == null) {
             role = new Role(name);
@@ -132,7 +132,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         return role;
     }
 
-    private final User createUserIfNotFound(final String email, final String username, final String firstName,
+    private User createUserIfNotFound(final String email, final String username, final String firstName,
                                             final String lastName, final String password, final Collection<Role> roles)
             throws Exception {
         User user = userRepository.findByUsername(username);
@@ -156,7 +156,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         return user;
     }
 
-    private final PaymentMode createPaymentModeIfNotFound(final String name) {
+    private PaymentMode createPaymentModeIfNotFound(final String name) {
         PaymentMode paymentMode = paymentModeRepository.findByName(name);
         if (paymentMode == null) {
             paymentMode = new PaymentMode(name);
@@ -165,13 +165,13 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         return paymentMode;
     }
 
-    private final Category createCategoryIfNotFound(final String name) {
-        Category category = categoryRepository.findByName(name);
-        if (category == null) {
-            category = new Category(name);
-            category = categoryRepository.save(category);
+    private SubscriptionCategory createSubscriptionCategoryIfNotFound(final String name) {
+        SubscriptionCategory subscriptionCategory = subscriptionCategoryRepository.findByName(name);
+        if (subscriptionCategory == null) {
+            subscriptionCategory = new SubscriptionCategory(name);
+            subscriptionCategory = subscriptionCategoryRepository.save(subscriptionCategory);
         }
-        return category;
+        return subscriptionCategory;
     }
 
     private ClothingSize createClothingSizeIfNotFound(final String name) {
