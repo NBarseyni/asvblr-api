@@ -43,6 +43,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private PositionRepository positionRepository;
 
     @Autowired
+    private TeamCategoryRepository teamCategoryRepository;
+
+    @Autowired
     private PasswordEncoder encoder;
 
     @Autowired
@@ -108,6 +111,35 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createPositionIfNotFound("Pointu", "Pt");
         createPositionIfNotFound("Libéro", "L");
         createPositionIfNotFound("Non défini", "");
+
+        // Create Team Category
+        createTeamCategoryIfNotFound("National homme");
+        createTeamCategoryIfNotFound("Pré-national homme");
+        createTeamCategoryIfNotFound("Régional homme");
+        createTeamCategoryIfNotFound("Pré-régional homme");
+        createTeamCategoryIfNotFound("Départemental homme");
+        createTeamCategoryIfNotFound("National femme");
+        createTeamCategoryIfNotFound("Pré-national femme");
+        createTeamCategoryIfNotFound("Régional homme");
+        createTeamCategoryIfNotFound("Pré-régional femme");
+        createTeamCategoryIfNotFound("Départemental femme");
+        createTeamCategoryIfNotFound("Loisir mixte 6x6");
+        createTeamCategoryIfNotFound("Loisir femme 4x4");
+        createTeamCategoryIfNotFound("Loisir homme 4x4");
+        createTeamCategoryIfNotFound("M20 garçons");
+        createTeamCategoryIfNotFound("M20 filles");
+        createTeamCategoryIfNotFound("M17 garçons");
+        createTeamCategoryIfNotFound("M17 filles");
+        createTeamCategoryIfNotFound("M15 garçons");
+        createTeamCategoryIfNotFound("M15 filles");
+        createTeamCategoryIfNotFound("M13 garçons");
+        createTeamCategoryIfNotFound("M13 filles");
+        createTeamCategoryIfNotFound("M13 mixte");
+        createTeamCategoryIfNotFound("M11 mixte");
+        createTeamCategoryIfNotFound("M9 mixte");
+        createTeamCategoryIfNotFound("M7 mixte");
+        createTeamCategoryIfNotFound("Baby-volley");
+        createTeamCategoryIfNotFound("Sanofi");
 
         alreadySetup = true;
     }
@@ -190,5 +222,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             position = this.positionRepository.save(position);
         }
         return position;
+    }
+
+    private TeamCategory createTeamCategoryIfNotFound(final String name) {
+        TeamCategory teamCategory = this.teamCategoryRepository.findByName(name);
+        if (teamCategory == null) {
+            teamCategory = new TeamCategory(name);
+            teamCategory = this.teamCategoryRepository.save(teamCategory);
+        }
+        return teamCategory;
     }
 }
