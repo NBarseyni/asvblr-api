@@ -5,10 +5,12 @@ import com.pa.asvblrapi.dto.TeamDto;
 import com.pa.asvblrapi.dto.TeamPlayerDto;
 import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.exception.*;
+import com.pa.asvblrapi.mapper.TeamMapper;
 import com.pa.asvblrapi.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.annotation.Target;
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,9 +70,9 @@ public class TeamService {
         return this.teamRepository.save(team.get());
     }
 
-    public void addCoach(Long id, Long idCoach) throws TeamNotFoundException, UserNotFoundException {
+    public TeamDto setCoach(Long id, Long idCoach) throws TeamNotFoundException, UserNotFoundException {
         Optional<Team> team = this.teamRepository.findById(id);
-        if (!team.isPresent()) {
+        if  (!team.isPresent()) {
             throw new TeamNotFoundException(id);
         }
         Optional<User> user = this.userRepository.findById(idCoach);
@@ -78,16 +80,7 @@ public class TeamService {
             throw new UserNotFoundException(idCoach);
         }
         team.get().setCoach(user.get());
-        this.teamRepository.save(team.get());
-    }
-
-    public void removeCoach(Long id) throws TeamNotFoundException {
-        Optional<Team> team = this.teamRepository.findById(id);
-        if (!team.isPresent()) {
-            throw new TeamNotFoundException(id);
-        }
-        team.get().setCoach(null);
-        this.teamRepository.save(team.get());
+        return TeamMapper.instance.toDto(this.teamRepository.save(team.get()));
     }
 
     public List<TeamPlayerDto> getTeamPlayers(Long id) throws TeamNotFoundException {

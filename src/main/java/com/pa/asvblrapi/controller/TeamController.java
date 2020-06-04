@@ -89,23 +89,13 @@ public class TeamController {
         }
     }
 
-    @PatchMapping("/{id}/coach/{idCoach}")
-    public ResponseEntity<Object> addCoach(@PathVariable Long id, @PathVariable Long idCoach) {
+    @PostMapping("/{id}/coach/{idCoach}")
+    public ResponseEntity<Object> setCoach(@PathVariable Long id, @PathVariable Long idCoach) {
         try {
-            this.teamService.addCoach(id, idCoach);
-            return ResponseEntity.status(HttpStatus.OK).body(null);
+            TeamDto teamDto = this.teamService.setCoach(id, idCoach);
+            return ResponseEntity.status(HttpStatus.OK).body(teamDto);
         } catch (TeamNotFoundException | UserNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
-        }
-    }
-
-    @PatchMapping("/{id}/remove-coach")
-    public ResponseEntity<Object> removeCoach(@PathVariable Long id) {
-        try {
-            this.teamService.removeCoach(id);
-            return ResponseEntity.status(HttpStatus.OK).body(null);
-        } catch (TeamNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
