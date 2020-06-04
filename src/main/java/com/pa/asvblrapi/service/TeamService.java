@@ -49,6 +49,13 @@ public class TeamService {
             throw new SeasonNotFoundException();
         }
         Team team = new Team(teamDto.getName(), season.get());
+        if (teamDto.getIdCoach() != null) {
+            Optional<User> coach = this.userRepository.findById(teamDto.getIdCoach());
+            if(!coach.isPresent()) {
+                throw new UserNotFoundException(teamDto.getIdCoach());
+            }
+            team.setCoach(coach.get());
+        }
         return this.teamRepository.save(team);
     }
 
