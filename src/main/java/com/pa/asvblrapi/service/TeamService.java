@@ -161,17 +161,18 @@ public class TeamService {
         List<TeamListDto> teamListDtoList = new ArrayList<>();
         List<Team> teams = this.teamRepository.findAll();
         for (Team team : teams) {
-            String coachName;
+            String coachFirstName = "";
+            String coachLastName = "";
             if (team.getCoach() != null) {
-                coachName = String.format("%s %s", team.getCoach().getFirstName(), team.getCoach().getLastName());
-            } else {
-                coachName = "";
+                coachFirstName = team.getCoach().getFirstName();
+                coachLastName = team.getCoach().getLastName();
             }
             TeamListDto teamListDto = new TeamListDto(
                     team.getId(),
                     team.getName(),
                     team.getTeamCategory().getName(),
-                    coachName,
+                    coachFirstName,
+                    coachLastName,
                     this.jerseyRepository.nbPlayerByIdTeam(team.getId())
             );
             teamListDtoList.add(teamListDto);
