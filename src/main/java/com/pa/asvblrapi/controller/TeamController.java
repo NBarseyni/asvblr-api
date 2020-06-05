@@ -101,20 +101,20 @@ public class TeamController {
         }
     }
 
-    @PostMapping("/{id}/coach/{idCoach}")
-    public ResponseEntity<Object> setCoach(@PathVariable Long id, @PathVariable Long idCoach) {
+    @PostMapping("/{id}/coach")
+    public ResponseEntity<Object> setCoach(@PathVariable Long id, @RequestBody CoachDto coachDto) {
         try {
-            TeamDto teamDto = this.teamService.setCoach(id, idCoach);
+            TeamDto teamDto = this.teamService.setCoach(id, coachDto.getIdCoach());
             return ResponseEntity.status(HttpStatus.OK).body(teamDto);
         } catch (TeamNotFoundException | UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
-    @PostMapping("/{id}/leader/{idLeader}")
-    public ResponseEntity<Object> setLeader(@PathVariable Long id, @PathVariable Long idLeader) {
+    @PostMapping("/{id}/leader")
+    public ResponseEntity<Object> setLeader(@PathVariable Long id, @RequestBody LeaderDto leaderDto) {
         try {
-            TeamDto teamDto = this.teamService.setLeader(id, idLeader);
+            TeamDto teamDto = this.teamService.setLeader(id, leaderDto.getIdLeader());
             return ResponseEntity.status(HttpStatus.OK).body(teamDto);
         } catch (TeamNotFoundException | PlayerNotFoundException | JerseyNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
