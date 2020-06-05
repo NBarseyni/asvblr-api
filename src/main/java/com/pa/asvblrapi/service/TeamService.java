@@ -197,7 +197,8 @@ public class TeamService {
         this.jerseyRepository.save(jersey);
     }
 
-    public void removePlayer(Long idTeam, Long idPlayer) throws TeamNotFoundException, PlayerNotFoundException {
+    public void removePlayer(Long idTeam, Long idPlayer) throws TeamNotFoundException, PlayerNotFoundException,
+            JerseyNotFoundException {
         Optional<Team> team = this.teamRepository.findById(idTeam);
         if (!team.isPresent()) {
             throw new TeamNotFoundException(idTeam);

@@ -145,10 +145,12 @@ public class TeamController {
         }
     }
 
-    @DeleteMapping("/{idTeam}/players/{idPlayer}")
-    public ResponseEntity<Object> removePlayer(@PathVariable Long idTeam, @PathVariable Long idPlayer) {
+    @DeleteMapping("/{idTeam}/players")
+    public ResponseEntity<Object> removePlayer(@PathVariable Long idTeam, @RequestBody List<Long> idsPlayer) {
         try {
-            this.teamService.removePlayer(idTeam, idPlayer);
+            for (Long idPlayer : idsPlayer) {
+                this.teamService.removePlayer(idTeam, idPlayer);
+            }
             return ResponseEntity.status(HttpStatus.OK).body(null);
         } catch (TeamNotFoundException | PlayerNotFoundException | JerseyNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e);
