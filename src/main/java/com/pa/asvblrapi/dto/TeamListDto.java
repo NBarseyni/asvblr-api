@@ -9,6 +9,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class TeamListDto {
     private Long id;
+    private String teamName;
     private String teamCategoryName;
     private String coachName;
     private int nbPlayers;

@@ -169,6 +169,7 @@ public class TeamService {
             }
             TeamListDto teamListDto = new TeamListDto(
                     team.getId(),
+                    team.getName(),
                     team.getTeamCategory().getName(),
                     coachName,
                     this.jerseyRepository.nbPlayerByIdTeam(team.getId())

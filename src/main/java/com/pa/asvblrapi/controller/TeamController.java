@@ -46,7 +46,7 @@ public class TeamController {
                 .orElseThrow(() -> new TeamNotFoundException(id)));
     }
 
-    @GetMapping("/team-list")
+    @GetMapping("/list-detail")
     public List<TeamListDto> getTeamList() {
         return this.teamService.getTeamList();
     }
