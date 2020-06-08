@@ -25,6 +25,8 @@ public class Player {
     @NotNull
     private String lastName;
     @NotNull
+    private boolean gender;
+    @NotNull
     private String address;
     @NotNull
     private int postcode;
@@ -56,11 +58,12 @@ public class Player {
     @OneToMany(mappedBy = "player")
     private List<Subscription> subscriptions;
 
-    public Player(String firstName, String lastName, String address, int postcode, String city, String email,
-                  String phoneNumber, Date birthDate, ClothingSize topSize, ClothingSize pantsSize,
+    public Player(String firstName, String lastName, boolean gender, String address, int postcode, String city,
+                  String email, String phoneNumber, Date birthDate, ClothingSize topSize, ClothingSize pantsSize,
                   SubscriptionCategory subscriptionCategory, User user) {
         this.firstName = firstName;
         this.lastName = lastName;
+        this.gender = gender;
         this.address = address;
         this.postcode = postcode;
         this.city = city;

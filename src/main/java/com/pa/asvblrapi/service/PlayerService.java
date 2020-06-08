@@ -38,6 +38,7 @@ public class PlayerService {
         Player player = new Player(
                 subscription.getFirstName(),
                 subscription.getLastName(),
+                subscription.isGender(),
                 subscription.getAddress(),
                 subscription.getPostcode(),
                 subscription.getCity(),

@@ -23,6 +23,7 @@ public class PlayerMappingTests {
         player.setId((long)4);
         player.setFirstName("firstName");
         player.setLastName("lastName");
+        player.setGender(true);
         player.setAddress("address");
         player.setPostcode(75001);
         player.setCity("city");
@@ -41,6 +42,7 @@ public class PlayerMappingTests {
         assertThat(playerDto.getId()).isEqualTo(player.getId());
         assertThat(playerDto.getFirstName()).isEqualTo(player.getFirstName());
         assertThat(playerDto.getLastName()).isEqualTo(player.getLastName());
+        assertThat(playerDto.isGender()).isEqualTo(player.isGender());
         assertThat(playerDto.getAddress()).isEqualTo(player.getAddress());
         assertThat(playerDto.getPostcode()).isEqualTo(player.getPostcode());
         assertThat(playerDto.getCity()).isEqualTo(player.getCity());

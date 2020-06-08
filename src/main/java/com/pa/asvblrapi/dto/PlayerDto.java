@@ -15,6 +15,8 @@ public class PlayerDto {
     private String firstName;
     @NotBlank
     private String lastName;
+    @NotNull
+    private boolean gender;
     @NotBlank
     private String address;
     @NotNull
