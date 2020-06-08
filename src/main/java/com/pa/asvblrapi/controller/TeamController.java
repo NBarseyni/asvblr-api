@@ -1,14 +1,9 @@
 package com.pa.asvblrapi.controller;
 
 import com.pa.asvblrapi.dto.*;
-import com.pa.asvblrapi.entity.Match;
-import com.pa.asvblrapi.entity.Photo;
-import com.pa.asvblrapi.entity.Team;
 import com.pa.asvblrapi.exception.*;
-import com.pa.asvblrapi.mapper.MatchMapper;
 import com.pa.asvblrapi.mapper.TeamMapper;
 import com.pa.asvblrapi.service.MatchService;
-import com.pa.asvblrapi.service.PhotoService;
 import com.pa.asvblrapi.service.TeamService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,12 +21,10 @@ import java.util.List;
 public class TeamController {
 
     private final TeamService teamService;
-    private final PhotoService photoService;
     private final MatchService matchService;
 
-    TeamController(TeamService teamService, PhotoService photoService, MatchService matchService) {
+    TeamController(TeamService teamService, MatchService matchService) {
         this.teamService = teamService;
-        this.photoService = photoService;
         this.matchService = matchService;
     }
 
@@ -73,18 +66,6 @@ public class TeamController {
             return ResponseEntity.status(HttpStatus.CREATED).body(team);
         } catch (SeasonNotFoundException | TeamCategoryNotFoundException | UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
-    @PostMapping("/{id}/photos")
-    public ResponseEntity<Object> createTeamPhoto(@RequestParam("file") MultipartFile multipartFile, @PathVariable Long id) {
-        Team team = this.teamService.getTeam(id)
-                .orElseThrow(() -> new TeamNotFoundException(id));
-        try {
-            Photo photo = this.photoService.createTeamPhoto(multipartFile, team);
-            return ResponseEntity.status(HttpStatus.CREATED).body(photo);
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
