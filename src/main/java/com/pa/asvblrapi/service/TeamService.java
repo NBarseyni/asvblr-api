@@ -207,7 +207,7 @@ public class TeamService {
         return teamListDtoList;
     }
 
-    public void addPlayer(Long id, AddPlayerTeamDto dto) throws TeamNotFoundException, PlayerNotFoundException,
+    public TeamPlayerDto addPlayer(Long id, AddPlayerTeamDto dto) throws TeamNotFoundException, PlayerNotFoundException,
             PositionNotFoundException {
         Optional<Team> team = this.teamRepository.findById(id);
         if (!team.isPresent()) {
@@ -223,6 +223,60 @@ public class TeamService {
         }
         Jersey jersey = new Jersey(dto.getNumber(), team.get(), position.get(), player.get());
         this.jerseyRepository.save(jersey);
+        return new TeamPlayerDto(
+                player.get().getId(),
+                player.get().getFirstName(),
+                player.get().getLastName(),
+                player.get().getAddress(),
+                player.get().getPostcode(),
+                player.get().getCity(),
+                player.get().getEmail(),
+                player.get().getPhoneNumber(),
+                player.get().getBirthDate(),
+                player.get().getLicenceNumber(),
+                jersey.getNumber(),
+                position.get().getName(),
+                position.get().getShortName()
+        );
+    }
+
+    public TeamPlayerDto updatePlayer(Long idTeam, Long idPlayer, UpdatePlayerTeamDto dto) throws TeamNotFoundException,
+            PlayerNotFoundException, JerseyNotFoundException {
+        Optional<Team> team = this.teamRepository.findById(idTeam);
+        if (!team.isPresent()) {
+            throw new TeamNotFoundException(idTeam);
+        }
+        Optional<Player> player = this.playerRepository.findById(idPlayer);
+        if (!player.isPresent()) {
+            throw new PlayerNotFoundException(idPlayer);
+        }
+        Optional<Jersey> jersey = this.jerseyRepository.findByIdTeamAndIdPlayer(idTeam, idPlayer);
+        if (!jersey.isPresent()) {
+            throw new JerseyNotFoundException(idTeam, idPlayer);
+        }
+        Optional<Position> position = this.positionRepository.findById(dto.getIdPosition());
+        if (!position.isPresent()) {
+            throw new PositionNotFoundException(dto.getIdPosition());
+        }
+        jersey.get().setPosition(position.get());
+        jersey.get().setNumber(dto.getNumber());
+        Jersey updatedJersey = this.jerseyRepository.save(jersey.get());
+
+        return new TeamPlayerDto(
+                player.get().getId(),
+                player.get().getFirstName(),
+                player.get().getLastName(),
+                player.get().getAddress(),
+                player.get().getPostcode(),
+                player.get().getCity(),
+                player.get().getEmail(),
+                player.get().getPhoneNumber(),
+                player.get().getBirthDate(),
+                player.get().getLicenceNumber(),
+                updatedJersey.getNumber(),
+                position.get().getName(),
+                position.get().getShortName()
+        );
     }
 
     public void removePlayer(Long idTeam, Long idPlayer) throws TeamNotFoundException, PlayerNotFoundException,

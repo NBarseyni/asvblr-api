@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -126,12 +127,25 @@ public class TeamController {
     @PostMapping("/{id}/players")
     public ResponseEntity<Object> addPlayer(@PathVariable Long id, @Valid @RequestBody List<AddPlayerTeamDto> dtos) {
         try {
+            List<TeamPlayerDto> teamPlayersDto = new ArrayList<>();
             for (AddPlayerTeamDto dto : dtos) {
-                this.teamService.addPlayer(id, dto);
+                teamPlayersDto.add(this.teamService.addPlayer(id, dto));
             }
-            return ResponseEntity.status(HttpStatus.OK).body(null);
+            return ResponseEntity.status(HttpStatus.OK).body(teamPlayersDto);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PutMapping("/{idTeam}/players/{idPlayer}")
+    public ResponseEntity<Object> updatePositionAndNumberPlayer(@PathVariable Long idTeam,
+                                                                @PathVariable Long idPlayer,
+                                                                @Valid @RequestBody UpdatePlayerTeamDto dto) {
+        try {
+            TeamPlayerDto teamPlayerDto = this.teamService.updatePlayer(idTeam, idPlayer, dto);
+            return ResponseEntity.status(HttpStatus.OK).body(teamPlayerDto);
+        } catch (TeamNotFoundException | PlayerNotFoundException | JerseyNotFoundException e) {
+          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
