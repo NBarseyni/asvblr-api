@@ -217,11 +217,16 @@ public class TeamService {
         if (!player.isPresent()) {
             throw new PlayerNotFoundException(dto.getIdPlayer());
         }
-        Optional<Position> position = this.positionRepository.findById(dto.getIdPosition());
-        if (!position.isPresent()) {
-            throw new PositionNotFoundException(dto.getIdPosition());
+        Position position = this.positionRepository.findByName("Non défini");
+        if (dto.getIdPosition() != null) {
+            Optional<Position> positionOptional = this.positionRepository.findById(dto.getIdPosition());
+            if (!positionOptional.isPresent()) {
+                throw new PositionNotFoundException(dto.getIdPosition());
+            }
+            position = positionOptional.get();
         }
-        Jersey jersey = new Jersey(dto.getNumber(), team.get(), position.get(), player.get());
+
+        Jersey jersey = new Jersey(dto.getNumber(), team.get(), position, player.get());
         this.jerseyRepository.save(jersey);
         return new TeamPlayerDto(
                 player.get().getId(),
@@ -235,8 +240,8 @@ public class TeamService {
                 player.get().getBirthDate(),
                 player.get().getLicenceNumber(),
                 jersey.getNumber(),
-                position.get().getName(),
-                position.get().getShortName()
+                position.getName(),
+                position.getShortName()
         );
     }
 
@@ -254,11 +259,16 @@ public class TeamService {
         if (!jersey.isPresent()) {
             throw new JerseyNotFoundException(idTeam, idPlayer);
         }
-        Optional<Position> position = this.positionRepository.findById(dto.getIdPosition());
-        if (!position.isPresent()) {
-            throw new PositionNotFoundException(dto.getIdPosition());
+        Position position = this.positionRepository.findByName("Non défini");
+        if (dto.getIdPosition() != null) {
+            Optional<Position> positionOptional = this.positionRepository.findById(dto.getIdPosition());
+            if (!positionOptional.isPresent()) {
+                throw new PositionNotFoundException(dto.getIdPosition());
+            }
+            position = positionOptional.get();
         }
-        jersey.get().setPosition(position.get());
+
+        jersey.get().setPosition(position);
         jersey.get().setNumber(dto.getNumber());
         Jersey updatedJersey = this.jerseyRepository.save(jersey.get());
 
@@ -274,8 +284,8 @@ public class TeamService {
                 player.get().getBirthDate(),
                 player.get().getLicenceNumber(),
                 updatedJersey.getNumber(),
-                position.get().getName(),
-                position.get().getShortName()
+                position.getName(),
+                position.getShortName()
         );
     }
 

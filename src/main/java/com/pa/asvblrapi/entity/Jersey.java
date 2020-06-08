@@ -19,8 +19,7 @@ public class Jersey {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
-    private int number;
+    private Integer number;
 
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
@@ -37,8 +36,8 @@ public class Jersey {
     @OneToMany(mappedBy = "jersey")
     private List<CommentPlayer> commentsPlayer;
 
-    public Jersey(int number, Team team, Position position, Player player) {
-        this.number = number;
+    public Jersey(Integer number, Team team, Position position, Player player) {
+        this.number = (number == 0) ? null : number;
         this.team = team;
         this.position = position;
         this.player = player;

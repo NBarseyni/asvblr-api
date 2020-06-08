@@ -10,8 +10,6 @@ import javax.validation.constraints.NotNull;
 public class AddPlayerTeamDto {
     @NotNull
     private Long idPlayer;
-    @NotNull
     private Long idPosition;
-    @NotNull
     private int number;
 }

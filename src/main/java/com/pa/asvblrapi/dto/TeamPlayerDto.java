@@ -23,7 +23,7 @@ public class TeamPlayerDto {
     private Date birthDate;
     private String licenceNumber;
 
-    private int jerseyNumber;
+    private Integer jerseyNumber;
 
     private String positionName;
     private String positionShortName;
