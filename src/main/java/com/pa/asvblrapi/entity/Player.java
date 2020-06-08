@@ -42,6 +42,9 @@ public class Player {
     @ManyToOne
     @JoinColumn(name = "pantsSize_id")
     private ClothingSize pantsSize;
+    @ManyToOne
+    @JoinColumn(name = "subscriptionCategory_id")
+    private SubscriptionCategory subscriptionCategory;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -54,7 +57,8 @@ public class Player {
     private List<Subscription> subscriptions;
 
     public Player(String firstName, String lastName, String address, int postcode, String city, String email,
-                  String phoneNumber, Date birthDate, ClothingSize topSize, ClothingSize pantsSize, User user) {
+                  String phoneNumber, Date birthDate, ClothingSize topSize, ClothingSize pantsSize,
+                  SubscriptionCategory subscriptionCategory, User user) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -65,6 +69,7 @@ public class Player {
         this.birthDate = birthDate;
         this.topSize = topSize;
         this.pantsSize = pantsSize;
+        this.subscriptionCategory = subscriptionCategory;
         this.user = user;
     }
 }

@@ -1,10 +1,7 @@
 package com.pa.asvblrapi.mapper;
 
 import com.pa.asvblrapi.dto.PlayerDto;
-import com.pa.asvblrapi.entity.ClothingSize;
-import com.pa.asvblrapi.entity.Jersey;
-import com.pa.asvblrapi.entity.Player;
-import com.pa.asvblrapi.entity.User;
+import com.pa.asvblrapi.entity.*;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -19,6 +16,7 @@ public class PlayerMappingTests {
     @Test
     public void should_map_player_to_dto() {
         ClothingSize clothingSize = new ClothingSize((long)1,"L");
+        SubscriptionCategory subscriptionCategory = new SubscriptionCategory((long)3, "test");
         User user = new User();
         user.setId((long)2);
         Player player = new Player();
@@ -34,6 +32,7 @@ public class PlayerMappingTests {
         player.setLicenceNumber("licenceNumber");
         player.setTopSize(clothingSize);
         player.setPantsSize(clothingSize);
+        player.setSubscriptionCategory(subscriptionCategory);
         player.setUser(user);
 
         PlayerDto playerDto = PlayerMapper.instance.toDto(player);
@@ -51,6 +50,7 @@ public class PlayerMappingTests {
         assertThat(playerDto.getLicenceNumber()).isEqualTo(player.getLicenceNumber());
         assertThat(playerDto.getIdTopSize()).isEqualTo(clothingSize.getId());
         assertThat(playerDto.getIdPantsSize()).isEqualTo(clothingSize.getId());
+        assertThat(playerDto.getIdSubscriptionCategory()).isEqualTo(subscriptionCategory.getId());
         assertThat(playerDto.getIdUser()).isEqualTo(player.getUser().getId());
     }
 

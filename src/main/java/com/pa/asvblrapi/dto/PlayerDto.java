@@ -31,5 +31,7 @@ public class PlayerDto {
     private Long idTopSize;
     private Long idPantsSize;
     @NotNull
+    private Long idSubscriptionCategory;
+    @NotNull
     private Long idUser;
 }
