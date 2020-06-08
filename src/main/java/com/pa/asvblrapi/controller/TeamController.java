@@ -1,6 +1,7 @@
 package com.pa.asvblrapi.controller;
 
 import com.pa.asvblrapi.dto.*;
+import com.pa.asvblrapi.entity.Position;
 import com.pa.asvblrapi.exception.*;
 import com.pa.asvblrapi.mapper.TeamMapper;
 import com.pa.asvblrapi.service.MatchService;
@@ -132,6 +133,8 @@ public class TeamController {
                 teamPlayersDto.add(this.teamService.addPlayer(id, dto));
             }
             return ResponseEntity.status(HttpStatus.OK).body(teamPlayersDto);
+        } catch (TeamNotFoundException | PlayerNotFoundException | PositionNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
@@ -145,7 +148,7 @@ public class TeamController {
             TeamPlayerDto teamPlayerDto = this.teamService.updatePlayer(idTeam, idPlayer, dto);
             return ResponseEntity.status(HttpStatus.OK).body(teamPlayerDto);
         } catch (TeamNotFoundException | PlayerNotFoundException | JerseyNotFoundException e) {
-          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
