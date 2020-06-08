@@ -1,5 +1,6 @@
 package com.pa.asvblrapi.service;
 
+import com.google.common.collect.Iterables;
 import com.pa.asvblrapi.dto.UserDto;
 import com.pa.asvblrapi.dto.UserDtoFirebase;
 import com.pa.asvblrapi.entity.PasswordResetToken;
@@ -23,6 +24,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -48,7 +50,24 @@ public class UserService {
     private PasswordResetTokenRepository passwordResetTokenRepository;
 
     public List<UserDto> getAllUser() {
-        return UserMapper.instance.toDto(this.userRepository.findAll());
+        List<User> users = this.userRepository.findAll();
+
+        List<UserDto> usersDto = new ArrayList<>();
+        for(User user : users) {
+            Role role = Iterables.get(user.getRoles(), 0);
+            List<String> privileges = role.getPrivileges().stream().map(Privilege::getName).collect(Collectors.toList());
+
+            usersDto.add(new UserDto(
+                    user.getId(),
+                    user.getUsername(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getEmail(),
+                    role.getName(),
+                    privileges
+            ));
+        }
+        return usersDto;
     }
 
     public Optional<User> getUser(Long id) {
