@@ -12,6 +12,7 @@ public class TeamDto {
     private Long id;
     @NotBlank
     private String name;
+    private String photo;
     private Long idSeason;
     private Long idCoach;
     private Long idLeader;

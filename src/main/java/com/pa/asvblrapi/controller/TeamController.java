@@ -71,8 +71,7 @@ public class TeamController {
         try {
             TeamDto team = this.teamService.createTeam(teamDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(team);
-        }
-        catch (SeasonNotFoundException | TeamCategoryNotFoundException | UserNotFoundException e) {
+        } catch (SeasonNotFoundException | TeamCategoryNotFoundException | UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -84,8 +83,7 @@ public class TeamController {
         try {
             Photo photo = this.photoService.createTeamPhoto(multipartFile, team);
             return ResponseEntity.status(HttpStatus.CREATED).body(photo);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
@@ -95,9 +93,20 @@ public class TeamController {
         try {
             TeamDto team = this.teamService.updateTeam(id, teamDto);
             return ResponseEntity.status(HttpStatus.OK).body(team);
+        } catch (SeasonNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
-        catch (SeasonNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
+    @PostMapping("/{id}/photo")
+    public ResponseEntity<Object> setPhoto(@PathVariable Long id, @RequestParam("file") MultipartFile file) {
+        try {
+            TeamDto teamDto = this.teamService.setPhoto(id, file);
+            return ResponseEntity.status(HttpStatus.OK).body(teamDto);
+        } catch (TeamNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
@@ -163,12 +172,12 @@ public class TeamController {
     public ResponseEntity<Object> deleteTeam(@PathVariable Long id) {
         try {
             this.teamService.deleteTeam(id);
-        }
-        catch (TeamNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        catch (AccessDeniedException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        } catch (TeamNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (AccessDeniedException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }

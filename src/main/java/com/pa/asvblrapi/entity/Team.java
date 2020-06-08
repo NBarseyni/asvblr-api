@@ -21,8 +21,7 @@ public class Team {
     @NotNull
     private String name;
 
-    @OneToMany(mappedBy = "team")
-    private List<Photo> photos;
+    private String photo;
 
     @ManyToOne
     @JoinColumn(name = "season_id", nullable = false)

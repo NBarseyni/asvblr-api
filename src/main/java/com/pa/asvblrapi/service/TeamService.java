@@ -8,15 +8,22 @@ import com.pa.asvblrapi.mapper.TeamMapper;
 import com.pa.asvblrapi.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.lang.annotation.Target;
 import java.nio.file.AccessDeniedException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class TeamService {
+
+    private final String UPLOADED_FOLDER = "src/main/resources/public/photos/";
 
     @Autowired
     private TeamRepository teamRepository;
@@ -47,7 +54,8 @@ public class TeamService {
         return this.teamRepository.findById(id);
     }
 
-    public TeamDto createTeam(TeamDto teamDto) throws SeasonNotFoundException, TeamCategoryNotFoundException, UserNotFoundException {
+    public TeamDto createTeam(TeamDto teamDto) throws SeasonNotFoundException, TeamCategoryNotFoundException,
+            UserNotFoundException {
         Optional<Season> season = this.seasonRepository.findCurrentSeason();
         if (!season.isPresent()) {
             throw new SeasonNotFoundException();
@@ -78,6 +86,25 @@ public class TeamService {
         }
         team.get().setName(teamDto.getName());
         team.get().setTeamCategory(teamCategory.get());
+        return TeamMapper.instance.toDto(this.teamRepository.save(team.get()));
+    }
+
+    public TeamDto setPhoto(Long id, MultipartFile file) throws TeamNotFoundException, IOException {
+        Optional<Team> team = this.teamRepository.findById(id);
+        if (!team.isPresent()) {
+            throw new TeamNotFoundException(id);
+        }
+        try {
+            String fileName = file.getOriginalFilename();
+            byte[] bytes = file.getBytes();
+            Path path = Paths.get(UPLOADED_FOLDER + fileName);
+            Files.write(path, bytes);
+            Files.delete(Paths.get(UPLOADED_FOLDER + team.get().getPhoto()));
+            team.get().setPhoto(fileName);
+        }
+        catch (IOException e) {
+            throw new IOException(e.getMessage());
+        }
         return TeamMapper.instance.toDto(this.teamRepository.save(team.get()));
     }
 
@@ -215,10 +242,15 @@ public class TeamService {
         this.jerseyRepository.delete(jersey.get());
     }
 
-    public void deleteTeam(Long id) throws TeamNotFoundException, AccessDeniedException {
+    public void deleteTeam(Long id) throws TeamNotFoundException, IOException {
         Optional<Team> team = this.teamRepository.findById(id);
         if (!team.isPresent()) {
             throw new TeamNotFoundException(id);
+        }
+        try {
+            Files.delete(Paths.get(UPLOADED_FOLDER + team.get().getPhoto()));
+        } catch (IOException e) {
+            throw new IOException(e.getMessage());
         }
         this.teamRepository.delete(team.get());
     }
