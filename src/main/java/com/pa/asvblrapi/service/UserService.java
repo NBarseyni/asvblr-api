@@ -7,6 +7,7 @@ import com.pa.asvblrapi.entity.Privilege;
 import com.pa.asvblrapi.entity.Role;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.UserNotFoundException;
+import com.pa.asvblrapi.mapper.UserMapper;
 import com.pa.asvblrapi.repository.PasswordResetTokenRepository;
 import com.pa.asvblrapi.repository.PrivilegeRepository;
 import com.pa.asvblrapi.repository.RoleRepository;
@@ -45,6 +46,10 @@ public class UserService {
 
     @Autowired
     private PasswordResetTokenRepository passwordResetTokenRepository;
+
+    public List<UserDto> getAllUser() {
+        return UserMapper.instance.toDto(this.userRepository.findAll());
+    }
 
     public Optional<User> getUser(Long id) {
         return this.userRepository.findById(id);
