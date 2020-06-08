@@ -301,10 +301,12 @@ public class TeamService {
         if (!team.isPresent()) {
             throw new TeamNotFoundException(id);
         }
-        try {
-            Files.delete(Paths.get(UPLOADED_FOLDER + team.get().getPhoto()));
-        } catch (IOException e) {
-            throw new IOException(e.getMessage());
+        if (team.get().getPhoto() != null) {
+            try {
+                Files.delete(Paths.get(UPLOADED_FOLDER + team.get().getPhoto()));
+            } catch (IOException e) {
+                throw new IOException(e.getMessage());
+            }
         }
         this.teamRepository.delete(team.get());
     }
