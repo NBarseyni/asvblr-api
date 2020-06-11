@@ -187,17 +187,6 @@ public class SubscriptionController {
         return ResponseEntity.status(HttpStatus.OK).body(null);
     }
 
-    @PatchMapping("/{id}/unvalidated")
-    public ResponseEntity<Object> unvalidatedSubscription(@PathVariable Long id) {
-        try {
-            this.subscriptionService.unvalidatedSubscription(id);
-        }
-        catch (SubscriptionNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(null);
-    }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deleteSubscription(@PathVariable Long id) {
         try {

@@ -47,11 +47,6 @@ public class SeasonController {
         .orElseThrow(RuntimeException::new));
     }
 
-    @GetMapping("/{id}/subscriptions")
-    public List<SubscriptionDto> getSubscriptionBySeason(@PathVariable Long id) {
-        return SubscriptionMapper.instance.toDto(this.subscriptionService.getSubscriptionsBySeason(id));
-    }
-
     @PostMapping("")
     public ResponseEntity<SeasonDto> createSeason(@Valid @RequestBody SeasonDto seasonDto) {
         try {
@@ -72,30 +67,5 @@ public class SeasonController {
         catch (SeasonNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
-    }
-
-    @PatchMapping("/{id}/set-current-season")
-    public ResponseEntity<Object> setCurrentSeason(@PathVariable Long id) {
-        try {
-            this.seasonService.setCurrentSeason(id);
-            return ResponseEntity.status(HttpStatus.OK).body(null);
-        }
-        catch (SeasonNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteSeason(@PathVariable Long id) {
-        try {
-            this.seasonService.deleteSeason(id);
-        }
-        catch (SeasonNotFoundException e) {
-          return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        catch (AccessDeniedException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
     }
 }
