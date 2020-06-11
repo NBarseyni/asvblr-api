@@ -59,22 +59,40 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         }
 
         // Create initial privileges
-        final Privilege readPrivilege = createPrivilegeIfNotFound("READ_PRIVILEGE");
+        final Privilege articleManagement = createPrivilegeIfNotFound("ARTICLE_MANAGEMENT");
+        final Privilege signUp = createPrivilegeIfNotFound("SIGNUP");
+        final Privilege documentManagement = createPrivilegeIfNotFound("DOCUMENT_MANAGEMENT");
+        final Privilege matchManagement = createPrivilegeIfNotFound("MATCH_MANAGEMENT");
+        final Privilege playerManagement = createPrivilegeIfNotFound("PLAYER_MANAGEMENT");
+        final Privilege playerRead = createPrivilegeIfNotFound("PLAYER_READ");
+        final Privilege userManagement = createPrivilegeIfNotFound("USER_MANAGEMENT");
+        final Privilege userRead = createPrivilegeIfNotFound("USER_READ");
+        final Privilege seasonManagement = createPrivilegeIfNotFound("SEASON_MANAGEMENT");
         final Privilege subscriptionManagement = createPrivilegeIfNotFound("SUBSCRIPTION_MANAGEMENT");
-        // Create initial roles
-        final List<Privilege> userPrivileges = new ArrayList<Privilege>(Arrays.asList(readPrivilege));
-        final List<Privilege> adminPrivileges = new ArrayList<Privilege>(Arrays.asList(readPrivilege, subscriptionManagement));
-        final List<Privilege> presidentPrivileges = new ArrayList<Privilege>(Arrays.asList(readPrivilege, subscriptionManagement));
+        final Privilege teamManagement = createPrivilegeIfNotFound("TEAM_MANAGEMENT");
+        final Privilege teamManagementCoach = createPrivilegeIfNotFound("TEAM_MANAGEMENT_COACH");
 
-        final Role userRole = createRoleIfNotFound("ROLE_USER", userPrivileges);
-        final Role adminRole = createRoleIfNotFound("ROLE_ADMIN", adminPrivileges);
+        // Create initial roles
+        final List<Privilege> presidentPrivileges = new ArrayList<Privilege>(Arrays.asList(articleManagement, signUp,
+                documentManagement, matchManagement, playerManagement, userManagement, seasonManagement,
+                subscriptionManagement, teamManagement));
+        final List<Privilege> managerPrivileges = new ArrayList<Privilege>(Arrays.asList(articleManagement, documentManagement,
+                matchManagement, playerManagement, subscriptionManagement, teamManagement));
+        final List<Privilege> coachPrivileges = new ArrayList<Privilege>(Arrays.asList(matchManagement, teamManagementCoach));
+        final List<Privilege> playerPrivileges = new ArrayList<Privilege>(Arrays.asList(playerRead));
+
+        final Role playerRole = createRoleIfNotFound("ROLE_PLAYER", playerPrivileges);
+        final Role coachRole = createRoleIfNotFound("ROLE_COACH", coachPrivileges);
+        final Role managerRole = createRoleIfNotFound("ROLE_MANAGER", managerPrivileges);
         final Role presidentRole = createRoleIfNotFound("ROLE_PRESIDENT", presidentPrivileges);
 
         try {
             createUserIfNotFound("testUser@test.com", "userTest", "Test", "Test",
-                    "123456", new ArrayList<Role>(Arrays.asList(userRole)));
+                    "123456", new ArrayList<Role>(Arrays.asList(playerRole)));
             createUserIfNotFound("testAdmin@test.com", "adminTest", "Test", "Test",
-                    "123456", new ArrayList<Role>(Arrays.asList(adminRole)));
+                    "123456", new ArrayList<Role>(Arrays.asList(managerRole)));
+            createUserIfNotFound("testCoach@test.com", "coachTest", "Test", "Test",
+                    "123456", new ArrayList<Role>(Arrays.asList(coachRole)));
             createUserIfNotFound("testPresident@test.com", "presidentTest", "Test", "Test",
                     "123456", new ArrayList<Role>(Arrays.asList(presidentRole)));
         }

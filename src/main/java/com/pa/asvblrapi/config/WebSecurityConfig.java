@@ -3,9 +3,11 @@ package com.pa.asvblrapi.config;
 import com.pa.asvblrapi.jwt.AuthEntryPointJwt;
 import com.pa.asvblrapi.jwt.AuthTokenFilter;
 import com.pa.asvblrapi.service.UserDetailsServiceImpl;
+import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -56,12 +58,53 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests()
-                .antMatchers("/api/articles/**", "/api/auth/**", "/api/documents/**", "/api/subscription-categories/**",
-                        "/api/team-categories/**", "/api/clothing-sizes/**", "/api/matches/**", "/api/payment-modes/**", "/api/photos/**",
-                        "/api/players/**", "/api/positions/**", "/api/seasons/**", "/api/subscriptions/**",
-                        "/api/teams/**", "/api/users/**").permitAll()
-                .antMatchers("/api/test/**").hasAuthority("SUBSCRIPTION_MANAGEMENT")
-                //.antMatchers("/api/users/**").hasAuthority("READ_PRIVILEGE")
+                // Article
+                .antMatchers(HttpMethod.GET, "/api/articles/{id}", "/api/articles/list").hasAuthority("ARTICLE_MANAGEMENT")
+                .antMatchers(HttpMethod.POST, "/api/articles/**").hasAuthority("ARTICLE_MANAGEMENT")
+                .antMatchers(HttpMethod.PUT, "/api/articles/**").hasAuthority("ARTICLE_MANAGEMENT")
+                .antMatchers(HttpMethod.PATCH, "/api/articles/**").hasAuthority("ARTICLE_MANAGEMENT")
+                .antMatchers(HttpMethod.DELETE, "/api/articles/**").hasAuthority("ARTICLE_MANAGEMENT")
+                .antMatchers(HttpMethod.GET, "/api/articles").permitAll()
+                // Auth
+                .antMatchers("/api/auth/signup").hasAuthority("SIGNUP")
+                .antMatchers("/api/auth/signin").permitAll()
+                // Matches
+                .antMatchers("/api/matches/**").hasAuthority("MATCH_MANAGEMENT")
+                // Players
+                .antMatchers(HttpMethod.GET, "/api/players").hasAuthority("PLAYER_MANAGEMENT")
+                .antMatchers(HttpMethod.PUT, "/api/players/**").hasAuthority("PLAYER_MANAGEMENT")
+                .antMatchers(HttpMethod.DELETE, "/api/players/**").hasAuthority("PLAYER_MANAGEMENT")
+                .antMatchers(HttpMethod.GET, "/api/players/{id}").hasAuthority("PLAYER_READ")
+                // Roles && getUserById
+                .antMatchers("/api/roles/**").hasAuthority("USER_MANAGEMENT")
+                .antMatchers("/api/users/{id}").hasAuthority("USER_MANAGEMENT")
+                // Users
+                .antMatchers(HttpMethod.GET, "/api/users").hasAuthority("USER_READ")
+                .antMatchers("/api/users").hasAuthority("USER_READ")
+                .antMatchers(HttpMethod.POST, "/api/users/**").permitAll()
+                // Season
+                .antMatchers("/api/seasons/**").hasAuthority("SEASON_MANAGEMENT")
+                // Subscriptions
+                .antMatchers(HttpMethod.GET, "/api/subscriptions").hasAuthority("SUBSCRIPTION_MANAGEMENT")
+                .antMatchers(HttpMethod.POST, "/api/subscriptions/{id}/cni", "/api/subscriptions/{id}/identity-photo",
+                        "/api/subscriptions/{id}/medical-certificate").hasAuthority("SUBSCRIPTION_MANAGEMENT")
+                .antMatchers(HttpMethod.PUT, "/api/subscriptions/**").hasAuthority("SUBSCRIPTION_MANAGEMENT")
+                .antMatchers(HttpMethod.DELETE, "/api/subscriptions/**").hasAuthority("SUBSCRIPTION_MANAGEMENT")
+                .antMatchers(HttpMethod.PATCH, "/api/subscriptions/**").hasAuthority("SUBSCRIPTION_MANAGEMENT")
+                .antMatchers(HttpMethod.POST, "/api/subscriptions", "/api/subscriptions/{id}/documents").permitAll()
+                // Teams
+                .antMatchers(HttpMethod.GET, "/api/teams/list-detail").hasAuthority("TEAM_MANAGEMENT")
+                .antMatchers(HttpMethod.PUT, "/api/teams/{id}").hasAuthority("TEAM_MANAGEMENT")
+                .antMatchers(HttpMethod.DELETE, "/api/teams/**").hasAuthority("TEAM_MANAGEMENT")
+                .antMatchers(HttpMethod.POST, "/api/teams", "/api/teams/{id}/coach", "/api/teams/{id}/photo",
+                        "/api/teams/{id}/players").hasAuthority("TEAM_MANAGEMENT")
+                .antMatchers("/api/teams/{id}/leader", "/api/teams/{idTeam}/players/{idPlayer}").hasAuthority("TEAM_MANAGEMENT_COACH")
+                .antMatchers(HttpMethod.GET, "/api/teams/", "/api/teams/{id}", "/api/teams/{id}/players",
+                        "/api/teams/{id}/matches").permitAll()
+                .antMatchers().permitAll()
+                // Allow all
+                .antMatchers("/api/clothing-size/**", "/api/payment-mode/**", "/api/positions/**",
+                        "/api/subscription-categories/**", "/api/team-categories/**", "/api/teams/{id}/matches").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationFiler(), UsernamePasswordAuthenticationFilter.class);
