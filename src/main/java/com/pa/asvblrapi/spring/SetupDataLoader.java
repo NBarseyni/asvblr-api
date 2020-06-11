@@ -103,7 +103,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         // Create SubscriptionCategories
         createSubscriptionCategoryIfNotFound("Loisir");
         createSubscriptionCategoryIfNotFound("Loisir compétition");
-        createSubscriptionCategoryIfNotFound("Départementale compétition");
+        createSubscriptionCategoryIfNotFound("Départemental compétition");
         createSubscriptionCategoryIfNotFound("Régional compétition");
 
         // Create PaymentMode
