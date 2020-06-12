@@ -87,13 +87,13 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         final Role presidentRole = createRoleIfNotFound("ROLE_PRESIDENT", presidentPrivileges);
 
         try {
-            createUserIfNotFound("testUser@test.com", "userTest", "Test", "Test",
+            createUserIfNotFound("testUser@test.com", "userTest", "User", "Test",
                     "123456", new ArrayList<Role>(Arrays.asList(playerRole)));
-            createUserIfNotFound("testAdmin@test.com", "adminTest", "Test", "Test",
+            createUserIfNotFound("testAdmin@test.com", "adminTest", "Manager", "Test",
                     "123456", new ArrayList<Role>(Arrays.asList(managerRole)));
-            createUserIfNotFound("testCoach@test.com", "coachTest", "Test", "Test",
+            createUserIfNotFound("testCoach@test.com", "coachTest", "Coach", "Test",
                     "123456", new ArrayList<Role>(Arrays.asList(coachRole)));
-            createUserIfNotFound("testPresident@test.com", "presidentTest", "Test", "Test",
+            createUserIfNotFound("testPresident@test.com", "presidentTest", "Président", "Test",
                     "123456", new ArrayList<Role>(Arrays.asList(presidentRole)));
         }
         catch (Exception e) {
