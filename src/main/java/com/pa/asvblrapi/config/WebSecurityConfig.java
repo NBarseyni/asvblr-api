@@ -83,7 +83,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/users").hasAuthority("USER_READ")
                 .antMatchers(HttpMethod.POST, "/api/users/**").permitAll()
                 // Season
-                .antMatchers("/api/seasons/**").hasAuthority("SEASON_MANAGEMENT")
+                .antMatchers(HttpMethod.POST,"/api/seasons/**").hasAuthority("SEASON_MANAGEMENT")
+                .antMatchers(HttpMethod.PUT, "/api/seasons/**").hasAuthority("SEASON_MANAGEMENT")
+                .antMatchers(HttpMethod.GET, "/api/seasons", "/api/seasons/{id}").hasAuthority("SEASON_MANAGEMENT")
                 // Subscriptions
                 .antMatchers(HttpMethod.GET, "/api/subscriptions").hasAuthority("SUBSCRIPTION_MANAGEMENT")
                 .antMatchers(HttpMethod.POST, "/api/subscriptions/{id}/cni", "/api/subscriptions/{id}/identity-photo",
@@ -103,8 +105,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/api/teams/{id}/matches").permitAll()
                 .antMatchers().permitAll()
                 // Allow all
-                .antMatchers("/api/clothing-size/**", "/api/payment-mode/**", "/api/positions/**",
-                        "/api/subscription-categories/**", "/api/team-categories/**", "/api/teams/{id}/matches").permitAll()
+                .antMatchers("/api/clothing-sizes/**", "/api/payment-modes/**", "/api/positions/**",
+                        "/api/subscription-categories/**", "/api/team-categories/**", "/api/teams/{id}/matches",
+                        "/api/seasons/current-season").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationFiler(), UsernamePasswordAuthenticationFilter.class);
