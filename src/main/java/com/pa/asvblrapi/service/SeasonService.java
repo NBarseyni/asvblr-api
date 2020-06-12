@@ -3,6 +3,7 @@ package com.pa.asvblrapi.service;
 import com.pa.asvblrapi.dto.SeasonDto;
 import com.pa.asvblrapi.entity.Season;
 import com.pa.asvblrapi.exception.SeasonNotFoundException;
+import com.pa.asvblrapi.mapper.SeasonMapper;
 import com.pa.asvblrapi.repository.SeasonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,12 @@ public class SeasonService {
         return this.seasonRepository.findById(id);
     }
 
-    public Optional<Season> getCurrentSeason() {
-        return this.seasonRepository.findCurrentSeason();
+    public SeasonDto getCurrentSeason() throws SeasonNotFoundException {
+        Optional<Season> season = this.seasonRepository.findCurrentSeason();
+        if (!season.isPresent()) {
+            throw new SeasonNotFoundException();
+        }
+        return SeasonMapper.instance.toDto(season.get());
     }
 
     public Season createSeason(SeasonDto seasonDto) {

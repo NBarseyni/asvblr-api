@@ -9,6 +9,7 @@ import com.pa.asvblrapi.mapper.SeasonMapper;
 import com.pa.asvblrapi.mapper.SubscriptionMapper;
 import com.pa.asvblrapi.service.SeasonService;
 import com.pa.asvblrapi.service.SubscriptionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,13 +23,8 @@ import java.util.List;
 @RequestMapping("/api/seasons")
 public class SeasonController {
 
-    private final SeasonService seasonService;
-    private final SubscriptionService subscriptionService;
-
-    SeasonController(SeasonService seasonService, SubscriptionService subscriptionService) {
-        this.seasonService = seasonService;
-        this.subscriptionService = subscriptionService;
-    }
+    @Autowired
+    private SeasonService seasonService;
 
     @GetMapping("")
     public List<SeasonDto> getSeasons() {
@@ -42,9 +38,13 @@ public class SeasonController {
     }
 
     @GetMapping("/current-season")
-    public SeasonDto getCurrentSeason() {
-        return SeasonMapper.instance.toDto(this.seasonService.getCurrentSeason()
-        .orElseThrow(RuntimeException::new));
+    public ResponseEntity<Object> getCurrentSeason() {
+        try {
+            SeasonDto seasonDto = this.seasonService.getCurrentSeason();
+            return ResponseEntity.status(HttpStatus.OK).body(seasonDto);
+        } catch (SeasonNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @PostMapping("")
@@ -52,8 +52,7 @@ public class SeasonController {
         try {
             Season season = this.seasonService.createSeason(seasonDto);
             return ResponseEntity.status(HttpStatus.CREATED).body(SeasonMapper.instance.toDto(season));
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
@@ -63,8 +62,7 @@ public class SeasonController {
         try {
             Season season = this.seasonService.updateSeason(id, seasonDto);
             return ResponseEntity.status(HttpStatus.OK).body(SeasonMapper.instance.toDto(season));
-        }
-        catch (SeasonNotFoundException e) {
+        } catch (SeasonNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
