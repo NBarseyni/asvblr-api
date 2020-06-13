@@ -37,4 +37,13 @@ public class Drive {
             joinColumns = @JoinColumn(name = "drive_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> passengers;
+
+    public Drive(String address, boolean go, int nbTotalPlaces, User driver, Match match) {
+        this.address = address;
+        this.go = go;
+        this.nbTotalPlaces = nbTotalPlaces;
+        this.nbFreePlaces = nbTotalPlaces;
+        this.driver = driver;
+        this.match = match;
+    }
 }
