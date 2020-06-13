@@ -45,6 +45,14 @@ public class DriveService {
         return DriveMapper.instance.toDto(this.driveRepository.findAllByIdMatch(idMatch));
     }
 
+    public List<DriveDto> getAllByIdDriver(Long idDriver) throws UserNotFoundException {
+        Optional<User> user = this.userRepository.findById(idDriver);
+        if (!user.isPresent()) {
+            throw new UserNotFoundException(idDriver);
+        }
+        return DriveMapper.instance.toDto(this.driveRepository.findAllByIdDriver(idDriver));
+    }
+
     public DriveDto createDrive(DriveDto driveDto) throws UserNotFoundException, MatchNotFoundException {
         Optional<User> driver = this.userRepository.findById(driveDto.getIdDriver());
         if (!driver.isPresent()) {

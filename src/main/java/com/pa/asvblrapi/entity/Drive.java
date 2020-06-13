@@ -27,7 +27,7 @@ public class Drive {
     @NotNull
     private int nbFreePlaces;
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "driver_id", nullable = false)
     private User driver;
     @ManyToOne
     @JoinColumn(name = "match_id", nullable = false)

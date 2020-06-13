@@ -1,11 +1,13 @@
 package com.pa.asvblrapi.controller;
 
+import com.pa.asvblrapi.dto.DriveDto;
 import com.pa.asvblrapi.dto.UserDto;
 import com.pa.asvblrapi.dto.UserDtoFirebase;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.InvalidOldPasswordException;
 import com.pa.asvblrapi.exception.UserNotFoundException;
 import com.pa.asvblrapi.repository.UserRepository;
+import com.pa.asvblrapi.service.DriveService;
 import com.pa.asvblrapi.service.FirebaseService;
 import com.pa.asvblrapi.service.UserSecurityService;
 import com.pa.asvblrapi.service.UserService;
@@ -37,6 +39,9 @@ public class UserController {
     @Autowired
     private UserSecurityService userSecurityService;
 
+    @Autowired
+    private DriveService driveService;
+
     @GetMapping("")
     public List<UserDto> getAllUser() {
         return this.userService.getAllUser();
@@ -46,6 +51,16 @@ public class UserController {
     public User getUser(@PathVariable Long id) {
         return this.userService.getUser(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    @GetMapping("/{id}/driving-drives")
+    public ResponseEntity<Object> getDrivingDrive(@PathVariable Long id) {
+        try {
+            List<DriveDto> drives = this.driveService.getAllByIdDriver(id);
+            return ResponseEntity.status(HttpStatus.OK).body(drives);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @PostMapping("/update-password")
