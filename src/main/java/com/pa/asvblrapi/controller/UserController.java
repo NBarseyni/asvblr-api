@@ -63,6 +63,16 @@ public class UserController {
         }
     }
 
+    @GetMapping("/{id}/passenger-drives")
+    public ResponseEntity<Object> getDrives(@PathVariable Long id) {
+        try {
+            List<DriveDto> drives = this.driveService.getAllByIdPassenger(id);
+            return ResponseEntity.status(HttpStatus.OK).body(drives);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @PostMapping("/update-password")
     public ResponseEntity<Object> changeUserPassword(
             @RequestParam("password") String password,

@@ -18,4 +18,8 @@ public interface DriveRepository extends JpaRepository<Drive, Long> {
     @Query(value = "select d.* from Drive d where d.driver_id = :idDriver",
             nativeQuery = true)
     List<Drive> findAllByIdDriver(@Param("idDriver") Long idDriver);
+
+    @Query(value = "select d.* from Drive d, drives_users du where d.id = du.drive_id and du.user_id = :idPassenger",
+            nativeQuery = true)
+    List<Drive> findAllByIdPassenger(@Param("idPassenger") Long idPassenger);
 }
