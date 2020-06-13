@@ -3,6 +3,7 @@ package com.pa.asvblrapi.service;
 import com.pa.asvblrapi.dto.SubscriptionDto;
 import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.exception.*;
+import com.pa.asvblrapi.mapper.SubscriptionMapper;
 import com.pa.asvblrapi.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,6 +38,11 @@ public class SubscriptionService {
 
     public List<Subscription> getSubscriptionsBySeason(Long id) {
         return this.subscriptionRepository.findSubscriptionBySeason(id);
+    }
+
+    public List<SubscriptionDto> getCurrentSeasonSubscriptions() {
+        return SubscriptionMapper.instance.toDto(this.subscriptionRepository.findSubscriptionBySeason(
+                this.seasonRepository.findCurrentSeason().get().getId()));
     }
 
     public List<Subscription> getSubscriptionsByPlayer(Long id) {

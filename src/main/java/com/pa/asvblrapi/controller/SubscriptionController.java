@@ -48,7 +48,7 @@ public class SubscriptionController {
 
     @GetMapping("")
     public List<SubscriptionDto> getSubscriptions() {
-        return SubscriptionMapper.instance.toDto(this.subscriptionService.getAllSubscriptions());
+        return this.subscriptionService.getCurrentSeasonSubscriptions();
     }
 
     @GetMapping("/{id}")
