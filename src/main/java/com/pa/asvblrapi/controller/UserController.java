@@ -95,7 +95,7 @@ public class UserController {
             }
             String token = UUID.randomUUID().toString();
             this.userService.createPasswordResetTokenForUser(user, token);
-            this.emailService.sendMessageResetPassword(getAppUrl(request), token, user);
+            this.emailService.sendMessageResetPassword(token, user);
             return ResponseEntity.status(HttpStatus.OK).body(null);
         } catch (MessagingException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
