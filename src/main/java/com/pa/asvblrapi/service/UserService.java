@@ -8,9 +8,7 @@ import com.pa.asvblrapi.entity.Privilege;
 import com.pa.asvblrapi.entity.Role;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.UserNotFoundException;
-import com.pa.asvblrapi.mapper.UserMapper;
 import com.pa.asvblrapi.repository.PasswordResetTokenRepository;
-import com.pa.asvblrapi.repository.PrivilegeRepository;
 import com.pa.asvblrapi.repository.RoleRepository;
 import com.pa.asvblrapi.repository.UserRepository;
 import com.pa.asvblrapi.spring.EmailServiceImpl;
@@ -24,7 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -54,8 +51,20 @@ public class UserService {
 
         List<UserDto> usersDto = new ArrayList<>();
         for(User user : users) {
+            List<String> roles = new ArrayList<>();
+            List<String> privileges = new ArrayList<>();
+            for (Role role :
+                    user.getRoles()) {
+                roles.add(role.getName());
+                for (Privilege privilege :
+                        role.getPrivileges()) {
+                    if (!privileges.contains(privilege.getName())) {
+                        privileges.add(privilege.getName());
+                    }
+                }
+            }
             Role role = Iterables.get(user.getRoles(), 0);
-            List<String> privileges = role.getPrivileges().stream().map(Privilege::getName).collect(Collectors.toList());
+            //List<String> privileges = role.getPrivileges().stream().map(Privilege::getName).collect(Collectors.toList());
 
             usersDto.add(new UserDto(
                     user.getId(),
@@ -63,7 +72,7 @@ public class UserService {
                     user.getFirstName(),
                     user.getLastName(),
                     user.getEmail(),
-                    role.getName(),
+                    roles,
                     privileges
             ));
         }
@@ -92,7 +101,7 @@ public class UserService {
             String password = randomPasswordGenerator.generatePassword();
             User user = userRepository.save(new User(username, firstName, lastName, email, encoder.encode(password)));
 
-            Role role = roleRepository.findByName("ROLE_USER");
+            Role role = roleRepository.findByName("ROLE_PLAYER");
             List<Role> roles = new ArrayList<>(Arrays.asList(role));
             user.setRoles(roles);
 

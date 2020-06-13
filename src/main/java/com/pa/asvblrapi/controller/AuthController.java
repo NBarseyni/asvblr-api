@@ -1,6 +1,6 @@
 package com.pa.asvblrapi.controller;
 
-import com.google.common.collect.Iterables;
+import com.pa.asvblrapi.entity.Privilege;
 import com.pa.asvblrapi.entity.Role;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.jwt.JwtUtils;
@@ -21,11 +21,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -55,12 +51,25 @@ public class AuthController {
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        /*
         List<String> privileges = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
-
+         */
         Collection<Role> roles = userRepository.findByUsername(userDetails.getUsername()).getRoles();
-        Role role = Iterables.get(roles, 0);
+
+        List<String> rolesString = new ArrayList<>();
+        List<String> privileges = new ArrayList<>();
+        for (Role role :
+                roles) {
+            rolesString.add(role.getName());
+            for (Privilege privilege :
+                    role.getPrivileges()) {
+                if (!privileges.contains(privilege.getName())) {
+                    privileges.add(privilege.getName());
+                }
+            }
+        }
         
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
@@ -68,7 +77,7 @@ public class AuthController {
                 userDetails.getFirstName(),
                 userDetails.getLastName(),
                 userDetails.getEmail(),
-                role.getName(),
+                rolesString,
                 privileges));
     }
 
