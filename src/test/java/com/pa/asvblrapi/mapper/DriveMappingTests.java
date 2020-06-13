@@ -17,16 +17,17 @@ public class DriveMappingTests {
     @Test
     public void should_map_drive_to_dto() {
         User user = new User();
-        user.setId((long)2);
+        user.setId((long) 2);
         Match match = new Match();
-        match.setId((long)3);
-        Drive drive = new Drive((long)1, "address", 3, 3, user, match, new ArrayList<>());
+        match.setId((long) 3);
+        Drive drive = new Drive((long) 1, "address", true, 3, 3, user, match, new ArrayList<>());
 
         DriveDto driveDto = DriveMapper.instance.toDto(drive);
 
         assertThat(driveDto).isNotNull();
         assertThat(driveDto.getId()).isEqualTo(drive.getId());
         assertThat(driveDto.getAddress()).isEqualTo(drive.getAddress());
+        assertThat(driveDto.isGo()).isEqualTo(drive.isGo());
         assertThat(driveDto.getNbTotalPlaces()).isEqualTo(drive.getNbTotalPlaces());
         assertThat(driveDto.getNbFreePlaces()).isEqualTo(drive.getNbFreePlaces());
         assertThat(driveDto.getIdDriver()).isEqualTo(user.getId());

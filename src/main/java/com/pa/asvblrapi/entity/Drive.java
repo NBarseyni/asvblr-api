@@ -21,6 +21,8 @@ public class Drive {
     @NotNull
     private String address;
     @NotNull
+    private boolean go;
+    @NotNull
     private int nbTotalPlaces;
     @NotNull
     private int nbFreePlaces;

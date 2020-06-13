@@ -13,6 +13,8 @@ public class DriveDto {
     @NotBlank
     private String address;
     @NotNull
+    private boolean go;
+    @NotNull
     private int nbTotalPlaces;
     private int nbFreePlaces;
     @NotNull
