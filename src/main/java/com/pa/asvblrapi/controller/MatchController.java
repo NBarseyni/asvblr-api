@@ -1,8 +1,10 @@
 package com.pa.asvblrapi.controller;
 
+import com.pa.asvblrapi.dto.DriveDto;
 import com.pa.asvblrapi.dto.MatchDto;
 import com.pa.asvblrapi.exception.MatchNotFoundException;
 import com.pa.asvblrapi.exception.TeamNotFoundException;
+import com.pa.asvblrapi.service.DriveService;
 import com.pa.asvblrapi.service.MatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,9 @@ public class MatchController {
     @Autowired
     private MatchService matchService;
 
+    @Autowired
+    private DriveService driveService;
+
     @GetMapping("")
     public List<MatchDto> getMatches() {
         return this.matchService.getAllMatches();
@@ -27,6 +32,16 @@ public class MatchController {
     @GetMapping("/{id}")
     public MatchDto getMatch(@PathVariable Long id) {
         return this.matchService.getMatch(id);
+    }
+
+    @GetMapping("/{id}/drives")
+    public ResponseEntity<Object> getDrives(@PathVariable Long id) {
+        try {
+            List<DriveDto> drives = this.driveService.getAllByIdMatch(id);
+            return ResponseEntity.status(HttpStatus.OK).body(drives);
+        } catch (MatchNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     @PostMapping("")
