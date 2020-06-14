@@ -16,9 +16,8 @@ import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TeamService {
@@ -46,6 +45,9 @@ public class TeamService {
     @Autowired
     private TeamCategoryRepository teamCategoryRepository;
 
+    @Autowired
+    private RoleRepository roleRepository;
+
     public List<Team> getAllTeam() {
         return this.teamRepository.findAll();
     }
@@ -67,7 +69,7 @@ public class TeamService {
         Team team = new Team(teamDto.getName(), season.get(), teamCategory.get());
         if (teamDto.getIdCoach() != null) {
             Optional<User> coach = this.userRepository.findById(teamDto.getIdCoach());
-            if(!coach.isPresent()) {
+            if (!coach.isPresent()) {
                 throw new UserNotFoundException(teamDto.getIdCoach());
             }
             team.setCoach(coach.get());
@@ -101,8 +103,7 @@ public class TeamService {
             Files.write(path, bytes);
             Files.delete(Paths.get(UPLOADED_FOLDER + team.get().getPhoto()));
             team.get().setPhoto(fileName);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new IOException(e.getMessage());
         }
         return TeamMapper.instance.toDto(this.teamRepository.save(team.get()));
@@ -110,15 +111,37 @@ public class TeamService {
 
     public TeamDto setCoach(Long id, Long idCoach) throws TeamNotFoundException, UserNotFoundException {
         Optional<Team> team = this.teamRepository.findById(id);
-        if  (!team.isPresent()) {
+        if (!team.isPresent()) {
             throw new TeamNotFoundException(id);
         }
         Optional<User> user = this.userRepository.findById(idCoach);
         if (!user.isPresent()) {
             throw new UserNotFoundException(idCoach);
         }
+
+        Role roleCoach = this.roleRepository.findByName("ROLE_COACH");
+
+        if (!user.get().getRoles().contains(roleCoach)) {
+            user.get().getRoles().add(roleCoach);
+        }
+        // Remove duplicates roles (don't know why there are duplicates roles but remove it...)
+        user.get().setRoles(user.get().getRoles().stream().distinct().collect(Collectors.toList()));
+        this.userRepository.save(user.get());
+
+        User oldCoach = team.get().getCoach();
+
         team.get().setCoach(user.get());
-        return TeamMapper.instance.toDto(this.teamRepository.save(team.get()));
+        Team updatedTeam = this.teamRepository.save(team.get());
+
+        if (oldCoach != null) {
+            oldCoach.getCoachedTeams().remove(team.get());
+            if (oldCoach.getCoachedTeams().size() == 0) {
+                oldCoach.getRoles().remove(roleCoach);
+            }
+            this.userRepository.save(oldCoach);
+        }
+
+        return TeamMapper.instance.toDto(updatedTeam);
     }
 
     public TeamDto setLeader(Long id, Long idLeader) throws TeamNotFoundException, PlayerNotFoundException, JerseyNotFoundException {
@@ -317,6 +340,14 @@ public class TeamService {
             } catch (IOException e) {
                 throw new IOException(e.getMessage());
             }
+        }
+        User coach = team.get().getCoach();
+        if (coach != null) {
+            coach.getCoachedTeams().remove(team.get());
+            if (coach.getCoachedTeams().size() == 0) {
+                coach.getRoles().remove(this.roleRepository.findByName("ROLE_COACH"));
+            }
+            this.userRepository.save(coach);
         }
         this.teamRepository.delete(team.get());
     }
