@@ -6,9 +6,7 @@ import com.pa.asvblrapi.entity.Document;
 import com.pa.asvblrapi.entity.Player;
 import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.entity.User;
-import com.pa.asvblrapi.exception.SeasonNotFoundException;
-import com.pa.asvblrapi.exception.SubscriptionAlreadyValidatedException;
-import com.pa.asvblrapi.exception.SubscriptionNotFoundException;
+import com.pa.asvblrapi.exception.*;
 import com.pa.asvblrapi.mapper.SubscriptionMapper;
 import com.pa.asvblrapi.service.*;
 import com.pa.asvblrapi.spring.EmailServiceImpl;
@@ -65,7 +63,7 @@ public class SubscriptionController {
             this.emailService.sendMessageCreateSubscription(subscription);
             return ResponseEntity.status(HttpStatus.CREATED).body(SubscriptionMapper.instance.toDto(subscription));
         }
-        catch (SeasonNotFoundException e) {
+        catch (SeasonNotFoundException | SubscriptionCategoryNotFoundException | PaymentModeNotFoundException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No current season");
         }
         catch (Exception e) {
