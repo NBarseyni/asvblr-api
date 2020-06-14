@@ -7,6 +7,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Date;
 import java.util.List;
 
 @Getter
@@ -23,6 +24,8 @@ public class Drive {
     @NotNull
     private boolean go;
     @NotNull
+    private Date date;
+    @NotNull
     private int nbTotalPlaces;
     @NotNull
     private int nbFreePlaces;
@@ -38,9 +41,10 @@ public class Drive {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> passengers;
 
-    public Drive(String address, boolean go, int nbTotalPlaces, User driver, Match match) {
+    public Drive(String address, boolean go, Date date, int nbTotalPlaces, User driver, Match match) {
         this.address = address;
         this.go = go;
+        this.date = date;
         this.nbTotalPlaces = nbTotalPlaces;
         this.nbFreePlaces = nbTotalPlaces;
         this.driver = driver;

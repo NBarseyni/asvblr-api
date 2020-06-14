@@ -71,8 +71,8 @@ public class DriveService {
             throw new MatchNotFoundException(driveDto.getIdMatch());
         }
 
-        Drive drive = new Drive(
-                driveDto.getAddress(), driveDto.isGo(), driveDto.getNbTotalPlaces(), driver.get(), match.get());
+        Drive drive = new Drive(driveDto.getAddress(), driveDto.isGo(), driveDto.getDate(), driveDto.getNbTotalPlaces(),
+                driver.get(), match.get());
 
         return DriveMapper.instance.toDto(this.driveRepository.save(drive));
     }
@@ -94,6 +94,7 @@ public class DriveService {
 
         drive.get().setAddress(driveDto.getAddress());
         drive.get().setGo(driveDto.isGo());
+        drive.get().setDate(driveDto.getDate());
         drive.get().setNbTotalPlaces(driveDto.getNbTotalPlaces());
         drive.get().setDriver(driver.get());
         drive.get().setMatch(match.get());
