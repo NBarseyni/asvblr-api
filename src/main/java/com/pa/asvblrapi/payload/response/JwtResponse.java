@@ -13,8 +13,8 @@ public class JwtResponse {
     private UserDto user;
 
     public JwtResponse(String accessToken, Long id, String username, String firstName, String lastName,
-                       String email, List<String> roles, List<String> privileges) {
+                       String email, boolean isPasswordChanged, List<String> roles, List<String> privileges) {
         this.token = accessToken;
-        this.user = new UserDto(id, username, firstName, lastName, email, roles, privileges);
+        this.user = new UserDto(id, username, firstName, lastName, email, isPasswordChanged, roles, privileges);
     }
 }

@@ -22,7 +22,7 @@ public class User {
     private String lastName;
     private String email;
     private String password;
-    private boolean enabled;
+    private boolean passwordChanged;
 
     @OneToOne(mappedBy = "user")
     private Player player;
@@ -42,6 +42,6 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.enabled = true;
+        this.passwordChanged = false;
     }
 }

@@ -72,6 +72,7 @@ public class UserService {
                     user.getFirstName(),
                     user.getLastName(),
                     user.getEmail(),
+                    user.isPasswordChanged(),
                     roles,
                     privileges
             ));
@@ -143,6 +144,9 @@ public class UserService {
 
     public void changeUserPassword(User user, String password) {
         user.setPassword(this.encoder.encode(password));
+        if (!user.isPasswordChanged()) {
+            user.setPasswordChanged(true);
+        }
         this.userRepository.save(user);
     }
 

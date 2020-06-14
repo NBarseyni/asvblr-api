@@ -56,7 +56,8 @@ public class AuthController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
          */
-        Collection<Role> roles = userRepository.findByUsername(userDetails.getUsername()).getRoles();
+        User user = userRepository.findByUsername(userDetails.getUsername());
+        Collection<Role> roles = user.getRoles();
 
         List<String> rolesString = new ArrayList<>();
         List<String> privileges = new ArrayList<>();
@@ -77,6 +78,7 @@ public class AuthController {
                 userDetails.getFirstName(),
                 userDetails.getLastName(),
                 userDetails.getEmail(),
+                user.isPasswordChanged(),
                 rolesString,
                 privileges));
     }
