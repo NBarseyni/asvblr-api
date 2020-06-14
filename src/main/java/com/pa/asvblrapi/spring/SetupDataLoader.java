@@ -172,7 +172,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         return privilege;
     }
 
-    private Role createRoleIfNotFound(final String name, final Collection<Privilege> privileges) {
+    private Role createRoleIfNotFound(final String name, final List<Privilege> privileges) {
         Role role = roleRepository.findByName(name);
         if (role == null) {
             role = new Role(name);
@@ -183,7 +183,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     }
 
     private User createUserIfNotFound(final String email, final String username, final String firstName,
-                                            final String lastName, final String password, final Collection<Role> roles)
+                                            final String lastName, final String password, final List<Role> roles)
             throws Exception {
         User user = userRepository.findByUsername(username);
         if (user == null) {
@@ -194,14 +194,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             user.setLastName(lastName);
             user.setPassword(encoder.encode(password));
             user.setEnabled(true);
-        }
-        user.setRoles(roles);
-        user = userRepository.save(user);
-        try {
-            this.firebaseService.saveUserDetails(new UserDtoFirebase(user.getId(), username, firstName, lastName, email));
-        }
-        catch (Exception e) {
-            throw new Exception(e.getMessage());
+            user.setRoles(roles);
+            user = userRepository.save(user);
+            try {
+                this.firebaseService.saveUserDetails(new UserDtoFirebase(user.getId(), username, firstName, lastName, email));
+            }
+            catch (Exception e) {
+                throw new Exception(e.getMessage());
+            }
         }
         return user;
     }
