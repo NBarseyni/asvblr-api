@@ -3,7 +3,6 @@ package com.pa.asvblrapi.config;
 import com.pa.asvblrapi.jwt.AuthEntryPointJwt;
 import com.pa.asvblrapi.jwt.AuthTokenFilter;
 import com.pa.asvblrapi.service.UserDetailsServiceImpl;
-import org.apache.http.protocol.HTTP;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -85,7 +84,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // Season
                 .antMatchers(HttpMethod.POST,"/api/seasons/**").hasAuthority("SEASON_MANAGEMENT")
                 .antMatchers(HttpMethod.PUT, "/api/seasons/**").hasAuthority("SEASON_MANAGEMENT")
-                .antMatchers(HttpMethod.GET, "/api/seasons", "/api/seasons/{id}").hasAuthority("SEASON_MANAGEMENT")
+                .antMatchers(HttpMethod.GET, "/api/seasons/current-season").permitAll()
                 // Subscriptions
                 .antMatchers(HttpMethod.GET, "/api/subscriptions").hasAuthority("SUBSCRIPTION_MANAGEMENT")
                 .antMatchers(HttpMethod.POST, "/api/subscriptions/{id}/cni", "/api/subscriptions/{id}/identity-photo",
@@ -100,14 +99,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/api/teams/**").hasAuthority("TEAM_MANAGEMENT")
                 .antMatchers(HttpMethod.POST, "/api/teams", "/api/teams/{id}/coach", "/api/teams/{id}/photo",
                         "/api/teams/{id}/players").hasAuthority("TEAM_MANAGEMENT")
-                .antMatchers("/api/teams/{id}/leader", "/api/teams/{idTeam}/players/{idPlayer}").hasAuthority("TEAM_MANAGEMENT_COACH")
-                .antMatchers(HttpMethod.GET, "/api/teams/", "/api/teams/{id}", "/api/teams/{id}/players",
+                .antMatchers(HttpMethod.POST, "/api/teams/{id}/leader").hasAuthority("TEAM_MANAGEMENT_COACH")
+                .antMatchers(HttpMethod.PUT, "/api/teams/{idTeam}/players/{idPlayer}").hasAuthority("TEAM_MANAGEMENT_COACH")
+                .antMatchers(HttpMethod.GET, "/api/teams", "/api/teams/{id}", "/api/teams/{id}/players",
                         "/api/teams/{id}/matches").permitAll()
-                .antMatchers().permitAll()
-                // Allow all
+                // Drives
+                .antMatchers("/api/drives/**").hasAuthority("DRIVE_READ_CREATE")
+                // Dataset
                 .antMatchers("/api/clothing-sizes/**", "/api/payment-modes/**", "/api/positions/**",
-                        "/api/subscription-categories/**", "/api/team-categories/**", "/api/teams/{id}/matches",
-                        "/api/seasons/current-season").permitAll()
+                        "/api/subscription-categories/**", "/api/team-categories/**").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterBefore(authenticationFiler(), UsernamePasswordAuthenticationFilter.class);
