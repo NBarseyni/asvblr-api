@@ -8,6 +8,7 @@ import com.pa.asvblrapi.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,6 +33,9 @@ public class SubscriptionService {
     @Autowired
     private ClothingSizeRepository clothingSizeRepository;
 
+    @Autowired
+    private DocumentService documentService;
+
     public List<Subscription> getAllSubscriptions() {
         return this.subscriptionRepository.findAll();
     }
@@ -53,21 +57,21 @@ public class SubscriptionService {
         return this.subscriptionRepository.findById(id);
     }
 
-    public Subscription createSubscription(SubscriptionDto subscriptionDto) throws SeasonNotFoundException, SubscriptionCategoryNotFoundException, PaymentModeNotFoundException{
+    public Subscription createSubscription(SubscriptionDto subscriptionDto) throws SeasonNotFoundException, SubscriptionCategoryNotFoundException, PaymentModeNotFoundException {
         Optional<Season> season = this.seasonRepository.findCurrentSeason();
-        if(!season.isPresent()) {
+        if (!season.isPresent()) {
             throw new SeasonNotFoundException(subscriptionDto.getIdSeason());
         }
 
         Optional<SubscriptionCategory> category = this.subscriptionCategoryRepository.findById(subscriptionDto.getIdSubscriptionCategory());
-        if(!category.isPresent()) {
+        if (!category.isPresent()) {
             throw new SubscriptionCategoryNotFoundException(subscriptionDto.getIdSubscriptionCategory());
         }
 
         List<PaymentMode> paymentModes = new ArrayList<>();
-        for(int i = 0; i < subscriptionDto.getIdsPaymentMode().size(); i++) {
+        for (int i = 0; i < subscriptionDto.getIdsPaymentMode().size(); i++) {
             Optional<PaymentMode> paymentMode = this.paymentModeRepository.findById(subscriptionDto.getIdsPaymentMode().get(i));
-            if(!paymentMode.isPresent()) {
+            if (!paymentMode.isPresent()) {
                 throw new PaymentModeNotFoundException(subscriptionDto.getIdsPaymentMode().get(i));
             }
             paymentModes.add(paymentMode.get());
@@ -76,7 +80,7 @@ public class SubscriptionService {
         ClothingSize topSize;
         if (subscriptionDto.getIdTopSize() != null) {
             Optional<ClothingSize> topSizeOptional = this.clothingSizeRepository.findById(subscriptionDto.getIdTopSize());
-            if(!topSizeOptional.isPresent()) {
+            if (!topSizeOptional.isPresent()) {
                 throw new ClothingSizeNotFoundException(subscriptionDto.getIdTopSize());
             }
             topSize = topSizeOptional.get();
@@ -86,7 +90,7 @@ public class SubscriptionService {
         ClothingSize pantsSize;
         if (subscriptionDto.getIdPantsSize() != null) {
             Optional<ClothingSize> pantsSizeOptional = this.clothingSizeRepository.findById(subscriptionDto.getIdPantsSize());
-            if(!pantsSizeOptional.isPresent()) {
+            if (!pantsSizeOptional.isPresent()) {
                 throw new ClothingSizeNotFoundException(subscriptionDto.getIdPantsSize());
             }
             pantsSize = pantsSizeOptional.get();
@@ -130,29 +134,29 @@ public class SubscriptionService {
     public Subscription updateSubscription(Long id, SubscriptionDto subscriptionDto) throws SubscriptionNotFoundException,
             SeasonNotFoundException, SubscriptionCategoryNotFoundException, PaymentModeNotFoundException {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
-        if(!subscription.isPresent()) {
+        if (!subscription.isPresent()) {
             throw new SubscriptionNotFoundException(id);
         }
         Optional<SubscriptionCategory> category = this.subscriptionCategoryRepository.findById(subscriptionDto.getIdSubscriptionCategory());
-        if(!category.isPresent()) {
+        if (!category.isPresent()) {
             throw new SubscriptionCategoryNotFoundException(subscriptionDto.getIdSubscriptionCategory());
         }
 
         List<PaymentMode> paymentModes = new ArrayList<>();
         for (int i = 0; i < subscriptionDto.getIdsPaymentMode().size(); i++) {
             Optional<PaymentMode> paymentMode = this.paymentModeRepository.findById(subscriptionDto.getIdsPaymentMode().get(i));
-            if(!paymentMode.isPresent()) {
+            if (!paymentMode.isPresent()) {
                 throw new PaymentModeNotFoundException(subscriptionDto.getIdsPaymentMode().get(i));
             }
             paymentModes.add(paymentMode.get());
         }
 
         Optional<ClothingSize> topSize = this.clothingSizeRepository.findById(subscriptionDto.getIdTopSize());
-        if(!topSize.isPresent()) {
+        if (!topSize.isPresent()) {
             throw new ClothingSizeNotFoundException(subscriptionDto.getIdTopSize());
         }
         Optional<ClothingSize> pantsSize = this.clothingSizeRepository.findById(subscriptionDto.getIdPantsSize());
-        if(!pantsSize.isPresent()) {
+        if (!pantsSize.isPresent()) {
             throw new ClothingSizeNotFoundException(subscriptionDto.getIdPantsSize());
         }
         subscription.get().setFirstName(subscriptionDto.getFirstName());
@@ -187,7 +191,7 @@ public class SubscriptionService {
 
     public void setPlayer(Long id, Player player) {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
-        if(subscription.isPresent()) {
+        if (subscription.isPresent()) {
             subscription.get().setPlayer(player);
             this.subscriptionRepository.save(subscription.get());
         }
@@ -195,7 +199,7 @@ public class SubscriptionService {
 
     public void addCNI(Long id, Document document) {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
-        if(subscription.isPresent()) {
+        if (subscription.isPresent()) {
             subscription.get().setCNI(document);
             this.subscriptionRepository.save(subscription.get());
         }
@@ -203,7 +207,7 @@ public class SubscriptionService {
 
     public void addIdentityPhoto(Long id, Document document) {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
-        if(subscription.isPresent()) {
+        if (subscription.isPresent()) {
             subscription.get().setIdentityPhoto(document);
             this.subscriptionRepository.save(subscription.get());
         }
@@ -211,7 +215,7 @@ public class SubscriptionService {
 
     public void addMedicalCertificate(Long id, Document document) {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
-        if(subscription.isPresent()) {
+        if (subscription.isPresent()) {
             subscription.get().setMedicalCertificate(document);
             this.subscriptionRepository.save(subscription.get());
         }
@@ -234,19 +238,22 @@ public class SubscriptionService {
     public void unvalidatedSubscription(Long id) throws SubscriptionNotFoundException {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
 
-        if(!subscription.isPresent()) {
+        if (!subscription.isPresent()) {
             throw new SubscriptionNotFoundException(id);
         }
         subscription.get().setValidated(false);
         this.subscriptionRepository.save(subscription.get());
     }
 
-    public void deleteSubscription(Long id) throws SubscriptionNotFoundException, AccessDeniedException {
+    public void deleteSubscription(Long id) throws SubscriptionNotFoundException, DocumentNotFoundException, IOException {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
 
-        if(!subscription.isPresent()) {
+        if (!subscription.isPresent()) {
             throw new SubscriptionNotFoundException(id);
         }
         this.subscriptionRepository.delete(subscription.get());
+        this.documentService.deleteDocument(subscription.get().getCNI().getId());
+        this.documentService.deleteDocument(subscription.get().getIdentityPhoto().getId());
+        this.documentService.deleteDocument(subscription.get().getMedicalCertificate().getId());
     }
 }
