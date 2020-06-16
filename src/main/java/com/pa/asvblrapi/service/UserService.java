@@ -94,11 +94,7 @@ public class UserService {
 
     public User createUser(String firstName, String lastName, String email) throws Exception {
         try {
-            String username = String.format("%s%s", firstName, lastName);
-            int i = 1;
-            while (userRepository.existsByUsername(username)) {
-                username += i;
-            }
+            String username = this.createUsername(firstName, lastName);
             String password = randomPasswordGenerator.generatePassword();
             User user = userRepository.save(new User(username, firstName, lastName, email, encoder.encode(password)));
 
@@ -116,6 +112,15 @@ public class UserService {
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
+    }
+
+    public String createUsername(String firstName, String lastName) {
+        String username = String.format("%s%s", firstName, lastName);
+        int i = 1;
+        while (this.userRepository.existsByUsername(username)) {
+            username += i;
+        }
+        return username;
     }
 
     public User updateUser(Long id, UserDto userDto) throws UserNotFoundException, InterruptedException, ExecutionException {

@@ -8,6 +8,7 @@ import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.*;
 import com.pa.asvblrapi.mapper.SubscriptionMapper;
+import com.pa.asvblrapi.repository.UserRepository;
 import com.pa.asvblrapi.service.*;
 import com.pa.asvblrapi.spring.EmailServiceImpl;
 import com.sun.mail.iap.Response;
@@ -62,29 +63,32 @@ public class SubscriptionController {
             Subscription subscription = this.subscriptionService.createSubscription(subscriptionDto);
             this.emailService.sendMessageCreateSubscription(subscription);
             return ResponseEntity.status(HttpStatus.CREATED).body(SubscriptionMapper.instance.toDto(subscription));
-        }
-        catch (SeasonNotFoundException | SubscriptionCategoryNotFoundException | PaymentModeNotFoundException e) {
+        } catch (SeasonNotFoundException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No current season");
-        }
-        catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        } catch (SubscriptionCategoryNotFoundException | PaymentModeNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
     //@PostMapping("")
     public ResponseEntity<Object> createSubscriptionWithDocuments(@Valid @RequestParam String subscription,
-                                                     @RequestParam("cni") MultipartFile cniFile,
-                                                     @RequestParam("identityPhoto") MultipartFile identityPhotoFile,
-                                                     @RequestParam("medicalCertificate") MultipartFile medicalCertificateFile) {
+                                                                  @RequestParam("cni") MultipartFile cniFile,
+                                                                  @RequestParam("identityPhoto") MultipartFile identityPhotoFile,
+                                                                  @RequestParam("medicalCertificate") MultipartFile medicalCertificateFile) {
         try {
             ObjectMapper mapper = new ObjectMapper();
             SubscriptionDto subscriptionDto = mapper.readValue(subscription, SubscriptionDto.class);
             Subscription subscriptionSave = this.subscriptionService.createSubscription(subscriptionDto);
-            Document cniDocument = this.documentService.createDocument(cniFile);
+            String username = this.userService.createUsername(subscriptionSave.getFirstName(), subscriptionSave.getLastName());
+            Document cniDocument = this.documentService.createDocument(cniFile, username + "_cni");
             this.subscriptionService.addCNI(subscriptionSave.getId(), cniDocument);
-            Document identityPhotoDocument = this.documentService.createDocument(identityPhotoFile);
+            Document identityPhotoDocument = this.documentService.createDocument(identityPhotoFile,
+                    username + "_identityPhoto");
             this.subscriptionService.addIdentityPhoto(subscriptionSave.getId(), identityPhotoDocument);
-            Document medicalCertificateDocument = this.documentService.createDocument(medicalCertificateFile);
+            Document medicalCertificateDocument = this.documentService.createDocument(medicalCertificateFile,
+                    username + "_medicalCertificate");
             this.subscriptionService.addMedicalCertificate(subscriptionSave.getId(), medicalCertificateDocument);
             this.emailService.sendMessageCreateSubscription(subscriptionSave);
             return ResponseEntity.status(HttpStatus.CREATED).body(SubscriptionMapper.instance.toDto(subscriptionSave));
@@ -98,8 +102,7 @@ public class SubscriptionController {
         try {
             Subscription subscription = this.subscriptionService.updateSubscription(id, subscriptionDto);
             return ResponseEntity.status(HttpStatus.OK).body(SubscriptionMapper.instance.toDto(subscription));
-        }
-        catch (SubscriptionNotFoundException e) {
+        } catch (SubscriptionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
@@ -112,14 +115,17 @@ public class SubscriptionController {
             @RequestParam("medicalCertificate") MultipartFile medicalCertificateFile) {
         this.subscriptionService.getSubscription(id).orElseThrow(() -> new SubscriptionNotFoundException(id));
         try {
-            Document cniDocument = this.documentService.createDocument(cniFile);
-            this.subscriptionService.addCNI(id, cniDocument);
-            Document identityPhotoDocument = this.documentService.createDocument(identityPhotoFile);
-            this.subscriptionService.addIdentityPhoto(id, identityPhotoDocument);
-            Document medicalCertificateDocument = this.documentService.createDocument(medicalCertificateFile);
-            this.subscriptionService.addMedicalCertificate(id, medicalCertificateDocument);
             Subscription subscription = this.subscriptionService.getSubscription(id)
                     .orElseThrow(() -> new SubscriptionNotFoundException(id));
+            String username = this.userService.createUsername(subscription.getFirstName(), subscription.getLastName());
+            Document cniDocument = this.documentService.createDocument(cniFile, username + "_cni");
+            this.subscriptionService.addCNI(id, cniDocument);
+            Document identityPhotoDocument = this.documentService.createDocument(identityPhotoFile,
+                    username + "_identityPhoto");
+            this.subscriptionService.addIdentityPhoto(id, identityPhotoDocument);
+            Document medicalCertificateDocument = this.documentService.createDocument(medicalCertificateFile,
+                    username + "_medicalCertificate");
+            this.subscriptionService.addMedicalCertificate(id, medicalCertificateDocument);
             return ResponseEntity.status(HttpStatus.OK).body(subscription);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
@@ -128,39 +134,42 @@ public class SubscriptionController {
 
     @PostMapping("/{id}/cni")
     public ResponseEntity<Object> addCNI(@RequestPart("file") MultipartFile file, @PathVariable Long id) {
-        this.subscriptionService.getSubscription(id).orElseThrow(() -> new SubscriptionNotFoundException(id));
+        Subscription subscription = this.subscriptionService.getSubscription(id)
+                .orElseThrow(() -> new SubscriptionNotFoundException(id));
         try {
-            Document document = this.documentService.createDocument(file);
+            String username = this.userService.createUsername(subscription.getFirstName(), subscription.getLastName());
+            Document document = this.documentService.createDocument(file, username + "_cni");
             this.subscriptionService.addCNI(id, document);
             return ResponseEntity.status(HttpStatus.OK).body(null);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
     @PostMapping("/{id}/identity-photo")
     public ResponseEntity<Object> addIdentityPhoto(@RequestPart("file") MultipartFile file, @PathVariable Long id) {
-        this.subscriptionService.getSubscription(id).orElseThrow(() -> new SubscriptionNotFoundException(id));
+        Subscription subscription = this.subscriptionService.getSubscription(id)
+                .orElseThrow(() -> new SubscriptionNotFoundException(id));
         try {
-            Document document = this.documentService.createDocument(file);
+            String username = this.userService.createUsername(subscription.getFirstName(), subscription.getLastName());
+            Document document = this.documentService.createDocument(file, username + "_identityPhoto");
             this.subscriptionService.addIdentityPhoto(id, document);
             return ResponseEntity.status(HttpStatus.OK).body(null);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
     @PostMapping("/{id}/medical-certificate")
     public ResponseEntity<Object> addMedicalCertificate(@RequestPart("file") MultipartFile file, @PathVariable Long id) {
-        this.subscriptionService.getSubscription(id).orElseThrow(() -> new SubscriptionNotFoundException(id));
+        Subscription subscription = this.subscriptionService.getSubscription(id)
+                .orElseThrow(() -> new SubscriptionNotFoundException(id));
         try {
-            Document document = this.documentService.createDocument(file);
+            String username = this.userService.createUsername(subscription.getFirstName(), subscription.getLastName());
+            Document document = this.documentService.createDocument(file, username + "_medicalCertificate");
             this.subscriptionService.addMedicalCertificate(id, document);
             return ResponseEntity.status(HttpStatus.OK).body(null);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
@@ -172,14 +181,11 @@ public class SubscriptionController {
             User user = this.userService.createUser(subscription.getFirstName(), subscription.getLastName(), subscription.getEmail());
             Player player = this.playerService.createPlayer(subscription, user);
             this.subscriptionService.setPlayer(id, player);
-        }
-        catch (SubscriptionNotFoundException e) {
+        } catch (SubscriptionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        catch (SubscriptionAlreadyValidatedException e) {
+        } catch (SubscriptionAlreadyValidatedException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
         return ResponseEntity.status(HttpStatus.OK).body(null);
@@ -189,11 +195,9 @@ public class SubscriptionController {
     public ResponseEntity<Object> deleteSubscription(@PathVariable Long id) {
         try {
             this.subscriptionService.deleteSubscription(id);
-        }
-        catch (SubscriptionNotFoundException e) {
+        } catch (SubscriptionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-        catch (AccessDeniedException e) {
+        } catch (AccessDeniedException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
         return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);

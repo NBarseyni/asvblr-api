@@ -4,6 +4,7 @@ import com.pa.asvblrapi.entity.Document;
 import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.exception.DocumentNotFoundException;
 import com.pa.asvblrapi.repository.DocumentRepository;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -26,14 +27,15 @@ public class DocumentService {
         return this.documentRepository.findById(id);
     }
 
-    public Document createDocument(MultipartFile file) throws IOException {
+    public Document createDocument(MultipartFile file, String username) throws IOException {
         try {
-            String filename = file.getOriginalFilename();
+            String originalFilename = file.getOriginalFilename();
+            String newFilename = username + "." + FilenameUtils.getExtension(originalFilename);
             byte[] bytes = file.getBytes();
-            Path path = Paths.get(UPLOADED_FOLDER + filename);
+            Path path = Paths.get(UPLOADED_FOLDER + newFilename);
             Files.write(path, bytes);
 
-            Document document = new Document(filename);
+            Document document = new Document(newFilename);
             return this.documentRepository.save(document);
         }
         catch (IOException e) {
