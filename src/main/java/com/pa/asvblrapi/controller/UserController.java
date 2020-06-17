@@ -82,8 +82,8 @@ public class UserController {
         if (!this.userService.checkIfValidOldPassword(user, oldPassword)) {
             throw new InvalidOldPasswordException();
         }
-        this.userService.changeUserPassword(user, password);
-        return ResponseEntity.status(HttpStatus.OK).body(null);
+        UserDto userDto = this.userService.changeUserPassword(user, password);
+        return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
     @PostMapping("/reset-password")

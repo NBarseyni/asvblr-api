@@ -8,6 +8,7 @@ import com.pa.asvblrapi.entity.Privilege;
 import com.pa.asvblrapi.entity.Role;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.UserNotFoundException;
+import com.pa.asvblrapi.mapper.UserMapper;
 import com.pa.asvblrapi.repository.PasswordResetTokenRepository;
 import com.pa.asvblrapi.repository.RoleRepository;
 import com.pa.asvblrapi.repository.UserRepository;
@@ -48,36 +49,7 @@ public class UserService {
 
     public List<UserDto> getAllUser() {
         List<User> users = this.userRepository.findAll();
-
-        List<UserDto> usersDto = new ArrayList<>();
-        for(User user : users) {
-            List<String> roles = new ArrayList<>();
-            List<String> privileges = new ArrayList<>();
-            for (Role role :
-                    user.getRoles()) {
-                roles.add(role.getName());
-                for (Privilege privilege :
-                        role.getPrivileges()) {
-                    if (!privileges.contains(privilege.getName())) {
-                        privileges.add(privilege.getName());
-                    }
-                }
-            }
-            Role role = Iterables.get(user.getRoles(), 0);
-            //List<String> privileges = role.getPrivileges().stream().map(Privilege::getName).collect(Collectors.toList());
-
-            usersDto.add(new UserDto(
-                    user.getId(),
-                    user.getUsername(),
-                    user.getFirstName(),
-                    user.getLastName(),
-                    user.getEmail(),
-                    user.isPasswordChanged(),
-                    roles,
-                    privileges
-            ));
-        }
-        return usersDto;
+        return UserMapper.instance.toDto(users);
     }
 
     public Optional<User> getUser(Long id) {
@@ -147,12 +119,13 @@ public class UserService {
         return this.encoder.matches(oldPassword, user.getPassword());
     }
 
-    public void changeUserPassword(User user, String password) {
+    public UserDto changeUserPassword(User user, String password) {
         user.setPassword(this.encoder.encode(password));
         if (!user.isPasswordChanged()) {
             user.setPasswordChanged(true);
         }
-        this.userRepository.save(user);
+        User userSave = this.userRepository.save(user);
+        return UserMapper.instance.toDto(userSave);
     }
 
     public void createPasswordResetTokenForUser(User user, String token) {
