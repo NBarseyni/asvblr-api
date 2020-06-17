@@ -5,9 +5,12 @@ import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.exception.ClothingSizeNotFoundException;
 import com.pa.asvblrapi.exception.PlayerNotFoundException;
 import com.pa.asvblrapi.exception.SubscriptionCategoryNotFoundException;
+import com.pa.asvblrapi.exception.UserNotFoundException;
+import com.pa.asvblrapi.mapper.PlayerMapper;
 import com.pa.asvblrapi.repository.ClothingSizeRepository;
 import com.pa.asvblrapi.repository.PlayerRepository;
 import com.pa.asvblrapi.repository.SubscriptionCategoryRepository;
+import com.pa.asvblrapi.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,12 +29,24 @@ public class PlayerService {
     @Autowired
     private SubscriptionCategoryRepository subscriptionCategoryRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public List<Player> getAllPlayer() {
         return this.playerRepository.findAll();
     }
 
     public Optional<Player> getPlayer(Long id) {
         return this.playerRepository.findById(id);
+    }
+
+    public PlayerDto getPlayerByIdUser(Long id) throws UserNotFoundException, PlayerNotFoundException {
+        Optional<User> user = this.userRepository.findById(id);
+        if (!user.isPresent()) {
+            throw new UserNotFoundException(id);
+        }
+        return PlayerMapper.instance.toDto(this.playerRepository.findByIdUser(id)
+                .orElseThrow(() -> new PlayerNotFoundException(id, 1)));
     }
 
     public Player createPlayer(Subscription subscription, User user) {

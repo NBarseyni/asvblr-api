@@ -1,14 +1,13 @@
 package com.pa.asvblrapi.controller;
 
 import com.pa.asvblrapi.dto.*;
+import com.pa.asvblrapi.entity.Player;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.InvalidOldPasswordException;
+import com.pa.asvblrapi.exception.PlayerNotFoundException;
 import com.pa.asvblrapi.exception.UserNotFoundException;
 import com.pa.asvblrapi.repository.UserRepository;
-import com.pa.asvblrapi.service.DriveService;
-import com.pa.asvblrapi.service.FirebaseService;
-import com.pa.asvblrapi.service.UserSecurityService;
-import com.pa.asvblrapi.service.UserService;
+import com.pa.asvblrapi.service.*;
 import com.pa.asvblrapi.spring.EmailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,6 +40,9 @@ public class UserController {
     @Autowired
     private DriveService driveService;
 
+    @Autowired
+    private PlayerService playerService;
+
     @GetMapping("")
     public List<UserDto> getAllUser() {
         return this.userService.getAllUser();
@@ -68,6 +70,16 @@ public class UserController {
             List<DriveDto> drives = this.driveService.getAllByIdPassenger(id);
             return ResponseEntity.status(HttpStatus.OK).body(drives);
         } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}/player")
+    public ResponseEntity<Object> getPlayer(@PathVariable Long id) {
+        try {
+            PlayerDto playerDto = this.playerService.getPlayerByIdUser(id);
+            return ResponseEntity.status(HttpStatus.OK).body(playerDto);
+        } catch (PlayerNotFoundException |UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
