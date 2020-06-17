@@ -1,8 +1,6 @@
 package com.pa.asvblrapi.controller;
 
-import com.pa.asvblrapi.dto.DriveDto;
-import com.pa.asvblrapi.dto.UserDto;
-import com.pa.asvblrapi.dto.UserDtoFirebase;
+import com.pa.asvblrapi.dto.*;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.InvalidOldPasswordException;
 import com.pa.asvblrapi.exception.UserNotFoundException;
@@ -21,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -74,24 +73,22 @@ public class UserController {
     }
 
     @PostMapping("/update-password")
-    public ResponseEntity<Object> changeUserPassword(
-            @RequestParam("password") String password,
-            @RequestParam("oldPassword") String oldPassword) {
+    public ResponseEntity<Object> changeUserPassword(@Valid @RequestBody UserUpdatePasswordDto dto) {
         User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
 
-        if (!this.userService.checkIfValidOldPassword(user, oldPassword)) {
+        if (!this.userService.checkIfValidOldPassword(user, dto.getOldPassword())) {
             throw new InvalidOldPasswordException();
         }
-        UserDto userDto = this.userService.changeUserPassword(user, password);
+        UserDto userDto = this.userService.changeUserPassword(user, dto.getPassword());
         return ResponseEntity.status(HttpStatus.OK).body(userDto);
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<Object> resetPassword(HttpServletRequest request, @RequestParam("email") String email) {
+    public ResponseEntity<Object> resetPassword(HttpServletRequest request, @Valid @RequestBody UserResetPasswordDto dto) {
         try {
-            User user = this.userService.getUserByEmail(email);
+            User user = this.userService.getUserByEmail(dto.getEmail());
             if (user == null) {
-                throw new UserNotFoundException(email);
+                throw new UserNotFoundException(dto.getEmail());
             }
             String token = UUID.randomUUID().toString();
             this.userService.createPasswordResetTokenForUser(user, token);
