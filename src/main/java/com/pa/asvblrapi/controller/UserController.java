@@ -5,6 +5,7 @@ import com.pa.asvblrapi.entity.Player;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.InvalidOldPasswordException;
 import com.pa.asvblrapi.exception.PlayerNotFoundException;
+import com.pa.asvblrapi.exception.UserAlreadyManagerException;
 import com.pa.asvblrapi.exception.UserNotFoundException;
 import com.pa.asvblrapi.repository.UserRepository;
 import com.pa.asvblrapi.service.*;
@@ -147,6 +148,28 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(user);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{id}/give-manager-right")
+    public ResponseEntity<Object> setManager(@PathVariable Long id) {
+        try {
+            UserDto user = this.userService.giveManagerRight(id);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (UserAlreadyManagerException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{id}/give-president-right")
+    public ResponseEntity<Object> givePresidentRight(@PathVariable Long id) {
+        try {
+            UserDto user = this.userService.givePresidentRight(id);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

@@ -8,10 +8,8 @@ import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.*;
 import com.pa.asvblrapi.mapper.SubscriptionMapper;
-import com.pa.asvblrapi.repository.UserRepository;
 import com.pa.asvblrapi.service.*;
 import com.pa.asvblrapi.spring.EmailServiceImpl;
-import com.sun.mail.iap.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +21,6 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -178,7 +175,8 @@ public class SubscriptionController {
     public ResponseEntity<Object> validatedSubscription(@PathVariable Long id) {
         try {
             Subscription subscription = this.subscriptionService.validatedSubscription(id);
-            User user = this.userService.createUser(subscription.getFirstName(), subscription.getLastName(), subscription.getEmail());
+            User user = this.userService.createUserSubscription(subscription.getFirstName(), subscription.getLastName(),
+                    subscription.getEmail());
             Player player = this.playerService.createPlayer(subscription, user);
             this.subscriptionService.setPlayer(id, player);
         } catch (SubscriptionNotFoundException e) {

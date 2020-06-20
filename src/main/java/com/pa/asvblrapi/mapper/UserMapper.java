@@ -17,13 +17,15 @@ public interface UserMapper {
     default UserDto toDto(User user) {
         List<String> roles = new ArrayList<>();
         List<String> privileges = new ArrayList<>();
-        for (Role role :
-                user.getRoles()) {
-            roles.add(role.getName());
-            for (Privilege privilege :
-                    role.getPrivileges()) {
-                if (!privileges.contains(privilege.getName())) {
-                    privileges.add(privilege.getName());
+        if (user.getRoles() != null) {
+            for (Role role :
+                    user.getRoles()) {
+                roles.add(role.getName());
+                for (Privilege privilege :
+                        role.getPrivileges()) {
+                    if (!privileges.contains(privilege.getName())) {
+                        privileges.add(privilege.getName());
+                    }
                 }
             }
         }

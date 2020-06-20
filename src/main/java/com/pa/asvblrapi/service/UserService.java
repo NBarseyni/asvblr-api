@@ -7,6 +7,7 @@ import com.pa.asvblrapi.entity.PasswordResetToken;
 import com.pa.asvblrapi.entity.Privilege;
 import com.pa.asvblrapi.entity.Role;
 import com.pa.asvblrapi.entity.User;
+import com.pa.asvblrapi.exception.UserAlreadyManagerException;
 import com.pa.asvblrapi.exception.UserNotFoundException;
 import com.pa.asvblrapi.mapper.UserMapper;
 import com.pa.asvblrapi.repository.PasswordResetTokenRepository;
@@ -18,11 +19,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import javax.mail.MessagingException;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -64,26 +64,49 @@ public class UserService {
         return this.userRepository.findByEmail(email);
     }
 
-    public User createUser(String firstName, String lastName, String email) throws Exception {
+    public User createUserSubscription(String firstName, String lastName, String email) throws Exception {
         try {
             String username = this.createUsername(firstName, lastName);
             String password = randomPasswordGenerator.generatePassword();
             User user = userRepository.save(new User(username, firstName, lastName, email, encoder.encode(password)));
 
             Role role = roleRepository.findByName("ROLE_PLAYER");
-            List<Role> roles = new ArrayList<>(Arrays.asList(role));
-            user.setRoles(roles);
-
-            UserDtoFirebase userDtoFirebase = new UserDtoFirebase(user.getId(), username, user.getFirstName(),
-                    user.getLastName(), user.getEmail());
-            this.firebaseService.saveUserDetails(userDtoFirebase);
-
-            this.emailService.sendMessageCreateUser(user, password);
-
+            saveUserFirebaseAndSendEmail(username, password, user, role);
             return user;
         } catch (Exception e) {
             throw new Exception(e.getMessage());
         }
+    }
+
+    public User createUser(String firstName, String lastName, String email) throws Exception {
+        try {
+            String username = this.createUsername(firstName, lastName);
+            String password = this.randomPasswordGenerator.generatePassword();
+            User user = this.userRepository.save(new User(username, firstName, lastName, email, encoder.encode(password)));
+            saveUserFirebaseAndSendEmail(username, password, user);
+            return user;
+        } catch (Exception e) {
+            throw new Exception(e.getMessage());
+        }
+    }
+
+    private void saveUserFirebaseAndSendEmail(String username, String password, User user, Role role)
+            throws InterruptedException, ExecutionException, MessagingException {
+        List<Role> roles = new ArrayList<>(Collections.singletonList(role));
+        user.setRoles(roles);
+
+        UserDtoFirebase userDtoFirebase = new UserDtoFirebase(user.getId(), username, user.getFirstName(),
+                user.getLastName(), user.getEmail());
+        this.firebaseService.saveUserDetails(userDtoFirebase);
+        this.emailService.sendMessageCreateUser(user, password);
+    }
+
+    private void saveUserFirebaseAndSendEmail(String username, String password, User user)
+            throws ExecutionException, InterruptedException, MessagingException {
+        UserDtoFirebase userDtoFirebase = new UserDtoFirebase(user.getId(), username, user.getFirstName(),
+                user.getLastName(), user.getEmail());
+        this.firebaseService.saveUserDetails(userDtoFirebase);
+        this.emailService.sendMessageCreateUser(user, password);
     }
 
     public String createUsername(String firstName, String lastName) {
@@ -113,6 +136,35 @@ public class UserService {
         } catch (ExecutionException e) {
             throw new ExecutionException(e.getCause());
         }
+    }
+
+    public UserDto giveManagerRight(Long id) throws UserNotFoundException, UserAlreadyManagerException {
+        Optional<User> user = this.userRepository.findById(id);
+        if (!user.isPresent()) {
+            throw new UserNotFoundException(id);
+        }
+        Role role = this.roleRepository.findByName("ROLE_MANAGER");
+        if (user.get().getRoles().contains(role)) {
+            throw new UserAlreadyManagerException(id);
+        }
+        user.get().getRoles().add(role);
+        return UserMapper.instance.toDto(this.userRepository.save(user.get()));
+    }
+
+    public UserDto givePresidentRight(Long id) throws UserNotFoundException {
+        Optional<User> user = this.userRepository.findById(id);
+        if (!user.isPresent()) {
+            throw new UserNotFoundException(id);
+        }
+        Role role = this.roleRepository.findByName("ROLE_PRESIDENT");
+        user.get().getRoles().add(role);
+
+        User oldPresident = this.userRepository.findPresident();
+        oldPresident.getRoles().remove(role);
+        this.userRepository.save(oldPresident);
+        // Remove duplicates roles (don't know why there are duplicates roles but remove it...)
+        user.get().setRoles(user.get().getRoles().stream().distinct().collect(Collectors.toList()));
+        return UserMapper.instance.toDto(this.userRepository.save(user.get()));
     }
 
     public boolean checkIfValidOldPassword(User user, String oldPassword) {
