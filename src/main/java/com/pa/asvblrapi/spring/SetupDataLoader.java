@@ -103,7 +103,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         }
 
         // Create SubscriptionCategories
-        createSubscriptionCategoryIfNotFound("Loisir");
+        createSubscriptionCategoryIfNotFound("Loisir pour tous");
         createSubscriptionCategoryIfNotFound("Loisir compétition");
         createSubscriptionCategoryIfNotFound("Départemental compétition");
         createSubscriptionCategoryIfNotFound("Régional compétition");
@@ -146,6 +146,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createTeamCategoryIfNotFound("Loisir mixte 6x6");
         createTeamCategoryIfNotFound("Loisir femme 4x4");
         createTeamCategoryIfNotFound("Loisir homme 4x4");
+        createTeamCategoryIfNotFound("Loisir pour tous");
         createTeamCategoryIfNotFound("M20 garçons");
         createTeamCategoryIfNotFound("M20 filles");
         createTeamCategoryIfNotFound("M17 garçons");
