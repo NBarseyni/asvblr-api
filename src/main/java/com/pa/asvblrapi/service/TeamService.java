@@ -11,8 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.lang.annotation.Target;
-import java.nio.file.AccessDeniedException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -54,6 +52,14 @@ public class TeamService {
 
     public Optional<Team> getTeam(Long id) {
         return this.teamRepository.findById(id);
+    }
+
+    public List<TeamDto> getTeamsByPlayer(Long id) throws PlayerNotFoundException {
+        Optional<Player> player = this.playerRepository.findById(id);
+        if (!player.isPresent()) {
+            throw new PlayerNotFoundException(id);
+        }
+        return TeamMapper.instance.toDto(this.teamRepository.findAllByPlayer(id));
     }
 
     public TeamDto createTeam(TeamDto teamDto) throws SeasonNotFoundException, TeamCategoryNotFoundException,
