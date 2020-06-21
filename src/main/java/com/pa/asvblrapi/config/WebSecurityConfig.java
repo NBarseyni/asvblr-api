@@ -87,6 +87,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST,"/api/seasons/**").hasAuthority("SEASON_MANAGEMENT")
                 .antMatchers(HttpMethod.PUT, "/api/seasons/**").hasAuthority("SEASON_MANAGEMENT")
                 .antMatchers(HttpMethod.GET, "/api/seasons/current-season").permitAll()
+                // Statistics
+                .antMatchers("/api/statistics/**").hasAuthority("STATISTICS_READ")
                 // Subscriptions
                 .antMatchers(HttpMethod.GET, "/api/subscriptions").hasAuthority("SUBSCRIPTION_MANAGEMENT")
                 .antMatchers(HttpMethod.POST, "/api/subscriptions/{id}/cni", "/api/subscriptions/{id}/identity-photo",
