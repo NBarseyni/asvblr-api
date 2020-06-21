@@ -19,6 +19,11 @@ public class StatisticsController {
 
     @GetMapping("/players-city")
     public List<Object> getCountNbPlayersByCity() {
-        return statisticsService.getCountNbPlayersByCity();
+        return this.statisticsService.getCountNbPlayersByCity();
+    }
+
+    @GetMapping("/payments-mode")
+    public List<Object> getCountNbPaymentMode() {
+        return this.statisticsService.getCountNbPaymentMode();
     }
 }
