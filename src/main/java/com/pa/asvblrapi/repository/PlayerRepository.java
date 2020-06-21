@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,4 +16,8 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
             nativeQuery = true
     )
     Optional<Player> findByIdUser(@Param("idUser") Long idUser);
+
+    @Query(value = "select count(city), city, postcode from Player group by city",
+            nativeQuery = true)
+    List<Object> countNbPlayersByCity();
 }
