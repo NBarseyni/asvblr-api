@@ -73,12 +73,17 @@ public class TeamService {
             throw new TeamCategoryNotFoundException(teamDto.getIdTeamCategory());
         }
         Team team = new Team(teamDto.getName(), season.get(), teamCategory.get());
+        Team teamWithCoach = null;
         if (teamDto.getIdCoach() != null) {
             Optional<User> coach = this.userRepository.findById(teamDto.getIdCoach());
             if (!coach.isPresent()) {
                 throw new UserNotFoundException(teamDto.getIdCoach());
             }
-            team.setCoach(coach.get());
+            teamWithCoach = this.teamRepository.save(team);
+            this.setCoach(teamWithCoach.getId(), teamDto.getIdCoach());
+        }
+        if (teamWithCoach != null) {
+            return TeamMapper.instance.toDto(this.teamRepository.save(teamWithCoach));
         }
         return TeamMapper.instance.toDto(this.teamRepository.save(team));
     }
