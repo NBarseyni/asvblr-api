@@ -80,7 +80,7 @@ public class UserController {
         try {
             PlayerDto playerDto = this.playerService.getPlayerByIdUser(id);
             return ResponseEntity.status(HttpStatus.OK).body(playerDto);
-        } catch (PlayerNotFoundException |UserNotFoundException e) {
+        } catch (PlayerNotFoundException | UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
@@ -123,18 +123,14 @@ public class UserController {
     }
 
     @PostMapping("/save-password")
-    public ResponseEntity<Object> savePassword(
-            @RequestParam("token") String token,
-            @RequestParam("password") String password) {
-        String result = this.userSecurityService.validatePasswordResetToken(token);
-
+    public ResponseEntity<Object> savePassword(@Valid @RequestBody UserSavePasswordDto dto) {
+        String result = this.userSecurityService.validatePasswordResetToken(dto.getToken());
         if (result != null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("This token is invalid");
         }
-
-        Optional<User> user = this.userSecurityService.getUserByPasswordResetToken(token);
+        Optional<User> user = this.userSecurityService.getUserByPasswordResetToken(dto.getToken());
         if (user.isPresent()) {
-            this.userService.changeUserPassword(user.get(), password);
+            this.userService.changeUserPassword(user.get(), dto.getPassword());
             return ResponseEntity.status(HttpStatus.OK).body(null);
         } else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
