@@ -66,7 +66,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/api/articles").permitAll()
                 // Auth
                 .antMatchers("/api/auth/signup").hasAuthority("SIGNUP")
-                .antMatchers("/api/auth/signin").permitAll()
+                .antMatchers("/api/auth/signin", "/api/auth/change-password", "/api/auth/reset-password",
+                        "/api/auth/save-password", "/api/auth/update-password").permitAll()
                 // Matches
                 .antMatchers("/api/matches/**").hasAuthority("MATCH_MANAGEMENT")
                 // Players
@@ -78,11 +79,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/roles/**").hasAuthority("USER_MANAGEMENT")
                 .antMatchers(HttpMethod.GET,"/api/users/{id}").hasAuthority("USER_MANAGEMENT")
                 .antMatchers(HttpMethod.PUT, "/api/users/{id}").hasAuthority("USER_MANAGEMENT")
+                .antMatchers(HttpMethod.PATCH, "/api/users/**").hasAuthority("USER_MANAGEMENT")
                 .antMatchers(HttpMethod.DELETE, "/api/users/{id}").hasAuthority("USER_MANAGEMENT")
                 // Users
                 .antMatchers(HttpMethod.GET, "/api/users").hasAuthority("USER_READ")
-                .antMatchers("/api/users").hasAuthority("USER_READ")
-                .antMatchers(HttpMethod.POST, "/api/users/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/users/{id}/player}", "/api/users/{id}/driving-drives",
+                        "/api/users/{id}/passenger-drives").permitAll()
                 // Season
                 .antMatchers(HttpMethod.POST,"/api/seasons/**").hasAuthority("SEASON_MANAGEMENT")
                 .antMatchers(HttpMethod.PUT, "/api/seasons/**").hasAuthority("SEASON_MANAGEMENT")
