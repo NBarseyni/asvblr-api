@@ -33,12 +33,6 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private EmailServiceImpl emailService;
-
-    @Autowired
-    private UserSecurityService userSecurityService;
-
-    @Autowired
     private DriveService driveService;
 
     @Autowired
@@ -82,58 +76,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.OK).body(playerDto);
         } catch (PlayerNotFoundException | UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
-    }
-
-    @PostMapping("/update-password")
-    public ResponseEntity<Object> changeUserPassword(@Valid @RequestBody UserUpdatePasswordDto dto) {
-        User user = userService.getUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-
-        if (!this.userService.checkIfValidOldPassword(user, dto.getOldPassword())) {
-            throw new InvalidOldPasswordException();
-        }
-        UserDto userDto = this.userService.changeUserPassword(user, dto.getPassword());
-        return ResponseEntity.status(HttpStatus.OK).body(userDto);
-    }
-
-    @PostMapping("/reset-password")
-    public ResponseEntity<Object> resetPassword(HttpServletRequest request, @Valid @RequestBody UserResetPasswordDto dto) {
-        try {
-            User user = this.userService.getUserByEmail(dto.getEmail());
-            if (user == null) {
-                throw new UserNotFoundException(dto.getEmail());
-            }
-            String token = UUID.randomUUID().toString();
-            this.userService.createPasswordResetTokenForUser(user, token);
-            this.emailService.sendMessageResetPassword(token, user);
-            return ResponseEntity.status(HttpStatus.OK).body(null);
-        } catch (MessagingException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
-
-    @GetMapping("/change-password")
-    public ResponseEntity<Object> changePassword(@RequestParam("token") String token) {
-        String result = this.userSecurityService.validatePasswordResetToken(token);
-        if (result != null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("This token is invalid");
-        } else {
-            return ResponseEntity.status(HttpStatus.OK).body(null);
-        }
-    }
-
-    @PostMapping("/save-password")
-    public ResponseEntity<Object> savePassword(@Valid @RequestBody UserSavePasswordDto dto) {
-        String result = this.userSecurityService.validatePasswordResetToken(dto.getToken());
-        if (result != null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("This token is invalid");
-        }
-        Optional<User> user = this.userSecurityService.getUserByPasswordResetToken(dto.getToken());
-        if (user.isPresent()) {
-            this.userService.changeUserPassword(user.get(), dto.getPassword());
-            return ResponseEntity.status(HttpStatus.OK).body(null);
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
