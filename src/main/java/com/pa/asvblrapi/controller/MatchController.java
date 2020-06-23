@@ -1,5 +1,6 @@
 package com.pa.asvblrapi.controller;
 
+import com.pa.asvblrapi.dto.CommentMatchDto;
 import com.pa.asvblrapi.dto.DriveDto;
 import com.pa.asvblrapi.dto.MatchDto;
 import com.pa.asvblrapi.exception.MatchNotFoundException;
@@ -62,6 +63,16 @@ public class MatchController {
             MatchDto match = this.matchService.updateMatch(id, matchDto);
             return ResponseEntity.status(HttpStatus.OK).body(match);
         } catch (MatchNotFoundException | TeamNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Object> commentMatch(@PathVariable Long id, @Valid @RequestBody CommentMatchDto commentMatchDto) {
+        try {
+            MatchDto matchDto = this.matchService.commentMatch(id, commentMatchDto);
+            return ResponseEntity.status(HttpStatus.OK).body(matchDto);
+        } catch (MatchNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }

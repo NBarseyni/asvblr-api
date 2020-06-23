@@ -1,8 +1,10 @@
 package com.pa.asvblrapi.service;
 
+import com.pa.asvblrapi.dto.CommentMatchDto;
 import com.pa.asvblrapi.dto.MatchDto;
 import com.pa.asvblrapi.entity.Match;
 import com.pa.asvblrapi.entity.Team;
+import com.pa.asvblrapi.exception.MatchDidNotTakePlaceException;
 import com.pa.asvblrapi.exception.MatchNotFoundException;
 import com.pa.asvblrapi.exception.TeamNotFoundException;
 import com.pa.asvblrapi.mapper.MatchMapper;
@@ -11,6 +13,7 @@ import com.pa.asvblrapi.repository.TeamRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,6 +62,23 @@ public class MatchService {
         match.get().setType(matchDto.isType());
         match.get().setOppositeTeam(matchDto.getOppositeTeam());
         match.get().setTeam(team.get());
+        return MatchMapper.instance.toDto(this.matchRepository.save(match.get()));
+    }
+
+    public MatchDto commentMatch(Long id, CommentMatchDto dto) throws MatchNotFoundException {
+        Optional<Match> match = this.matchRepository.findById(id);
+        if (!match.isPresent()) {
+            throw new MatchNotFoundException(id);
+        }
+        if (match.get().getDate().after(new Date())) {
+            throw new MatchDidNotTakePlaceException(id);
+        }
+        match.get().setComment(dto.getComment());
+        match.get().setTechnicalRating(dto.getTechnicalRating());
+        match.get().setCollectiveRating(dto.getCollectiveRating());
+        match.get().setOffensiveRating(dto.getOffensiveRating());
+        match.get().setDefensiveRating(dto.getDefensiveRating());
+        match.get().setCombativenessRating(dto.getCombativenessRating());
         return MatchMapper.instance.toDto(this.matchRepository.save(match.get()));
     }
 
