@@ -21,7 +21,7 @@ public interface SubscriptionRepository extends JpaRepository<Subscription, Long
     )
     List<Subscription> findSubscriptionsByPlayer(@Param("id") Long id);
 
-    @Query(value = "select p.name, count(p.name) from subscription s, subscription_payment_modes sp, payment_mode p " +
+    @Query(value = "select p.id, count(p.id) from subscription s, subscription_payment_modes sp, payment_mode p " +
             "where s.id = sp.subscription_id and sp.payment_mode_id = p.id and s.validated = 1 group by p.name",
             nativeQuery = true)
     List<Object> countNbPaymentMode();
