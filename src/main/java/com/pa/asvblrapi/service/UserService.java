@@ -151,6 +151,16 @@ public class UserService {
         return UserMapper.instance.toDto(this.userRepository.save(user.get()));
     }
 
+    public UserDto removeManagerRight(Long id) throws UserNotFoundException {
+        Optional<User> user = this.userRepository.findById(id);
+        if (!user.isPresent()) {
+            throw new UserNotFoundException(id);
+        }
+        Role role = this.roleRepository.findByName("ROLE_MANAGER");
+        user.get().getRoles().remove(role);
+        return UserMapper.instance.toDto(this.userRepository.save(user.get()));
+    }
+
     public UserDto givePresidentRight(Long id) throws UserNotFoundException {
         Optional<User> user = this.userRepository.findById(id);
         if (!user.isPresent()) {

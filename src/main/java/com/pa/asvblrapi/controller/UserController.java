@@ -90,7 +90,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}/give-manager-right")
-    public ResponseEntity<Object> setManager(@PathVariable Long id) {
+    public ResponseEntity<Object> giveManagerRight(@PathVariable Long id) {
         try {
             UserDto user = this.userService.giveManagerRight(id);
             return ResponseEntity.status(HttpStatus.OK).body(user);
@@ -98,6 +98,16 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (UserAlreadyManagerException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{id}/remove-manager-right")
+    public ResponseEntity<Object> removeManagerRight(@PathVariable Long id) {
+        try {
+            UserDto user = this.userService.removeManagerRight(id);
+            return ResponseEntity.status(HttpStatus.OK).body(user);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
