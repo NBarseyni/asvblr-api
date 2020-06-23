@@ -87,7 +87,20 @@ public class AuthController {
                 }
             }
         }
-        
+
+        if (user.getPlayer() != null) {
+            return ResponseEntity.ok(new JwtResponse(jwt,
+                    userDetails.getId(),
+                    userDetails.getUsername(),
+                    userDetails.getFirstName(),
+                    userDetails.getLastName(),
+                    userDetails.getEmail(),
+                    user.isPasswordChanged(),
+                    user.getPlayer().getId(),
+                    rolesString,
+                    privileges));
+        }
+
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),
                 userDetails.getUsername(),
@@ -95,8 +108,10 @@ public class AuthController {
                 userDetails.getLastName(),
                 userDetails.getEmail(),
                 user.isPasswordChanged(),
+                null,
                 rolesString,
                 privileges));
+
     }
 
     @PostMapping("/signup")

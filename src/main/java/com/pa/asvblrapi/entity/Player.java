@@ -48,8 +48,9 @@ public class Player {
     @JoinColumn(name = "subscriptionCategory_id")
     private SubscriptionCategory subscriptionCategory;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    //@OneToOne(cascade = CascadeType.ALL)
+    //@JoinColumn(name = "user_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "player")
     private User user;
 
     @OneToMany(mappedBy = "player")

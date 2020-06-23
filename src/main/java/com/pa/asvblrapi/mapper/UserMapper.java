@@ -29,16 +29,13 @@ public interface UserMapper {
                 }
             }
         }
+        if (user.getPlayer() != null) {
+            return new UserDto(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(),
+                    user.isPasswordChanged(), user.getPlayer().getId(), roles, privileges);
+        }
 
-        return new UserDto(
-                user.getId(),
-                user.getUsername(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getEmail(),
-                user.isPasswordChanged(),
-                roles,
-                privileges);
+        return new UserDto(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName(), user.getEmail(),
+                user.isPasswordChanged(), null, roles, privileges);
     }
 
     List<UserDto> toDto(List<User> users);

@@ -14,12 +14,12 @@ import java.util.List;
 public interface PlayerMapper extends EntityMapper<PlayerDto, Player> {
     PlayerMapper instance = Mappers.getMapper(PlayerMapper.class);
 
-    @Mapping(source = "idUser", target = "user")
+    //@Mapping(source = "idUser", target = "user")
     @Mapping(target = "jerseys", ignore = true)
     @Mapping(target = "subscriptions", ignore = true)
     Player toEntity(PlayerDto playerDto);
 
-    @Mapping(source = "user.id", target = "idUser")
+    //@Mapping(source = "user.id", target = "idUser")
     @Mapping(source = "topSize.id", target = "idTopSize")
     @Mapping(source = "pantsSize.id", target = "idPantsSize")
     @Mapping(source = "subscriptionCategory.id", target = "idSubscriptionCategory")

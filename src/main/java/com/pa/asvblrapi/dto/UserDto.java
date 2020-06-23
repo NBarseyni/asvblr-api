@@ -18,6 +18,7 @@ public class UserDto {
     private String lastName;
     private String email;
     private boolean passwordChanged;
+    private Long idPlayer;
     private List<String> roles;
     private List<String> privileges;
 }

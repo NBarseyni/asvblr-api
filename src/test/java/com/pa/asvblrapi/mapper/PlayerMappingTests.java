@@ -53,7 +53,7 @@ public class PlayerMappingTests {
         assertThat(playerDto.getIdTopSize()).isEqualTo(clothingSize.getId());
         assertThat(playerDto.getIdPantsSize()).isEqualTo(clothingSize.getId());
         assertThat(playerDto.getIdSubscriptionCategory()).isEqualTo(subscriptionCategory.getId());
-        assertThat(playerDto.getIdUser()).isEqualTo(player.getUser().getId());
+        //assertThat(playerDto.getIdUser()).isEqualTo(player.getUser().getId());
     }
 
     /*
