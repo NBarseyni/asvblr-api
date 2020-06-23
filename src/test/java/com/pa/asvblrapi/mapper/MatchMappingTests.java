@@ -19,7 +19,8 @@ public class MatchMappingTests {
         Team team = new Team();
         team.setId((long)2);
         Match match = new Match((long)1, new Date(), "place", true, "oppositeTeam",
-                "comment", 10, team, new ArrayList<>());
+                "comment", 10, 9, 8, 7,
+                6, team, new ArrayList<>());
 
         MatchDto matchDto = MatchMapper.instance.toDto(match);
 
@@ -30,7 +31,11 @@ public class MatchMappingTests {
         assertThat(matchDto.isType()).isEqualTo(match.isType());
         assertThat(matchDto.getOppositeTeam()).isEqualTo(match.getOppositeTeam());
         assertThat(matchDto.getComment()).isEqualTo(match.getComment());
-        assertThat(matchDto.getRate()).isEqualTo(match.getRate());
+        assertThat(matchDto.getTechnicalRating()).isEqualTo(match.getTechnicalRating());
+        assertThat(matchDto.getCollectiveRating()).isEqualTo(match.getCollectiveRating());
+        assertThat(matchDto.getOffensiveRating()).isEqualTo(match.getOffensiveRating());
+        assertThat(matchDto.getDefensiveRating()).isEqualTo(match.getDefensiveRating());
+        assertThat(matchDto.getCombativenessRating()).isEqualTo(match.getCombativenessRating());
         assertThat(matchDto.getIdTeam()).isEqualTo(match.getTeam().getId());
     }
 }

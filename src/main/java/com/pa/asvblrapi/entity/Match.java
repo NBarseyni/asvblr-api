@@ -29,7 +29,11 @@ public class Match {
     @NotNull
     private String oppositeTeam;
     private String comment;
-    private int rate;
+    private int technicalRating;
+    private int collectiveRating;
+    private int offensiveRating;
+    private int defensiveRating;
+    private int combativenessRating;
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;

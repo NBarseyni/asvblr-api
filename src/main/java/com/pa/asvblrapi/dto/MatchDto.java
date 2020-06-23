@@ -24,7 +24,11 @@ public class MatchDto {
     @NotBlank
     private String oppositeTeam;
     private String comment;
-    private int rate;
+    private int technicalRating;
+    private int collectiveRating;
+    private int offensiveRating;
+    private int defensiveRating;
+    private int combativenessRating;
     @NotNull
     private Long idTeam;
 }
