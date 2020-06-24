@@ -65,6 +65,7 @@ public class PlayerService {
                 subscription.getSubscriptionCategory(),
                 user
         );
+        user.setPlayer(player);
         return this.playerRepository.save(player);
     }
 
