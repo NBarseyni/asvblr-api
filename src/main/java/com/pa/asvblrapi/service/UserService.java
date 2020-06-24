@@ -3,11 +3,10 @@ package com.pa.asvblrapi.service;
 import com.google.common.collect.Iterables;
 import com.pa.asvblrapi.dto.UserDto;
 import com.pa.asvblrapi.dto.UserDtoFirebase;
-import com.pa.asvblrapi.entity.PasswordResetToken;
-import com.pa.asvblrapi.entity.Privilege;
-import com.pa.asvblrapi.entity.Role;
-import com.pa.asvblrapi.entity.User;
+import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.exception.UserAlreadyManagerException;
+import com.pa.asvblrapi.exception.UserIsPlayerException;
+import com.pa.asvblrapi.exception.UserIsPresidentException;
 import com.pa.asvblrapi.exception.UserNotFoundException;
 import com.pa.asvblrapi.mapper.UserMapper;
 import com.pa.asvblrapi.repository.PasswordResetTokenRepository;
@@ -199,6 +198,19 @@ public class UserService {
         Optional<User> user = userRepository.findById(id);
         if (!user.isPresent()) {
             throw new UserNotFoundException(id);
+        }
+        if (user.get().getRoles().contains(this.roleRepository.findByName("ROLE_PRESIDENT"))) {
+            throw new UserIsPresidentException(id);
+        }
+        if (user.get().getPlayer() != null) {
+            throw new UserIsPlayerException(id);
+        }
+        if (user.get().getRoles().contains(this.roleRepository.findByName("ROLE_COACH"))) {
+            for (Team team :
+                    user.get().getCoachedTeams()) {
+                team.setCoach(null);
+            }
+            user.get().getCoachedTeams().clear();
         }
         this.userRepository.delete(user.get());
         this.firebaseService.deleteUser(user.get().getUsername());

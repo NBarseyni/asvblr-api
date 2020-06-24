@@ -3,10 +3,7 @@ package com.pa.asvblrapi.controller;
 import com.pa.asvblrapi.dto.*;
 import com.pa.asvblrapi.entity.Player;
 import com.pa.asvblrapi.entity.User;
-import com.pa.asvblrapi.exception.InvalidOldPasswordException;
-import com.pa.asvblrapi.exception.PlayerNotFoundException;
-import com.pa.asvblrapi.exception.UserAlreadyManagerException;
-import com.pa.asvblrapi.exception.UserNotFoundException;
+import com.pa.asvblrapi.exception.*;
 import com.pa.asvblrapi.repository.UserRepository;
 import com.pa.asvblrapi.service.*;
 import com.pa.asvblrapi.spring.EmailServiceImpl;
@@ -122,8 +119,15 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        this.userService.deleteUser(id);
+    public ResponseEntity<Object> deleteUser(@PathVariable Long id) {
+        try {
+            this.userService.deleteUser(id);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (UserIsPresidentException | UserIsPlayerException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     // ===== NON-API =====
