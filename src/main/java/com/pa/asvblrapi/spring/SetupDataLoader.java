@@ -46,6 +46,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private TeamCategoryRepository teamCategoryRepository;
 
     @Autowired
+    private PriceRepository priceRepository;
+
+    @Autowired
     private PasswordEncoder encoder;
 
     @Autowired
@@ -163,6 +166,15 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createTeamCategoryIfNotFound("Baby-volley");
         createTeamCategoryIfNotFound("Sanofi");
 
+        // Create Price
+        createPriceIfNotFound("Inscription sénior compétition", 190.00);
+        createPriceIfNotFound("Inscription sénior loisir", 165.00);
+        createPriceIfNotFound("Inscription collégiens / lycéens", 160.00);
+        createPriceIfNotFound("Inscription enfants", 120.00);
+        createPriceIfNotFound("Inscription baby volley", 120.00);
+        createPriceIfNotFound("Calendrier", 10.00);
+        createPriceIfNotFound("Tenue", 30.00);
+
         alreadySetup = true;
     }
 
@@ -253,5 +265,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
             teamCategory = this.teamCategoryRepository.save(teamCategory);
         }
         return teamCategory;
+    }
+
+    private Price createPriceIfNotFound(final String name, final double priceValue) {
+        Price price = this.priceRepository.findByName(name);
+        if (price == null) {
+            price = new Price(name, priceValue);
+            price = this.priceRepository.save(price);
+        }
+        return price;
     }
 }
