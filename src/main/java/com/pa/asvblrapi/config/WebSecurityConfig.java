@@ -65,7 +65,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/api/articles/**").hasAuthority("ARTICLE_MANAGEMENT")
                 .antMatchers(HttpMethod.GET, "/api/articles").permitAll()
                 // Auth
-                .antMatchers("/api/auth/signup").hasAuthority("SIGNUP")
+                .antMatchers("/api/auth/signup").hasAuthority("USER_MANAGEMENT")
                 .antMatchers("/api/auth/signin", "/api/auth/change-password", "/api/auth/reset-password",
                         "/api/auth/save-password", "/api/auth/update-password").permitAll()
                 // Matches

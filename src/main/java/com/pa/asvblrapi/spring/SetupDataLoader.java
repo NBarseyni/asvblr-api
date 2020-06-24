@@ -63,7 +63,6 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         // Create initial privileges
         final Privilege articleManagement = createPrivilegeIfNotFound("ARTICLE_MANAGEMENT");
-        final Privilege signUp = createPrivilegeIfNotFound("SIGNUP");
         final Privilege documentManagement = createPrivilegeIfNotFound("DOCUMENT_MANAGEMENT");
         final Privilege matchManagement = createPrivilegeIfNotFound("MATCH_MANAGEMENT");
         final Privilege playerManagement = createPrivilegeIfNotFound("PLAYER_MANAGEMENT");
@@ -78,9 +77,9 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         final Privilege statisticsRead = createPrivilegeIfNotFound("STATISTICS_READ");
 
         // Create initial roles
-        final List<Privilege> presidentPrivileges = new ArrayList<Privilege>(Arrays.asList(articleManagement, signUp,
-                documentManagement, matchManagement, playerManagement, userManagement, userRead, seasonManagement,
-                subscriptionManagement, teamManagement, statisticsRead));
+        final List<Privilege> presidentPrivileges = new ArrayList<Privilege>(Arrays.asList(articleManagement, documentManagement,
+                matchManagement, playerManagement, userManagement, userRead, seasonManagement, subscriptionManagement,
+                teamManagement, statisticsRead));
         final List<Privilege> managerPrivileges = new ArrayList<Privilege>(Arrays.asList(articleManagement, documentManagement,
                 matchManagement, playerManagement, userRead, subscriptionManagement, teamManagement, statisticsRead));
         final List<Privilege> coachPrivileges = new ArrayList<Privilege>(Arrays.asList(matchManagement, teamManagementCoach,
