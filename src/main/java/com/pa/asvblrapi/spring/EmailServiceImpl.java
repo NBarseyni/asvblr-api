@@ -15,6 +15,7 @@ import org.thymeleaf.spring4.SpringTemplateEngine;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Component
@@ -83,6 +84,21 @@ public class EmailServiceImpl {
         sendHtmlMessage(user.getEmail(), "Réinitialisation mot de passe", htmlBody);
     }
 
+    public void sendMessage(List<User> users, String subject, String content) throws MessagingException {
+        Context thymeleafContext = new Context();
+        Map<String, Object> templateModel = new HashMap<>();
+        templateModel.put("content", content);
+
+        thymeleafContext.setVariables(templateModel);
+        String htmlBody = this.thymeleafTemplateEngine.process("template-mail.html", thymeleafContext);
+
+        String[] emails = new String[users.size()];
+        for (int i = 0; i < users.size(); i++) {
+            emails[i] = users.get(i).getEmail();
+        }
+        this.sendHtmlMessage(emails, subject, htmlBody);
+    }
+
     public void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel)
         throws MessagingException {
 
@@ -97,6 +113,16 @@ public class EmailServiceImpl {
         MimeMessage message = emailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
         helper.setTo(to);
+        helper.setSubject(subject);
+        helper.setText(htmlBody, true);
+        //helper.addInline("attachment.png", resourceFile);
+        emailSender.send(message);
+    }
+
+    private void sendHtmlMessage(String[] to, String subject, String htmlBody) throws MessagingException {
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setBcc(to);
         helper.setSubject(subject);
         helper.setText(htmlBody, true);
         //helper.addInline("attachment.png", resourceFile);

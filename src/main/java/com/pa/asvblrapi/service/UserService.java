@@ -1,6 +1,7 @@
 package com.pa.asvblrapi.service;
 
 import com.google.common.collect.Iterables;
+import com.pa.asvblrapi.dto.SendMailDto;
 import com.pa.asvblrapi.dto.UserDto;
 import com.pa.asvblrapi.dto.UserDtoFirebase;
 import com.pa.asvblrapi.entity.*;
@@ -214,5 +215,18 @@ public class UserService {
         }
         this.userRepository.delete(user.get());
         this.firebaseService.deleteUser(user.get().getUsername());
+    }
+
+    public List<User> convertListIdUserToUser(List<Long> idsUser) throws UserNotFoundException {
+        List<User> users = new ArrayList<>();
+        for (Long id:
+                idsUser) {
+            Optional<User> user = this.userRepository.findById(id);
+            if (!user.isPresent()) {
+                throw new UserNotFoundException(id);
+            }
+            users.add(user.get());
+        }
+        return users;
     }
 }
