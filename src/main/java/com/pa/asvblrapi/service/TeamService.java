@@ -260,6 +260,29 @@ public class TeamService {
         return teamListDtoList;
     }
 
+    public List<TeamListDto> getTeamList(Long idPlayer) {
+        List<TeamListDto> teamListDtoList = new ArrayList<>();
+        List<Team> teams = this.teamRepository.findAllByPlayer(idPlayer);
+        for (Team team : teams) {
+            String coachFirstName = "";
+            String coachLastName = "";
+            if (team.getCoach() != null) {
+                coachFirstName = team.getCoach().getFirstName();
+                coachLastName = team.getCoach().getLastName();
+            }
+            TeamListDto teamListDto = new TeamListDto(
+                    team.getId(),
+                    team.getName(),
+                    team.getTeamCategory().getName(),
+                    coachFirstName,
+                    coachLastName,
+                    this.jerseyRepository.nbPlayerByIdTeam(team.getId())
+            );
+            teamListDtoList.add(teamListDto);
+        }
+        return teamListDtoList;
+    }
+
     public TeamPlayerDto addPlayer(Long id, AddPlayerTeamDto dto) throws TeamNotFoundException, PlayerNotFoundException,
             PositionNotFoundException {
         Optional<Team> team = this.teamRepository.findById(id);

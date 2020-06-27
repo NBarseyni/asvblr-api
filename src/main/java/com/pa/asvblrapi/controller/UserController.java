@@ -76,6 +76,18 @@ public class UserController {
         }
     }
 
+    @GetMapping("/{id}/teams")
+    public ResponseEntity<Object> getTeams(@PathVariable Long id) {
+        try {
+            List<TeamListDto> teams = this.userService.getUserTeams(id);
+            return ResponseEntity.status(HttpStatus.OK).body(teams);
+        } catch (UserNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (UserIsNotPlayerException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Object> updateUser(@PathVariable Long id, @RequestBody UserDto userDto) {
         try {

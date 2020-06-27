@@ -1,14 +1,9 @@
 package com.pa.asvblrapi.service;
 
 import com.google.common.collect.Iterables;
-import com.pa.asvblrapi.dto.SendMailDto;
-import com.pa.asvblrapi.dto.UserDto;
-import com.pa.asvblrapi.dto.UserDtoFirebase;
+import com.pa.asvblrapi.dto.*;
 import com.pa.asvblrapi.entity.*;
-import com.pa.asvblrapi.exception.UserAlreadyManagerException;
-import com.pa.asvblrapi.exception.UserIsPlayerException;
-import com.pa.asvblrapi.exception.UserIsPresidentException;
-import com.pa.asvblrapi.exception.UserNotFoundException;
+import com.pa.asvblrapi.exception.*;
 import com.pa.asvblrapi.mapper.UserMapper;
 import com.pa.asvblrapi.repository.PasswordResetTokenRepository;
 import com.pa.asvblrapi.repository.RoleRepository;
@@ -47,6 +42,9 @@ public class UserService {
     @Autowired
     private PasswordResetTokenRepository passwordResetTokenRepository;
 
+    @Autowired
+    private TeamService teamService;
+
     public List<UserDto> getAllUser() {
         List<User> users = this.userRepository.findAll();
         return UserMapper.instance.toDto(users);
@@ -62,6 +60,18 @@ public class UserService {
 
     public List<User> getUserByEmail(String email) {
         return this.userRepository.findByEmail(email);
+    }
+
+    public List<TeamListDto> getUserTeams(Long id) throws UserNotFoundException, UserIsNotPlayerException {
+        Optional<User> user = this.userRepository.findById(id);
+        if (!user.isPresent()) {
+            throw new UserNotFoundException(id);
+        }
+        Player player = user.get().getPlayer();
+        if (player == null) {
+            throw new UserIsNotPlayerException(id);
+        }
+        return this.teamService.getTeamList(player.getId());
     }
 
     public User createUserSubscription(String firstName, String lastName, String email) throws Exception {
