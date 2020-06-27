@@ -5,6 +5,7 @@ import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.exception.*;
 import com.pa.asvblrapi.mapper.PlayerMapper;
 import com.pa.asvblrapi.mapper.TeamMapper;
+import com.pa.asvblrapi.mapper.UserMapper;
 import com.pa.asvblrapi.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -201,6 +202,24 @@ public class TeamService {
             teamPlayerDtoList.add(teamPlayerDto);
         }
         return teamPlayerDtoList;
+    }
+
+    public List<UserDto> getTeamUsers(Long id) throws TeamNotFoundException {
+        Optional<Team> team = this.teamRepository.findById(id);
+        if (!team.isPresent()) {
+            throw new TeamNotFoundException(id);
+        }
+        List<UserDto> users = new ArrayList<>();
+        List<Jersey> jerseys = this.jerseyRepository.findByIdTeam(id);
+        for (Jersey jersey : jerseys) {
+            Player player = jersey.getPlayer();
+            User user = player.getUser();
+            users.add(UserMapper.instance.toDto(user));
+        }
+        if (team.get().getCoach() != null) {
+            users.add(UserMapper.instance.toDto(team.get().getCoach()));
+        }
+        return users;
     }
 
     public List<PlayerDto> getPlayersNotInTeam(Long id) throws TeamNotFoundException {

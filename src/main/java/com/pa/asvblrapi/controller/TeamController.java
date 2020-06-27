@@ -115,6 +115,16 @@ public class TeamController {
         }
     }
 
+    @GetMapping("/{id}/users")
+    public ResponseEntity<Object> getUsers(@PathVariable Long id) {
+        try {
+            List<UserDto> users = this.teamService.getTeamUsers(id);
+            return ResponseEntity.status(HttpStatus.OK).body(users);
+        } catch (TeamNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
     @PostMapping("/{id}/players")
     public ResponseEntity<Object> addPlayer(@PathVariable Long id, @Valid @RequestBody List<AddPlayerTeamDto> dtos) {
         try {
