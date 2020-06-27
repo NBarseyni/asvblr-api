@@ -76,6 +76,7 @@ public class EmailServiceImpl {
         String url = "http://localhost:4200/login/reset-password?token=" + token;
         Map<String, Object> templateModel = new HashMap<>();
         templateModel.put("name", String.format("%s %s", user.getFirstName(), user.getLastName()));
+        templateModel.put("username", user.getUsername());
         templateModel.put("url", url);
 
         thymeleafContext.setVariables(templateModel);

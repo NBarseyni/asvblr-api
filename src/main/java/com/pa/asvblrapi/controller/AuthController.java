@@ -145,13 +145,16 @@ public class AuthController {
     @PostMapping("/reset-password")
     public ResponseEntity<Object> resetPassword(HttpServletRequest request, @Valid @RequestBody UserResetPasswordDto dto) {
         try {
-            User user = this.userService.getUserByEmail(dto.getEmail());
-            if (user == null) {
+            List<User> users = this.userService.getUserByEmail(dto.getEmail());
+            if (users == null) {
                 throw new UserNotFoundException(dto.getEmail());
             }
-            String token = UUID.randomUUID().toString();
-            this.userService.createPasswordResetTokenForUser(user, token);
-            this.emailService.sendMessageResetPassword(token, user);
+            for (User user :
+                    users) {
+                String token = UUID.randomUUID().toString();
+                this.userService.createPasswordResetTokenForUser(user, token);
+                this.emailService.sendMessageResetPassword(token, user);
+            }
             return ResponseEntity.status(HttpStatus.OK).body(null);
         } catch (MessagingException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
