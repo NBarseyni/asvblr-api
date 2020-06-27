@@ -22,4 +22,8 @@ public class StatisticsService {
     public List<Object> getCountNbPaymentMode() {
         return this.subscriptionRepository.countNbPaymentMode();
     }
+
+    public List<Object> getNbPlayersByAgeByTrancheOf5() {
+        return this.playerRepository.countNbPlayersByAgeByTrancheOf5();
+    }
 }

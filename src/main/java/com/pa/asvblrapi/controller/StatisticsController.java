@@ -26,4 +26,9 @@ public class StatisticsController {
     public List<Object> getCountNbPaymentMode() {
         return this.statisticsService.getCountNbPaymentMode();
     }
+
+    @GetMapping("/players-by-age")
+    public List<Object> getNbPlayersByAgeByTrancheOf5() {
+        return this.statisticsService.getNbPlayersByAgeByTrancheOf5();
+    }
 }
