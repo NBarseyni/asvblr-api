@@ -1,12 +1,14 @@
 package com.pa.asvblrapi.service;
 
 import com.pa.asvblrapi.dto.PlayerDto;
+import com.pa.asvblrapi.dto.SubscriptionDto;
 import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.exception.ClothingSizeNotFoundException;
 import com.pa.asvblrapi.exception.PlayerNotFoundException;
 import com.pa.asvblrapi.exception.SubscriptionCategoryNotFoundException;
 import com.pa.asvblrapi.exception.UserNotFoundException;
 import com.pa.asvblrapi.mapper.PlayerMapper;
+import com.pa.asvblrapi.mapper.SubscriptionMapper;
 import com.pa.asvblrapi.repository.ClothingSizeRepository;
 import com.pa.asvblrapi.repository.PlayerRepository;
 import com.pa.asvblrapi.repository.SubscriptionCategoryRepository;
@@ -47,6 +49,14 @@ public class PlayerService {
         }
         return PlayerMapper.instance.toDto(this.playerRepository.findByIdUser(id)
                 .orElseThrow(() -> new PlayerNotFoundException(id, 1)));
+    }
+
+    public Subscription getLastSubscription(Long id) throws PlayerNotFoundException {
+        Optional<Player> player = this.playerRepository.findById(id);
+        if (!player.isPresent()) {
+            throw new PlayerNotFoundException(id);
+        }
+        return player.get().getSubscriptions().get(player.get().getSubscriptions().size() - 1);
     }
 
     public Player createPlayer(Subscription subscription, User user) {
