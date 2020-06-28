@@ -238,49 +238,13 @@ public class TeamService {
     }
 
     public List<TeamListDto> getTeamList() {
-        List<TeamListDto> teamListDtoList = new ArrayList<>();
         List<Team> teams = this.teamRepository.findAll();
-        for (Team team : teams) {
-            String coachFirstName = "";
-            String coachLastName = "";
-            if (team.getCoach() != null) {
-                coachFirstName = team.getCoach().getFirstName();
-                coachLastName = team.getCoach().getLastName();
-            }
-            TeamListDto teamListDto = new TeamListDto(
-                    team.getId(),
-                    team.getName(),
-                    team.getTeamCategory().getName(),
-                    coachFirstName,
-                    coachLastName,
-                    this.jerseyRepository.nbPlayerByIdTeam(team.getId())
-            );
-            teamListDtoList.add(teamListDto);
-        }
-        return teamListDtoList;
+        return toTeamListDto(teams);
     }
 
     public List<TeamListDto> getTeamList(Long idPlayer) {
-        List<TeamListDto> teamListDtoList = new ArrayList<>();
         List<Team> teams = this.teamRepository.findAllByPlayer(idPlayer);
-        for (Team team : teams) {
-            String coachFirstName = "";
-            String coachLastName = "";
-            if (team.getCoach() != null) {
-                coachFirstName = team.getCoach().getFirstName();
-                coachLastName = team.getCoach().getLastName();
-            }
-            TeamListDto teamListDto = new TeamListDto(
-                    team.getId(),
-                    team.getName(),
-                    team.getTeamCategory().getName(),
-                    coachFirstName,
-                    coachLastName,
-                    this.jerseyRepository.nbPlayerByIdTeam(team.getId())
-            );
-            teamListDtoList.add(teamListDto);
-        }
-        return teamListDtoList;
+        return toTeamListDto(teams);
     }
 
     public TeamPlayerDto addPlayer(Long id, AddPlayerTeamDto dto) throws TeamNotFoundException, PlayerNotFoundException,
@@ -403,5 +367,29 @@ public class TeamService {
             this.userRepository.save(coach);
         }
         this.teamRepository.delete(team.get());
+    }
+
+    // ===== OTHERS =====
+
+    public List<TeamListDto> toTeamListDto(List<Team> teams) {
+        List<TeamListDto> teamListDtoList = new ArrayList<>();
+        for (Team team : teams) {
+            String coachFirstName = "";
+            String coachLastName = "";
+            if (team.getCoach() != null) {
+                coachFirstName = team.getCoach().getFirstName();
+                coachLastName = team.getCoach().getLastName();
+            }
+            TeamListDto teamListDto = new TeamListDto(
+                    team.getId(),
+                    team.getName(),
+                    team.getTeamCategory().getName(),
+                    coachFirstName,
+                    coachLastName,
+                    this.jerseyRepository.nbPlayerByIdTeam(team.getId())
+            );
+            teamListDtoList.add(teamListDto);
+        }
+        return teamListDtoList;
     }
 }
