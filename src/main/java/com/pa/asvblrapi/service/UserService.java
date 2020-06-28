@@ -1,10 +1,10 @@
 package com.pa.asvblrapi.service;
 
-import com.google.common.collect.Iterables;
 import com.pa.asvblrapi.dto.*;
 import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.exception.*;
 import com.pa.asvblrapi.mapper.UserMapper;
+import com.pa.asvblrapi.repository.JerseyRepository;
 import com.pa.asvblrapi.repository.PasswordResetTokenRepository;
 import com.pa.asvblrapi.repository.RoleRepository;
 import com.pa.asvblrapi.repository.UserRepository;
@@ -45,6 +45,9 @@ public class UserService {
     @Autowired
     private TeamService teamService;
 
+    @Autowired
+    private JerseyRepository jerseyRepository;
+
     public List<UserDto> getAllUser() {
         List<User> users = this.userRepository.findAll();
         return UserMapper.instance.toDto(users);
@@ -72,6 +75,33 @@ public class UserService {
             throw new UserIsNotPlayerException(id);
         }
         return this.teamService.getTeamList(player.getId());
+    }
+
+    public List<TeamListDto> getUserCoachedTeams(Long id) throws UserNotFoundException {
+        Optional<User> user = this.userRepository.findById(id);
+        if (!user.isPresent()) {
+            throw new UserNotFoundException(id);
+        }
+        List<TeamListDto> teamListDtoList = new ArrayList<>();
+        List<Team> teams = user.get().getCoachedTeams();
+        for (Team team : teams) {
+            String coachFirstName = "";
+            String coachLastName = "";
+            if (team.getCoach() != null) {
+                coachFirstName = team.getCoach().getFirstName();
+                coachLastName = team.getCoach().getLastName();
+            }
+            TeamListDto teamListDto = new TeamListDto(
+                    team.getId(),
+                    team.getName(),
+                    team.getTeamCategory().getName(),
+                    coachFirstName,
+                    coachLastName,
+                    this.jerseyRepository.nbPlayerByIdTeam(team.getId())
+            );
+            teamListDtoList.add(teamListDto);
+        }
+        return teamListDtoList;
     }
 
     public User createUserSubscription(String firstName, String lastName, String email) throws Exception {
