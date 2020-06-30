@@ -41,9 +41,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) {
-        return this.userService.getUser(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+    public UserDto getUser(@PathVariable Long id) {
+        return this.userService.getUser(id);
     }
 
     @GetMapping("/{id}/driving-drives")

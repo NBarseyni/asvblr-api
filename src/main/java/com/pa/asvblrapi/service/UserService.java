@@ -49,8 +49,9 @@ public class UserService {
         return UserMapper.instance.toDto(users);
     }
 
-    public Optional<User> getUser(Long id) {
-        return this.userRepository.findById(id);
+    public UserDto getUser(Long id) {
+        return UserMapper.instance.toDto(this.userRepository.findById(id)
+            .orElseThrow(() -> new UserNotFoundException(id)));
     }
 
     public User getUserByUsername(String username) {
