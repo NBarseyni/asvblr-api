@@ -73,6 +73,7 @@ public class PlayerService {
                 subscription.getTopSize(),
                 subscription.getPantsSize(),
                 subscription.getSubscriptionCategory(),
+                subscription.getRequestedJerseyNumber(),
                 user
         );
         user.setPlayer(player);
