@@ -89,6 +89,7 @@ public class EmailServiceImpl {
         Context thymeleafContext = new Context();
         Map<String, Object> templateModel = new HashMap<>();
         templateModel.put("content", content);
+        templateModel.put("subject", subject);
 
         thymeleafContext.setVariables(templateModel);
         String htmlBody = this.thymeleafTemplateEngine.process("template-mail.html", thymeleafContext);
