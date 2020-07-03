@@ -51,7 +51,7 @@ public class UserService {
 
     public UserDto getUser(Long id) {
         return UserMapper.instance.toDto(this.userRepository.findById(id)
-            .orElseThrow(() -> new UserNotFoundException(id)));
+                .orElseThrow(() -> new UserNotFoundException(id)));
     }
 
     public User getUserByUsername(String username) {
@@ -236,9 +236,22 @@ public class UserService {
         this.firebaseService.deleteUser(user.get().getUsername());
     }
 
+    public void removeAllRightCoachAndDeleteNotPlayerUsers() {
+        List<User> users = this.userRepository.findAll();
+        Role coach = this.roleRepository.findByName("ROLE_COACH");
+        Role president = this.roleRepository.findByName("ROLE_PRESIDENT");
+        for (User user :
+                users) {
+            user.getRoles().remove(coach);
+            if (user.getPlayer() == null && !user.getRoles().contains(president)) {
+                this.userRepository.delete(user);
+            }
+        }
+    }
+
     public List<User> convertListIdUserToUser(List<Long> idsUser) throws UserNotFoundException {
         List<User> users = new ArrayList<>();
-        for (Long id:
+        for (Long id :
                 idsUser) {
             Optional<User> user = this.userRepository.findById(id);
             if (!user.isPresent()) {

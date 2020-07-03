@@ -369,6 +369,21 @@ public class TeamService {
         this.teamRepository.delete(team.get());
     }
 
+    public void deleteAllTeams() throws IOException {
+        List<Team> teams = this.teamRepository.findAll();
+        for (Team team :
+                teams) {
+            if (team.getPhoto() != null) {
+                try {
+                    Files.delete(Paths.get(UPLOADED_FOLDER + team.getPhoto()));
+                } catch (IOException e) {
+                    throw new IOException(e.getMessage());
+                }
+            }
+        }
+        this.teamRepository.deleteAll();
+    }
+
     // ===== OTHERS =====
 
     public List<TeamListDto> toTeamListDto(List<Team> teams) {
