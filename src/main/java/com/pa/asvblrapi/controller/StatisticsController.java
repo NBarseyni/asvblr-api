@@ -1,12 +1,13 @@
 package com.pa.asvblrapi.controller;
 
+import com.pa.asvblrapi.dto.VisitDto;
 import com.pa.asvblrapi.service.StatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -30,5 +31,20 @@ public class StatisticsController {
     @GetMapping("/players-by-age")
     public List<Object> getNbPlayersByAgeByTrancheOf5() {
         return this.statisticsService.getNbPlayersByAgeByTrancheOf5();
+    }
+
+    @GetMapping("/visits")
+    public List<Object> getVisitStat() {
+        return this.statisticsService.getVisitStat();
+    }
+
+    @PostMapping("/visits")
+    public ResponseEntity<Object> createStatVisit(@Valid @RequestBody VisitDto dto) {
+        try {
+            this.statisticsService.createVisit(dto);
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }
