@@ -2,10 +2,8 @@ package com.pa.asvblrapi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pa.asvblrapi.dto.SubscriptionDto;
-import com.pa.asvblrapi.entity.Document;
-import com.pa.asvblrapi.entity.Player;
-import com.pa.asvblrapi.entity.Subscription;
-import com.pa.asvblrapi.entity.User;
+import com.pa.asvblrapi.dto.SubscriptionPaidDto;
+import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.exception.*;
 import com.pa.asvblrapi.mapper.SubscriptionMapper;
 import com.pa.asvblrapi.service.*;
@@ -168,6 +166,33 @@ public class SubscriptionController {
             return ResponseEntity.status(HttpStatus.OK).body(null);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/{id}/payments")
+    public List<SubscriptionPaidDto> getSubscriptionPayment(@PathVariable Long id) {
+        return this.subscriptionService.getSubscriptionPaid(id);
+    }
+
+    @PatchMapping("/{idSubscription}/payments/{idPaymentMode}/validated")
+    public ResponseEntity<Object> validatedPayment(@PathVariable Long idSubscription, @PathVariable Long idPaymentMode) {
+        try {
+            List<SubscriptionPaidDto> subscriptionsPaidDto =
+                    this.subscriptionService.validatedPaymentMode(idSubscription, idPaymentMode);
+            return ResponseEntity.status(HttpStatus.OK).body(subscriptionsPaidDto);
+        } catch (SubscriptionPaidNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
+    }
+
+    @PatchMapping("/{idSubscription}/payments/{idPaymentMode}/unvalidated")
+    public ResponseEntity<Object> unvalidatedPayment(@PathVariable Long idSubscription, @PathVariable Long idPaymentMode) {
+        try {
+            List<SubscriptionPaidDto> subscriptionsPaidDto =
+                    this.subscriptionService.unvalidatedPaymentMode(idSubscription, idPaymentMode);
+            return ResponseEntity.status(HttpStatus.OK).body(subscriptionsPaidDto);
+        } catch (SubscriptionPaidNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

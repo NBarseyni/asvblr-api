@@ -1,9 +1,11 @@
 package com.pa.asvblrapi.service;
 
 import com.pa.asvblrapi.dto.SubscriptionDto;
+import com.pa.asvblrapi.dto.SubscriptionPaidDto;
 import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.exception.*;
 import com.pa.asvblrapi.mapper.SubscriptionMapper;
+import com.pa.asvblrapi.mapper.SubscriptionPaidMapper;
 import com.pa.asvblrapi.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -205,6 +207,33 @@ public class SubscriptionService {
         }
         subscription.get().setSubscriptionsPaid(subscriptionsPaid);
         return this.subscriptionRepository.save(subscription.get());
+    }
+
+    public List<SubscriptionPaidDto> getSubscriptionPaid(Long idSubscription) {
+        List<SubscriptionPaid> subscriptionsPaid = this.subscriptionPaidRepository.findByIdSubscription(idSubscription);
+        return SubscriptionPaidMapper.instance.toDto(subscriptionsPaid);
+    }
+
+    public List<SubscriptionPaidDto> validatedPaymentMode(Long idSubscription, Long idPaymentMode) throws SubscriptionPaidNotFoundException {
+        Optional<SubscriptionPaid> subscriptionPaid =
+                this.subscriptionPaidRepository.findByIdSubscriptionAndIdPaymentMode(idSubscription, idPaymentMode);
+        if (!subscriptionPaid.isPresent()) {
+            throw new SubscriptionPaidNotFoundException(idSubscription, idPaymentMode);
+        }
+        subscriptionPaid.get().setPaid(true);
+        this.subscriptionPaidRepository.save(subscriptionPaid.get());
+        return SubscriptionPaidMapper.instance.toDto(this.subscriptionPaidRepository.findByIdSubscription(idSubscription));
+    }
+
+    public List<SubscriptionPaidDto> unvalidatedPaymentMode(Long idSubscription, Long idPaymentMode) throws SubscriptionPaidNotFoundException {
+        Optional<SubscriptionPaid> subscriptionPaid =
+                this.subscriptionPaidRepository.findByIdSubscriptionAndIdPaymentMode(idSubscription, idPaymentMode);
+        if (!subscriptionPaid.isPresent()) {
+            throw new SubscriptionPaidNotFoundException(idSubscription, idPaymentMode);
+        }
+        subscriptionPaid.get().setPaid(false);
+        this.subscriptionPaidRepository.save(subscriptionPaid.get());
+        return SubscriptionPaidMapper.instance.toDto(this.subscriptionPaidRepository.findByIdSubscription(idSubscription));
     }
 
     public void setPlayer(Long id, Player player) {
