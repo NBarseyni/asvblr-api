@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface MatchRepository extends JpaRepository<Match, Long> {
 
-    @Query(value = "select m.* from Matche m where m.team_id = :idTeam",
+    @Query(value = "select m.* from Matche m where m.team_id = :idTeam order by m.date ASC",
             nativeQuery = true)
     List<Match> findAllByIdTeam(@Param("idTeam") Long idTeam);
 }
