@@ -71,7 +71,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // Mails
                 .antMatchers("/api/mails/**").hasAuthority("MAIL_MANAGEMENT")
                 // Matches
-                .antMatchers("/api/matches/**").hasAuthority("MATCH_MANAGEMENT")
+                .antMatchers(HttpMethod.GET, "/api/matches", "/api/matches/{id}").hasAuthority("MATCH_MANAGEMENT")
+                .antMatchers(HttpMethod.GET, "/api/matches/{id}/drives").hasAuthority("DRIVE_READ_CREATE")
+                .antMatchers(HttpMethod.POST, "/api/matches/**").hasAuthority("MATCH_MANAGEMENT")
+                .antMatchers(HttpMethod.PUT, "/api/matches/**").hasAuthority("MATCH_MANAGEMENT")
+                .antMatchers(HttpMethod.PATCH, "/api/matches/**").hasAuthority("MATCH_MANAGEMENT")
+                .antMatchers(HttpMethod.DELETE, "/api/matches/**").hasAuthority("MATCH_MANAGEMENT")
                 // Players
                 .antMatchers(HttpMethod.GET, "/api/players").hasAuthority("PLAYER_MANAGEMENT")
                 .antMatchers(HttpMethod.PUT, "/api/players/**").hasAuthority("PLAYER_MANAGEMENT")
