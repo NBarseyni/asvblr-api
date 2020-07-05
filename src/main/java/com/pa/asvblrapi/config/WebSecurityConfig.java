@@ -87,7 +87,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PATCH, "/api/users/**").hasAuthority("USER_MANAGEMENT")
                 .antMatchers(HttpMethod.DELETE, "/api/users/{id}").hasAuthority("USER_MANAGEMENT")
                 // Users
-                .antMatchers(HttpMethod.GET, "/api/users").hasAuthority("USER_READ")
+                .antMatchers(HttpMethod.GET, "/api/users", "/api/users/{id}").hasAuthority("USER_READ")
                 .antMatchers(HttpMethod.GET, "/api/users/{id}/player}", "/api/users/{id}/driving-drives",
                         "/api/users/{id}/passenger-drives").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/users/{id}/teams").hasAuthority("PLAYER_READ")
