@@ -206,7 +206,7 @@ public class SubscriptionController {
             this.subscriptionService.setPlayer(id, player);
         } catch (SubscriptionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } catch (SubscriptionAlreadyValidatedException e) {
+        } catch (SubscriptionAlreadyValidatedException | SubscriptionHasNotAllPaymentModeValidated e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);

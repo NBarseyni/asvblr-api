@@ -276,7 +276,12 @@ public class SubscriptionService {
         if (subscription.get().isValidated()) {
             throw new SubscriptionAlreadyValidatedException();
         }
-
+        for (SubscriptionPaid subscriptionPaid :
+                subscription.get().getSubscriptionsPaid()) {
+            if (!subscriptionPaid.isPaid()) {
+                throw new SubscriptionHasNotAllPaymentModeValidated(id);
+            }
+        }
         subscription.get().setValidated(true);
         subscription.get().setValidationDate(new Date());
         return this.subscriptionRepository.save(subscription.get());
