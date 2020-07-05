@@ -195,6 +195,7 @@ public class TeamService {
                     player.getPhoneNumber(),
                     player.getBirthDate(),
                     player.getLicenceNumber(),
+                    player.getRequestedJerseyNumber(),
                     jersey.getNumber(),
                     position.getName(),
                     position.getShortName()
@@ -279,6 +280,7 @@ public class TeamService {
                 player.get().getPhoneNumber(),
                 player.get().getBirthDate(),
                 player.get().getLicenceNumber(),
+                player.get().getRequestedJerseyNumber(),
                 jersey.getNumber(),
                 position.getName(),
                 position.getShortName()
@@ -323,6 +325,7 @@ public class TeamService {
                 player.get().getPhoneNumber(),
                 player.get().getBirthDate(),
                 player.get().getLicenceNumber(),
+                player.get().getRequestedJerseyNumber(),
                 updatedJersey.getNumber(),
                 position.getName(),
                 position.getShortName()

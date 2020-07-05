@@ -22,6 +22,7 @@ public class TeamPlayerDto {
     private String phoneNumber;
     private Date birthDate;
     private String licenceNumber;
+    private Integer requestedJerseyNumber;
 
     private Integer jerseyNumber;
 
