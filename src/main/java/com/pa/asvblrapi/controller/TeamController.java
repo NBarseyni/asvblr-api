@@ -36,9 +36,8 @@ public class TeamController {
     }
 
     @GetMapping("/{id}")
-    public TeamDto getTeam(@PathVariable Long id) {
-        return TeamMapper.instance.toDto(this.teamService.getTeam(id)
-                .orElseThrow(() -> new TeamNotFoundException(id)));
+    public TeamListDto getTeam(@PathVariable Long id) {
+        return this.teamService.getTeam(id);
     }
 
     @GetMapping("/list-detail")

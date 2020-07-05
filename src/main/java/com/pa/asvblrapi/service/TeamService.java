@@ -51,8 +51,8 @@ public class TeamService {
         return this.teamRepository.findAll();
     }
 
-    public Optional<Team> getTeam(Long id) {
-        return this.teamRepository.findById(id);
+    public TeamListDto getTeam(Long id) {
+        return this.toTeamListDto(this.teamRepository.findById(id).orElseThrow(() -> new TeamNotFoundException(id)));
     }
 
     public List<TeamDto> getTeamsByPlayer(Long id) throws PlayerNotFoundException {
@@ -388,6 +388,23 @@ public class TeamService {
     }
 
     // ===== OTHERS =====
+
+    public TeamListDto toTeamListDto(Team team) {
+        String coachFirstName = "";
+        String coachLastName = "";
+        if (team.getCoach() != null) {
+            coachFirstName = team.getCoach().getFirstName();
+            coachLastName = team.getCoach().getLastName();
+        }
+        return new TeamListDto(
+                team.getId(),
+                team.getName(),
+                team.getTeamCategory().getName(),
+                coachFirstName,
+                coachLastName,
+                this.jerseyRepository.nbPlayerByIdTeam(team.getId())
+        );
+    }
 
     public List<TeamListDto> toTeamListDto(List<Team> teams) {
         List<TeamListDto> teamListDtoList = new ArrayList<>();
