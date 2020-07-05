@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class SubscriptionService {
@@ -32,6 +29,9 @@ public class SubscriptionService {
 
     @Autowired
     private ClothingSizeRepository clothingSizeRepository;
+
+    @Autowired
+    private SubscriptionPaidRepository subscriptionPaidRepository;
 
     @Autowired
     private DocumentService documentService;
@@ -125,10 +125,19 @@ public class SubscriptionService {
                 subscriptionDto.isPc_unaccountability(),
                 subscriptionDto.isPc_allowToWhatsapp(),
                 season.get(),
-                category.get(),
-                paymentModes
+                category.get()
+                //paymentModes
         );
-        return this.subscriptionRepository.save(subscription);
+        Subscription subscriptionSave = this.subscriptionRepository.save(subscription);
+        Set<SubscriptionPaid> subscriptionsPaid = new HashSet<>();
+        for (PaymentMode paymentMode :
+                paymentModes) {
+            SubscriptionPaid subscriptionPaid = new SubscriptionPaid(subscriptionSave, paymentMode);
+            subscriptionsPaid.add(subscriptionPaid);
+            this.subscriptionPaidRepository.save(subscriptionPaid);
+        }
+        subscriptionSave.setSubscriptionsPaid(subscriptionsPaid);
+        return this.subscriptionRepository.save(subscriptionSave);
     }
 
     public Subscription updateSubscription(Long id, SubscriptionDto subscriptionDto) throws SubscriptionNotFoundException,
@@ -185,7 +194,16 @@ public class SubscriptionService {
         subscription.get().setPc_unaccountability(subscriptionDto.isPc_unaccountability());
         subscription.get().setPc_allowToWhatsapp(subscriptionDto.isPc_allowToWhatsapp());
         subscription.get().setSubscriptionCategory(category.get());
-        subscription.get().setPaymentModes(paymentModes);
+        //subscription.get().setPaymentModes(paymentModes);
+
+        Set<SubscriptionPaid> subscriptionsPaid = new HashSet<>();
+        for (PaymentMode paymentMode :
+                paymentModes) {
+            SubscriptionPaid subscriptionPaid = new SubscriptionPaid(subscription.get(), paymentMode);
+            subscriptionsPaid.add(subscriptionPaid);
+            this.subscriptionPaidRepository.save(subscriptionPaid);
+        }
+        subscription.get().setSubscriptionsPaid(subscriptionsPaid);
         return this.subscriptionRepository.save(subscription.get());
     }
 

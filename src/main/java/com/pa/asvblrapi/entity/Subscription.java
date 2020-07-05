@@ -9,7 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -80,11 +80,14 @@ public class Subscription {
     @JoinColumn(name = "category_id", nullable = false)
     private SubscriptionCategory subscriptionCategory;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    /*@ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "subscription_payment_modes",
             joinColumns = @JoinColumn(name = "subscription_id"),
             inverseJoinColumns = @JoinColumn(name = "paymentMode_id"))
     private List<PaymentMode> paymentModes;
+     */
+    @OneToMany(mappedBy = "subscription")
+    private Set<SubscriptionPaid> subscriptionsPaid;
 
     @ManyToOne
     @JoinColumn(name = "CNI_id")
@@ -104,7 +107,7 @@ public class Subscription {
                         boolean referee, boolean coach, boolean calendarRequested, String comment, boolean pc_allowToLeaveAlone,
                         boolean pc_allowClubToRescue, boolean pc_allowToTravelWithTeamMate, boolean pc_allowToPublish,
                         boolean pc_unaccountability, boolean pc_allowToWhatsapp, Season season,
-                        SubscriptionCategory subscriptionCategory, List<PaymentMode> paymentModes) {
+                        SubscriptionCategory subscriptionCategory) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -134,7 +137,6 @@ public class Subscription {
         this.creationDate = new Date();
         this.season = season;
         this.subscriptionCategory = subscriptionCategory;
-        this.paymentModes = paymentModes;
     }
 }
 
