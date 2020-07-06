@@ -61,7 +61,8 @@ public class DriveService {
         return DriveMapper.instance.toDto(this.driveRepository.findAllByIdPassenger(idPassenger));
     }
 
-    public DriveDto createDrive(DriveDto driveDto) throws UserNotFoundException, MatchNotFoundException {
+    public DriveDto createDrive(DriveDto driveDto) throws UserNotFoundException, MatchNotFoundException,
+            UserAlreadyInADriveException {
         Optional<User> driver = this.userRepository.findById(driveDto.getIdDriver());
         if (!driver.isPresent()) {
             throw new UserNotFoundException(driveDto.getIdDriver());
@@ -70,7 +71,9 @@ public class DriveService {
         if (!match.isPresent()) {
             throw new MatchNotFoundException(driveDto.getIdMatch());
         }
-
+        if (this.checkIfAlreadyInDrive(driveDto)) {
+            throw new UserAlreadyInADriveException(driveDto.getIdDriver());
+        }
         Drive drive = new Drive(driveDto.getAddress(), driveDto.isGo(), driveDto.getDate(), driveDto.getNbTotalPlaces(),
                 driver.get(), match.get());
 
@@ -121,7 +124,8 @@ public class DriveService {
         return passengers;
     }
 
-    public DriveDto addPassenger(Long idDrive, Long idUser) throws DriveNotFoundException, UserNotFoundException {
+    public DriveDto addPassenger(Long idDrive, Long idUser) throws DriveNotFoundException, UserNotFoundException,
+            DriveIsFullException, UserAlreadyInDriveException, UserAlreadyInADriveException {
         Optional<Drive> drive = this.driveRepository.findById(idDrive);
         if (!drive.isPresent()) {
             throw new DriveNotFoundException(idDrive);
@@ -135,6 +139,9 @@ public class DriveService {
         }
         if (drive.get().getPassengers().contains(user.get())) {
             throw new UserAlreadyInDriveException(idDrive, idUser);
+        }
+        if (this.checkIfAlreadyInDrive(idDrive, idUser)) {
+            throw new UserAlreadyInADriveException(idUser);
         }
         drive.get().getPassengers().add(user.get());
         drive.get().setNbFreePlaces(drive.get().getNbFreePlaces() - 1);
@@ -165,6 +172,53 @@ public class DriveService {
             throw new DriveNotFoundException(id);
         }
         this.driveRepository.delete(drive.get());
+    }
+
+    // ===== OTHERS =====
+
+    private boolean checkIfAlreadyInDrive(DriveDto dto) {
+        List<Drive> drives = this.driveRepository.findAllByIdMatch(dto.getIdMatch());
+        for (Drive drive :
+                drives) {
+            // If good type
+            if (drive.isGo() == dto.isGo()) {
+                // If drive's driver
+                if (drive.getDriver().getId().equals(dto.getIdDriver())) {
+                    return true;
+                }
+                for (User user :
+                        drive.getPassengers()) {
+                    // If in a other drive
+                    if (user.getId().equals(dto.getIdDriver())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean checkIfAlreadyInDrive(Long idDrive, Long idUser) throws DriveNotFoundException {
+        Optional<Drive> drive = this.driveRepository.findById(idDrive);
+        if (!drive.isPresent()) {
+            throw new DriveNotFoundException(idDrive);
+        }
+        List<Drive> drives = this.driveRepository.findAllByIdMatch(drive.get().getMatch().getId());
+        for (Drive d :
+                drives) {
+            if (d.isGo() == drive.get().isGo()) {
+                if (d.getDriver().getId().equals(idUser)) {
+                    return true;
+                }
+                for (User user :
+                        d.getPassengers()) {
+                    if (user.getId().equals(idUser)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }
 

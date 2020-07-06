@@ -3,10 +3,7 @@ package com.pa.asvblrapi.controller;
 import com.pa.asvblrapi.dto.DriveDto;
 import com.pa.asvblrapi.dto.DriveUserDto;
 import com.pa.asvblrapi.dto.UserDtoFirebase;
-import com.pa.asvblrapi.exception.DriveNotFoundException;
-import com.pa.asvblrapi.exception.MatchNotFoundException;
-import com.pa.asvblrapi.exception.UserNotFoundException;
-import com.pa.asvblrapi.exception.UserNotFoundInDriveException;
+import com.pa.asvblrapi.exception.*;
 import com.pa.asvblrapi.service.DriveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,6 +37,8 @@ public class DriveController {
             return ResponseEntity.status(HttpStatus.CREATED).body(drive);
         } catch (UserNotFoundException | MatchNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (UserAlreadyInADriveException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
@@ -70,6 +69,8 @@ public class DriveController {
             return ResponseEntity.status(HttpStatus.OK).body(driveDto);
         } catch (DriveNotFoundException | UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (DriveIsFullException | UserAlreadyInDriveException | UserAlreadyInADriveException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
 
