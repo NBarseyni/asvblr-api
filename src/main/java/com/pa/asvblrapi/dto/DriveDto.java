@@ -22,6 +22,8 @@ public class DriveDto {
     private int nbFreePlaces;
     @NotNull
     private Long idDriver;
+    private String firstNameDriver;
+    private String lastNameDriver;
     @NotNull
     private Long idMatch;
 }

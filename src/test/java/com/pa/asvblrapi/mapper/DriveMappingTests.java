@@ -19,6 +19,8 @@ public class DriveMappingTests {
     public void should_map_drive_to_dto() {
         User user = new User();
         user.setId((long) 2);
+        user.setFirstName("FirstNameTest");
+        user.setLastName("LastNameTest");
         Match match = new Match();
         match.setId((long) 3);
         Drive drive = new Drive((long) 1, "address",true, new Date(), 3, 3, user, match, new ArrayList<>());
@@ -33,6 +35,8 @@ public class DriveMappingTests {
         assertThat(driveDto.getNbTotalPlaces()).isEqualTo(drive.getNbTotalPlaces());
         assertThat(driveDto.getNbFreePlaces()).isEqualTo(drive.getNbFreePlaces());
         assertThat(driveDto.getIdDriver()).isEqualTo(user.getId());
+        assertThat(driveDto.getFirstNameDriver()).isEqualTo(user.getFirstName());
+        assertThat(driveDto.getLastNameDriver()).isEqualTo(user.getLastName());
         assertThat(driveDto.getIdMatch()).isEqualTo(match.getId());
     }
 }
