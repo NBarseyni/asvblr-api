@@ -131,7 +131,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
 
         // Create Position
         createPositionIfNotFound("Attaquant ailier", "R4");
-        createPositionIfNotFound("Centrale", "C");
+        createPositionIfNotFound("Central", "C");
         createPositionIfNotFound("Passeur", "Pa");
         createPositionIfNotFound("Pointu", "Pt");
         createPositionIfNotFound("Libéro", "L");
