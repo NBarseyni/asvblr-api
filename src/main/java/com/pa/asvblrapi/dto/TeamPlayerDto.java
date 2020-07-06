@@ -26,6 +26,7 @@ public class TeamPlayerDto {
 
     private Integer jerseyNumber;
 
+    private Long idPosition;
     private String positionName;
     private String positionShortName;
 }
