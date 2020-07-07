@@ -17,7 +17,7 @@ public interface PlayerRepository extends JpaRepository<Player, Long> {
     )
     Optional<Player> findByIdUser(@Param("idUser") Long idUser);
 
-    @Query(value = "select count(city), city, postcode from Player group by city",
+    @Query(value = "select count(city), city, postcode from Player group by city, postcode",
             nativeQuery = true)
     List<Object> countNbPlayersByCity();
 

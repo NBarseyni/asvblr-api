@@ -11,7 +11,7 @@ import java.util.List;
 public interface VisitRepository extends JpaRepository<Visit, Long> {
 
     @Query(value = "select v.page_code, MONTH(v.date) as date, count(*)" +
-            "from visit v \n where date > DATE_SUB(NOW(), INTERVAL 12 MONTH)" +
+            "from visit v where date > DATE_SUB(NOW(), INTERVAL 12 MONTH)" +
             "group by v.page_code, MONTH(page_code) order by MONTH(v.date) DESC",
             nativeQuery = true)
     List<Object> getVisitStats();
