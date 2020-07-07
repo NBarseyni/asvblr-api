@@ -121,7 +121,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/api/teams/{id}/leader").hasAuthority("TEAM_MANAGEMENT_COACH")
                 .antMatchers(HttpMethod.PUT, "/api/teams/{idTeam}/players/{idPlayer}").hasAuthority("TEAM_MANAGEMENT_COACH")
                 .antMatchers(HttpMethod.GET, "/api/teams", "/api/teams/{id}", "/api/teams/{id}/players",
-                        "/api/teams/{id}/matches").permitAll()
+                        "/api/teams/{id}/matches", "/api/teams/{id}/last-match").permitAll()
                 // Drives
                 .antMatchers("/api/drives/**").hasAuthority("DRIVE_READ_CREATE")
                 // Dataset

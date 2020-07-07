@@ -1,7 +1,6 @@
 package com.pa.asvblrapi.controller;
 
 import com.pa.asvblrapi.dto.*;
-import com.pa.asvblrapi.entity.Position;
 import com.pa.asvblrapi.exception.*;
 import com.pa.asvblrapi.mapper.TeamMapper;
 import com.pa.asvblrapi.service.MatchService;
@@ -48,6 +47,11 @@ public class TeamController {
     @GetMapping("/{id}/matches")
     public List<MatchDto> getMatchesByIdTeam(@PathVariable Long id) {
         return this.matchService.getAllMatchesByIdTeam(id);
+    }
+
+    @GetMapping("/{id}/last-match")
+    public MatchDto getLastEndedMatchByIdTeam(@PathVariable Long id) {
+        return this.matchService.getLastEndedMatchByIdTeam(id);
     }
 
     @PostMapping("")

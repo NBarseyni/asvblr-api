@@ -38,6 +38,10 @@ public class MatchService {
         return MatchMapper.instance.toDto(this.matchRepository.findAllByIdTeam(idTeam));
     }
 
+    public MatchDto getLastEndedMatchByIdTeam(Long idTeam) {
+        return MatchMapper.instance.toDto(this.matchRepository.findLastMatchByIdTeam(idTeam));
+    }
+
     public MatchDto createMatch(MatchDto matchDto) throws TeamNotFoundException {
         Optional<Team> team = this.teamRepository.findById(matchDto.getIdTeam());
         if (!team.isPresent()) {
