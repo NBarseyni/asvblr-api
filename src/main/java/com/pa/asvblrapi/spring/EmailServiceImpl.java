@@ -4,6 +4,7 @@ import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -14,6 +15,7 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +29,7 @@ public class EmailServiceImpl {
     @Autowired
     private SpringTemplateEngine thymeleafTemplateEngine;
 
-    @Value("classpath:/mail-logo.png")
+    @Value("classpath:/logo_asso.png")
     Resource resourceFile;
 
     @Value("${asvblrapi.app.mailContact}")
@@ -118,6 +120,7 @@ public class EmailServiceImpl {
         helper.setTo(mailContact);
         helper.setSubject("Question du site web");
         helper.setText(htmlBody, true);
+        helper.addInline("logo", resourceFile);
         emailSender.send(message);
     }
 
@@ -137,7 +140,7 @@ public class EmailServiceImpl {
         helper.setTo(to);
         helper.setSubject(subject);
         helper.setText(htmlBody, true);
-        //helper.addInline("attachment.png", resourceFile);
+        helper.addInline("logo", resourceFile);
         emailSender.send(message);
     }
 
@@ -147,7 +150,7 @@ public class EmailServiceImpl {
         helper.setBcc(to);
         helper.setSubject(subject);
         helper.setText(htmlBody, true);
-        //helper.addInline("attachment.png", resourceFile);
+        helper.addInline("logo", resourceFile);
         emailSender.send(message);
     }
 }
