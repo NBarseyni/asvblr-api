@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class CommentMatchDto {
-    private Long idMatch;
     @NotBlank
     private String comment;
     @NotNull
