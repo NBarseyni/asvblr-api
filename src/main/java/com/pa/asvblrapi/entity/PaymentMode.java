@@ -1,5 +1,6 @@
 package com.pa.asvblrapi.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,7 @@ public class PaymentMode {
     private String name;
 
     @OneToMany(mappedBy = "paymentMode")
+    @JsonBackReference
     private Set<SubscriptionPaid> subscriptionsPaid;
 
     public PaymentMode(String name) {
