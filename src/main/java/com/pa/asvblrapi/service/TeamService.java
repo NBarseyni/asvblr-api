@@ -399,12 +399,23 @@ public class TeamService {
             coachFirstName = team.getCoach().getFirstName();
             coachLastName = team.getCoach().getLastName();
         }
+        String leaderFirstName = "";
+        String leaderLastName = "";
+        Long idPlayerLeader = null;
+        if (team.getLeader() != null) {
+            leaderFirstName = team.getLeader().getPlayer().getFirstName();
+            leaderLastName = team.getLeader().getPlayer().getLastName();
+            idPlayerLeader = team.getLeader().getPlayer().getId();
+        }
         return new TeamListDto(
                 team.getId(),
                 team.getName(),
                 team.getTeamCategory().getName(),
                 coachFirstName,
                 coachLastName,
+                idPlayerLeader,
+                leaderFirstName,
+                leaderLastName,
                 this.jerseyRepository.nbPlayerByIdTeam(team.getId())
         );
     }
@@ -412,21 +423,7 @@ public class TeamService {
     public List<TeamListDto> toTeamListDto(List<Team> teams) {
         List<TeamListDto> teamListDtoList = new ArrayList<>();
         for (Team team : teams) {
-            String coachFirstName = "";
-            String coachLastName = "";
-            if (team.getCoach() != null) {
-                coachFirstName = team.getCoach().getFirstName();
-                coachLastName = team.getCoach().getLastName();
-            }
-            TeamListDto teamListDto = new TeamListDto(
-                    team.getId(),
-                    team.getName(),
-                    team.getTeamCategory().getName(),
-                    coachFirstName,
-                    coachLastName,
-                    this.jerseyRepository.nbPlayerByIdTeam(team.getId())
-            );
-            teamListDtoList.add(teamListDto);
+            teamListDtoList.add(toTeamListDto(team));
         }
         return teamListDtoList;
     }

@@ -13,5 +13,8 @@ public class TeamListDto {
     private String teamCategoryName;
     private String coachFirstName;
     private String coachLastName;
+    private Long idPlayerLeader;
+    private String leaderFirstName;
+    private String leaderLastName;
     private int nbPlayers;
 }
