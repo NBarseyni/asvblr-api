@@ -1,5 +1,6 @@
 package com.pa.asvblrapi.controller;
 
+import com.pa.asvblrapi.dto.ContactMailDto;
 import com.pa.asvblrapi.dto.SendMailDto;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.UserNotFoundException;
@@ -10,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.util.List;
@@ -33,6 +35,16 @@ public class MailController {
             return ResponseEntity.status(HttpStatus.OK).body(null);
         } catch (UserNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (MessagingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/contact-mail")
+    public ResponseEntity<Object> sendMailContact(@Valid @RequestBody ContactMailDto dto) {
+        try {
+            this.emailService.sendContactMessage(dto.getSender(), dto.getContent());
+            return ResponseEntity.status(HttpStatus.OK).body(null);
         } catch (MessagingException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }

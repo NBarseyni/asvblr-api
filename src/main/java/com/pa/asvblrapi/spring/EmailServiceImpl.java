@@ -30,6 +30,9 @@ public class EmailServiceImpl {
     @Value("classpath:/mail-logo.png")
     Resource resourceFile;
 
+    @Value("${asvblrapi.app.mailContact}")
+    private String mailContact;
+
     public void sendSimpleMessage(String to, String subject, String text) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -99,6 +102,23 @@ public class EmailServiceImpl {
             emails[i] = users.get(i).getEmail();
         }
         this.sendHtmlMessage(emails, subject, htmlBody);
+    }
+
+    public void sendContactMessage(String sender, String content) throws MessagingException {
+        Context thymeleafContext = new Context();
+        Map<String, Object> templateModel = new HashMap<>();
+        templateModel.put("sender", sender);
+        templateModel.put("content", content);
+
+        thymeleafContext.setVariables(templateModel);
+        String htmlBody = this.thymeleafTemplateEngine.process("template-mail-contact.html", thymeleafContext);
+
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");
+        helper.setTo(mailContact);
+        helper.setSubject("Question du site web");
+        helper.setText(htmlBody, true);
+        emailSender.send(message);
     }
 
     public void sendMessageUsingThymeleafTemplate(String to, String subject, Map<String, Object> templateModel)
