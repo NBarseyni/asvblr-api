@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface SeasonRepository extends JpaRepository<Season, Long> {
-    @Query(value = "select s.* from Season s where s.current_season = 1",
+    @Query(value = "select s.* from season s where s.current_season = 1",
             nativeQuery = true
     )
     Optional<Season> findCurrentSeason();

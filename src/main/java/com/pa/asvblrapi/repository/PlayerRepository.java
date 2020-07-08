@@ -12,12 +12,12 @@ import java.util.Optional;
 
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, Long> {
-    @Query(value = "select p.* from Player p where p.user_id = :idUser",
+    @Query(value = "select p.* from player p where p.user_id = :idUser",
             nativeQuery = true
     )
     Optional<Player> findByIdUser(@Param("idUser") Long idUser);
 
-    @Query(value = "select count(city), city, postcode from Player group by city, postcode",
+    @Query(value = "select count(city), city, postcode from player group by city, postcode",
             nativeQuery = true)
     List<Object> countNbPlayersByCity();
 

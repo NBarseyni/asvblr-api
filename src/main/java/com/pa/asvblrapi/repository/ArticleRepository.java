@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 public interface ArticleRepository extends JpaRepository<Article, Long> {
 
-    @Query(value = "select a.* from Article a where a.visible = 1 order by a.last_modification_date DESC",
+    @Query(value = "select a.* from article a where a.visible = 1 order by a.last_modification_date DESC",
             countQuery = "select count(a.id) from Article a",
             nativeQuery = true
     )

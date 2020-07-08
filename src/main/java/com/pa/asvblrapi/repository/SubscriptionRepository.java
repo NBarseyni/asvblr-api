@@ -11,12 +11,12 @@ import java.util.List;
 @Repository
 public interface SubscriptionRepository extends JpaRepository<Subscription, Long> {
 
-    @Query(value = "select s.* from Subscription s where s.season_id = :id",
+    @Query(value = "select s.* from subscription s where s.season_id = :id",
             nativeQuery = true
     )
     List<Subscription> findSubscriptionBySeason(@Param("id") Long id);
 
-    @Query(value = "select s.* from Subscription s where s.player_id = :id",
+    @Query(value = "select s.* from subscription s where s.player_id = :id",
             nativeQuery = true
     )
     List<Subscription> findSubscriptionsByPlayer(@Param("id") Long id);
