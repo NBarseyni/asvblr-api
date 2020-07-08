@@ -51,7 +51,6 @@ public class SubscriptionController {
                 .orElseThrow(() -> new SubscriptionNotFoundException(id)));
     }
 
-    // Old createSubscription
     @PostMapping("")
     public ResponseEntity<Object> createSubscription(@Valid @RequestBody SubscriptionDto subscriptionDto) {
         try {
@@ -121,7 +120,7 @@ public class SubscriptionController {
             Document medicalCertificateDocument = this.documentService.createDocument(medicalCertificateFile,
                     username + "_medicalCertificate");
             this.subscriptionService.addMedicalCertificate(id, medicalCertificateDocument);
-            return ResponseEntity.status(HttpStatus.OK).body(subscription);
+            return ResponseEntity.status(HttpStatus.OK).body(SubscriptionMapper.instance.toDto(subscription));
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
