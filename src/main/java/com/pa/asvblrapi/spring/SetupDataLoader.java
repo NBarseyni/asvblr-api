@@ -111,7 +111,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createSubscriptionCategoryIfNotFound("Loisir pour tous");
         createSubscriptionCategoryIfNotFound("Loisir compétition");
         createSubscriptionCategoryIfNotFound("Départemental compétition");
+        createSubscriptionCategoryIfNotFound("Pré-régional compétition");
         createSubscriptionCategoryIfNotFound("Régional compétition");
+        createSubscriptionCategoryIfNotFound("Pré-national compétition");
+        createSubscriptionCategoryIfNotFound("National compétition");
 
         // Create PaymentMode
         createPaymentModeIfNotFound("Chèque banquaire");
