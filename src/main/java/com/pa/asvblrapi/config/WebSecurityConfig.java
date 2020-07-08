@@ -69,7 +69,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/auth/signin", "/api/auth/change-password", "/api/auth/reset-password",
                         "/api/auth/save-password", "/api/auth/update-password").permitAll()
                 // Mails
-                .antMatchers("/api/mails/**").hasAuthority("MAIL_MANAGEMENT")
+                .antMatchers("/api/mails/send-mail").hasAuthority("MAIL_MANAGEMENT")
+                .antMatchers("/api/mails/contact-mail").permitAll()
                 // Matches
                 .antMatchers(HttpMethod.GET, "/api/matches", "/api/matches/{id}").hasAuthority("MATCH_MANAGEMENT")
                 .antMatchers(HttpMethod.GET, "/api/matches/{id}/drives").hasAuthority("DRIVE_READ_CREATE")
