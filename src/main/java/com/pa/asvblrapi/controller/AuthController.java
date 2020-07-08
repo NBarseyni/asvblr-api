@@ -116,11 +116,13 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
+        /*
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error : Email is already in use !"));
         }
+         */
 
         try {
             User user = this.userService.createUser(signUpRequest.getFirstName(), signUpRequest.getLastName(), signUpRequest.getEmail());
