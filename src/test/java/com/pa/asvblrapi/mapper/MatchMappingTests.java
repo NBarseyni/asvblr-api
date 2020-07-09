@@ -20,7 +20,7 @@ public class MatchMappingTests {
         team.setId((long)2);
         Match match = new Match((long)1, new Date(), "place", true, "oppositeTeam",
                 "comment", 10, 9, 8, 7,
-                6, team, new ArrayList<>());
+                6, team, new ArrayList<>(), new ArrayList<>());
 
         MatchDto matchDto = MatchMapper.instance.toDto(match);
 
