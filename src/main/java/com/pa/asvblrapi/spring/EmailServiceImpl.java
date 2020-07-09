@@ -60,6 +60,18 @@ public class EmailServiceImpl {
         sendHtmlMessage(subscription.getEmail(), "Inscription prise en compte", htmlBody);
     }
 
+    public void sendMessageValidatedReSubscription(Subscription subscription) throws MessagingException {
+        Context thymeleafContext = new Context();
+
+        Map<String, Object> templateModel = new HashMap<>();
+        templateModel.put("name", String.format("%s %s", subscription.getFirstName(), subscription.getLastName()));
+
+        thymeleafContext.setVariables(templateModel);
+        String htmlBody = thymeleafTemplateEngine.process("template-validated-subscription.html", thymeleafContext);
+
+        sendHtmlMessage(subscription.getEmail(), "Inscription validée", htmlBody);
+    }
+
     public void sendMessageCreateUser(User user, String password) throws MessagingException {
         Context thymeleafContext = new Context();
 
