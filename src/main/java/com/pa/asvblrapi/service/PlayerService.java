@@ -47,8 +47,10 @@ public class PlayerService {
         if (!user.isPresent()) {
             throw new UserNotFoundException(id);
         }
-        return PlayerMapper.instance.toDto(this.playerRepository.findByIdUser(id)
-                .orElseThrow(() -> new PlayerNotFoundException(id, 1)));
+        if (user.get().getPlayer() == null) {
+            throw new PlayerNotFoundException(id, 1);
+        }
+        return PlayerMapper.instance.toDto(user.get().getPlayer());
     }
 
     public Subscription getLastSubscription(Long id) throws PlayerNotFoundException {
