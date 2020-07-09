@@ -3,6 +3,7 @@ package com.pa.asvblrapi.controller;
 import com.pa.asvblrapi.dto.PlayerDto;
 import com.pa.asvblrapi.dto.SubscriptionDto;
 import com.pa.asvblrapi.dto.TeamDto;
+import com.pa.asvblrapi.dto.UpdateLicenceNumberPlayerDto;
 import com.pa.asvblrapi.entity.Player;
 import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.exception.PlayerNotFoundException;
@@ -73,6 +74,16 @@ public class PlayerController {
         }
         catch (PlayerNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Object> updatePlayer(@PathVariable Long id, @Valid @RequestBody UpdateLicenceNumberPlayerDto dto) {
+        try {
+            PlayerDto playerDto = this.playerService.updateLicenceNumberPlayer(id, dto.getLicenceNumber());
+            return ResponseEntity.status(HttpStatus.OK).body(playerDto);
+        } catch (PlayerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 

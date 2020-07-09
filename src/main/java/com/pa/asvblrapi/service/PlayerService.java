@@ -115,10 +115,19 @@ public class PlayerService {
         return this.playerRepository.save(player.get());
     }
 
+    public PlayerDto updateLicenceNumberPlayer(Long id, String licenceNumber) throws PlayerNotFoundException {
+        Optional<Player> player = this.playerRepository.findById(id);
+        if (!player.isPresent()) {
+            throw new PlayerNotFoundException(id);
+        }
+        player.get().setLicenceNumber(licenceNumber);
+        return PlayerMapper.instance.toDto(this.playerRepository.save(player.get()));
+    }
+
     public void deletePlayer(Long id) throws PlayerNotFoundException, AccessDeniedException {
         Optional<Player> player = this.playerRepository.findById(id);
 
-        if(!player.isPresent()) {
+        if (!player.isPresent()) {
             throw new PlayerNotFoundException(id);
         }
         this.playerRepository.delete(player.get());
