@@ -26,7 +26,6 @@ public class User {
     private String password;
     private boolean passwordChanged;
 
-    //@OneToOne(mappedBy = "user")
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "player_id", referencedColumnName = "id")
     private Player player;

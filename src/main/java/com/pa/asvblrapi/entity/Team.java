@@ -31,7 +31,7 @@ public class Team {
     @JoinColumn(name = "coach_id")
     private User coach;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "leader_id", referencedColumnName = "id")
     private Jersey leader;
 
