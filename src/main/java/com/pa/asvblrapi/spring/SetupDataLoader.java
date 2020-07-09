@@ -76,17 +76,20 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         final Privilege driveReadCreate = createPrivilegeIfNotFound("DRIVE_READ_CREATE");
         final Privilege statisticsRead = createPrivilegeIfNotFound("STATISTICS_READ");
         final Privilege mailManagement = createPrivilegeIfNotFound("MAIL_MANAGEMENT");
+        final Privilege messagingAll = createPrivilegeIfNotFound("MESSAGING_ALL");
+        final Privilege messagingCoach = createPrivilegeIfNotFound("MESSAGING_COACH");
+        final Privilege messagingBoard = createPrivilegeIfNotFound("MESSAGING_BOARD");
 
         // Create initial roles
         final List<Privilege> presidentPrivileges = new ArrayList<Privilege>(Arrays.asList(articleManagement, documentManagement,
                 matchManagement, playerManagement, userManagement, userRead, seasonManagement, subscriptionManagement,
-                teamManagement, statisticsRead, mailManagement));
+                teamManagement, statisticsRead, mailManagement, messagingAll, messagingBoard));
         final List<Privilege> managerPrivileges = new ArrayList<Privilege>(Arrays.asList(articleManagement, documentManagement,
                 matchManagement, playerManagement, userRead, subscriptionManagement, teamManagement, statisticsRead,
-                mailManagement));
+                mailManagement, messagingAll, messagingBoard));
         final List<Privilege> coachPrivileges = new ArrayList<Privilege>(Arrays.asList(matchManagement, teamManagementCoach,
-                driveReadCreate));
-        final List<Privilege> playerPrivileges = new ArrayList<Privilege>(Arrays.asList(playerRead, driveReadCreate));
+                driveReadCreate, messagingAll, messagingCoach));
+        final List<Privilege> playerPrivileges = new ArrayList<Privilege>(Arrays.asList(playerRead, driveReadCreate, messagingAll));
 
         final Role playerRole = createRoleIfNotFound("ROLE_PLAYER", playerPrivileges);
         final Role coachRole = createRoleIfNotFound("ROLE_COACH", coachPrivileges);
