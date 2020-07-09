@@ -128,6 +128,12 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createPaymentModeIfNotFound("Espèces");
 
         // Create ClothingSize
+        createClothingSizeIfNotFound("6 ans");
+        createClothingSizeIfNotFound("8 ans");
+        createClothingSizeIfNotFound("10 ans");
+        createClothingSizeIfNotFound("12 ans");
+        createClothingSizeIfNotFound("14 ans");
+        createClothingSizeIfNotFound("16 ans");
         createClothingSizeIfNotFound("XS");
         createClothingSizeIfNotFound("S");
         createClothingSizeIfNotFound("M");
