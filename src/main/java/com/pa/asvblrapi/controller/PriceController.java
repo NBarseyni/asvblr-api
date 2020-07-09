@@ -26,6 +26,7 @@ public class PriceController {
         return this.priceService.getPriceById(id);
     }
 
+    @GetMapping("/{code}")
     public Price getByCode(@PathVariable String code) {
         return this.priceService.getPriceByCode(code);
     }
