@@ -35,7 +35,7 @@ public class Drive {
     @ManyToOne
     @JoinColumn(name = "match_id", nullable = false)
     private Match match;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "drives_users",
             joinColumns = @JoinColumn(name = "drive_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))

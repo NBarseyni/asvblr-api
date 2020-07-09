@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
@@ -48,13 +47,13 @@ public class Player {
     @JoinColumn(name = "subscriptionCategory_id")
     private SubscriptionCategory subscriptionCategory;
     private int requestedJerseyNumber;
-    @OneToOne(mappedBy = "player")
+    @OneToOne(cascade = CascadeType.REMOVE, mappedBy = "player")
     private User user;
 
-    @OneToMany(mappedBy = "player")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "player")
     private List<Jersey> jerseys;
 
-    @OneToMany(mappedBy = "player")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "player")
     private List<Subscription> subscriptions;
 
     public Player(String firstName, String lastName, boolean gender, String address, int postcode, String city,

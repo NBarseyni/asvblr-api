@@ -33,7 +33,7 @@ public class Jersey {
     @JoinColumn(name = "player_id", nullable = false)
     private Player player;
 
-    @OneToMany(mappedBy = "jersey")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "jersey")
     private List<CommentPlayer> commentsPlayer;
 
     public Jersey(Integer number, Team team, Position position, Player player) {

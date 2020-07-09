@@ -39,10 +39,10 @@ public class Team {
     @JoinColumn(name = "team_category_id", nullable = false)
     private TeamCategory teamCategory;
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "team")
     private List<Jersey> jerseys;
 
-    @OneToMany(mappedBy = "team")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "team")
     private List<Match> matches;
 
     public Team(String name, Season season, TeamCategory teamCategory) {

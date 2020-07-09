@@ -37,8 +37,10 @@ public class Match {
     @ManyToOne
     @JoinColumn(name = "team_id", nullable = false)
     private Team team;
-    @OneToMany(mappedBy = "match")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "match")
     private List<CommentPlayer> commentsPlayer;
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "match")
+    private List<Drive> drives;
 
     public Match(Date date, String place, boolean type, String oppositeTeam, Team team) {
         this.date = date;
