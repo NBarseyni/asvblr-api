@@ -4,6 +4,7 @@ import com.pa.asvblrapi.dto.SubscriptionDto;
 import com.pa.asvblrapi.dto.SubscriptionPaidDto;
 import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.exception.*;
+import com.pa.asvblrapi.mapper.PlayerMapper;
 import com.pa.asvblrapi.mapper.SubscriptionMapper;
 import com.pa.asvblrapi.mapper.SubscriptionPaidMapper;
 import com.pa.asvblrapi.repository.*;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.nio.file.AccessDeniedException;
 import java.util.*;
 
 @Service
@@ -36,7 +36,13 @@ public class SubscriptionService {
     private SubscriptionPaidRepository subscriptionPaidRepository;
 
     @Autowired
+    private PlayerRepository playerRepository;
+
+    @Autowired
     private DocumentService documentService;
+
+    @Autowired
+    private PlayerService playerService;
 
     public List<Subscription> getAllSubscriptions() {
         return this.subscriptionRepository.findAll();
@@ -140,6 +146,16 @@ public class SubscriptionService {
         }
         subscriptionSave.setSubscriptionsPaid(subscriptionsPaid);
         return this.subscriptionRepository.save(subscriptionSave);
+    }
+
+    public Subscription createReSubscription(SubscriptionDto subscriptionDto) throws PlayerNotFoundException {
+        Optional<Player> player = this.playerRepository.findById(subscriptionDto.getIdPlayer());
+        if (!player.isPresent()) {
+            throw new PlayerNotFoundException(subscriptionDto.getIdPlayer());
+        }
+        Subscription subscription = this.createSubscription(subscriptionDto);
+        subscription.setPlayer(player.get());
+        return this.subscriptionRepository.save(subscription);
     }
 
     public Subscription updateSubscription(Long id, SubscriptionDto subscriptionDto) throws SubscriptionNotFoundException,
@@ -268,7 +284,8 @@ public class SubscriptionService {
         }
     }
 
-    public Subscription validatedSubscription(Long id) throws SubscriptionNotFoundException, SubscriptionAlreadyValidatedException {
+    public Subscription validatedSubscription(Long id) throws SubscriptionNotFoundException, SubscriptionAlreadyValidatedException,
+            SubscriptionHasNotAllPaymentModeValidatedException {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
         if (!subscription.isPresent()) {
             throw new SubscriptionNotFoundException(id);
@@ -279,12 +296,20 @@ public class SubscriptionService {
         for (SubscriptionPaid subscriptionPaid :
                 subscription.get().getSubscriptionsPaid()) {
             if (!subscriptionPaid.isPaid()) {
-                throw new SubscriptionHasNotAllPaymentModeValidated(id);
+                throw new SubscriptionHasNotAllPaymentModeValidatedException(id);
             }
         }
         subscription.get().setValidated(true);
         subscription.get().setValidationDate(new Date());
         return this.subscriptionRepository.save(subscription.get());
+    }
+
+    public void validatedReSubscription(Long id) throws SubscriptionNotFoundException, PlayerNotFoundException,
+            SubscriptionAlreadyValidatedException, SubscriptionHasNotAllPaymentModeValidatedException {
+        Subscription subscription = this.validatedSubscription(id);
+        Player player = this.playerService.updatePlayer(subscription.getPlayer().getId(), PlayerMapper.instance.toDto(subscription.getPlayer()));
+        subscription.setPlayer(player);
+        this.subscriptionRepository.save(subscription);
     }
 
     public void unvalidatedSubscription(Long id) throws SubscriptionNotFoundException {
@@ -304,8 +329,14 @@ public class SubscriptionService {
             throw new SubscriptionNotFoundException(id);
         }
         this.subscriptionRepository.delete(subscription.get());
-        this.documentService.deleteDocument(subscription.get().getCNI().getId());
-        this.documentService.deleteDocument(subscription.get().getIdentityPhoto().getId());
-        this.documentService.deleteDocument(subscription.get().getMedicalCertificate().getId());
+        if (subscription.get().getCNI() != null) {
+            this.documentService.deleteDocument(subscription.get().getCNI().getId());
+        }
+        if (subscription.get().getIdentityPhoto() != null) {
+            this.documentService.deleteDocument(subscription.get().getIdentityPhoto().getId());
+        }
+        if (subscription.get().getMedicalCertificate() != null) {
+            this.documentService.deleteDocument(subscription.get().getMedicalCertificate().getId());
+        }
     }
 }

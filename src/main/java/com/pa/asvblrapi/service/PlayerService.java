@@ -85,13 +85,19 @@ public class PlayerService {
         if (!player.isPresent()) {
             throw new PlayerNotFoundException(id);
         }
-        Optional<ClothingSize> topSize = this.clothingSizeRepository.findById(playerDto.getIdTopSize());
-        if (!topSize.isPresent()) {
-            throw new ClothingSizeNotFoundException(playerDto.getIdTopSize());
+        if (playerDto.getIdTopSize() != null) {
+            Optional<ClothingSize> topSize = this.clothingSizeRepository.findById(playerDto.getIdTopSize());
+            if (!topSize.isPresent()) {
+                throw new ClothingSizeNotFoundException(playerDto.getIdTopSize());
+            }
+            player.get().setTopSize(topSize.get());
         }
-        Optional<ClothingSize> pantsSize = this.clothingSizeRepository.findById(playerDto.getIdPantsSize());
-        if (!pantsSize.isPresent()) {
-            throw new ClothingSizeNotFoundException(playerDto.getIdPantsSize());
+        if (playerDto.getIdPantsSize() != null) {
+            Optional<ClothingSize> pantsSize = this.clothingSizeRepository.findById(playerDto.getIdPantsSize());
+            if (!pantsSize.isPresent()) {
+                throw new ClothingSizeNotFoundException(playerDto.getIdPantsSize());
+            }
+            player.get().setPantsSize(pantsSize.get());
         }
         Optional<SubscriptionCategory> subscriptionCategory = this.subscriptionCategoryRepository.findById(playerDto.getIdSubscriptionCategory());
         if (!subscriptionCategory.isPresent()) {
@@ -105,8 +111,6 @@ public class PlayerService {
         player.get().setEmail(playerDto.getEmail());
         player.get().setPhoneNumber(playerDto.getPhoneNumber());
         player.get().setBirthDate(playerDto.getBirthDate());
-        player.get().setTopSize(topSize.get());
-        player.get().setPantsSize(pantsSize.get());
         player.get().setSubscriptionCategory(subscriptionCategory.get());
         return this.playerRepository.save(player.get());
     }

@@ -4,6 +4,7 @@ import com.pa.asvblrapi.dto.PlayerDto;
 import com.pa.asvblrapi.dto.SubscriptionDto;
 import com.pa.asvblrapi.dto.TeamDto;
 import com.pa.asvblrapi.entity.Player;
+import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.exception.PlayerNotFoundException;
 import com.pa.asvblrapi.exception.SeasonNotFoundException;
 import com.pa.asvblrapi.mapper.PlayerMapper;
@@ -57,6 +58,11 @@ public class PlayerController {
     @GetMapping("/{id}/subscriptions")
     public List<SubscriptionDto> getSubscriptionsByPlayer(@PathVariable Long id) {
         return SubscriptionMapper.instance.toDto(this.subscriptionService.getSubscriptionsByPlayer(id));
+    }
+
+    @GetMapping("/{id}/last-subscription")
+    public SubscriptionDto getLastSubscription(@PathVariable Long id) {
+        return SubscriptionMapper.instance.toDto(this.playerService.getLastSubscription(id));
     }
 
     @PutMapping("/{id}")

@@ -86,7 +86,7 @@ public class Subscription {
             inverseJoinColumns = @JoinColumn(name = "paymentMode_id"))
     private List<PaymentMode> paymentModes;
      */
-    @OneToMany(mappedBy = "subscription")
+    @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "subscription")
     private Set<SubscriptionPaid> subscriptionsPaid;
 
     @ManyToOne

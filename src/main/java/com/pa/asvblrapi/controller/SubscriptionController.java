@@ -66,6 +66,21 @@ public class SubscriptionController {
         }
     }
 
+    @PostMapping("/re-subscription")
+    public ResponseEntity<Object> createReSubscription(@Valid @RequestBody SubscriptionDto subscriptionDto) {
+        try {
+            Subscription subscription = this.subscriptionService.createReSubscription(subscriptionDto);
+            this.emailService.sendMessageCreateSubscription(subscription);
+            return ResponseEntity.status(HttpStatus.CREATED).body(SubscriptionMapper.instance.toDto(subscription));
+        } catch (SeasonNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No current season");
+        } catch (SubscriptionCategoryNotFoundException | PaymentModeNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
     //@PostMapping("")
     public ResponseEntity<Object> createSubscriptionWithDocuments(@Valid @RequestParam String subscription,
                                                                   @RequestParam("cni") MultipartFile cniFile,
@@ -205,12 +220,24 @@ public class SubscriptionController {
             this.subscriptionService.setPlayer(id, player);
         } catch (SubscriptionNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        } catch (SubscriptionAlreadyValidatedException | SubscriptionHasNotAllPaymentModeValidated e) {
+        } catch (SubscriptionAlreadyValidatedException | SubscriptionHasNotAllPaymentModeValidatedException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
         return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+    @PatchMapping("/{id}/validated-re-subscription")
+    public ResponseEntity<Object> validatedReSubscription(@PathVariable Long id) {
+        try {
+            this.subscriptionService.validatedReSubscription(id);
+            return ResponseEntity.status(HttpStatus.OK).body(null);
+        } catch (SubscriptionNotFoundException | PlayerNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (SubscriptionAlreadyValidatedException | SubscriptionHasNotAllPaymentModeValidatedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     @DeleteMapping("/{id}")
