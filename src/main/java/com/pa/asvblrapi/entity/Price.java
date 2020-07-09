@@ -29,6 +29,7 @@ public class Price {
 
     public Price(String name, String code, double price) {
         this.name = name;
+        this.code = code;
         this.price = price;
     }
 }
