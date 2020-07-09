@@ -8,4 +8,8 @@ public class PriceNotFoundException extends RuntimeException {
     public PriceNotFoundException(Long id) {
         super("Could not find price with id = " + id);
     }
+
+    public PriceNotFoundException(String code) {
+        super("Could not find price with code = " + code);
+    }
 }

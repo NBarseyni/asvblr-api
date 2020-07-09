@@ -26,6 +26,10 @@ public class PriceController {
         return this.priceService.getPriceById(id);
     }
 
+    public Price getByCode(@PathVariable String code) {
+        return this.priceService.getPriceByCode(code);
+    }
+
     @PatchMapping("")
     public List<Price> updatePrice(@Valid @RequestBody List<Price> prices) {
         return this.priceService.updatePrice(prices);

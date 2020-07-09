@@ -180,13 +180,15 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createTeamCategoryIfNotFound("Sanofi");
 
         // Create Price
-        createPriceIfNotFound("Inscription sénior compétition", 190.00);
-        createPriceIfNotFound("Inscription sénior loisir", 165.00);
-        createPriceIfNotFound("Inscription collégiens / lycéens", 160.00);
-        createPriceIfNotFound("Inscription enfants", 120.00);
-        createPriceIfNotFound("Inscription baby volley", 120.00);
-        createPriceIfNotFound("Calendrier", 10.00);
-        createPriceIfNotFound("Tenue", 30.00);
+        createPriceIfNotFound("Inscription sénior compétition", "SUB_SENIOR_COMPETITION", 190.00);
+        createPriceIfNotFound("Inscription sénior loisir", "SUB_SENIOR", 165.00);
+        createPriceIfNotFound("Inscription collégiens / lycéens", "SUB_HIGH_SCHOOL", 160.00);
+        createPriceIfNotFound("Inscription enfants", "SUB_CHILD", 120.00);
+        createPriceIfNotFound("Inscription baby volley", "SUB_BABY", 120.00);
+        createPriceIfNotFound("Calendrier", "CALENDAR_PRICE", 10.00);
+        createPriceIfNotFound("Tenue", "EQUIPMENT_PRICE", 30.00);
+        createPriceIfNotFound("Short", "EQUIPMENT_SHORT_PRICE", 10.00);
+        createPriceIfNotFound("Maillot", "EQUIPMENT_JERSEY_PRICE", 20.00);
 
         alreadySetup = true;
     }
@@ -280,10 +282,10 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         return teamCategory;
     }
 
-    private Price createPriceIfNotFound(final String name, final double priceValue) {
+    private Price createPriceIfNotFound(final String name, final String code, final double priceValue) {
         Price price = this.priceRepository.findByName(name);
         if (price == null) {
-            price = new Price(name, priceValue);
+            price = new Price(name, code, priceValue);
             price = this.priceRepository.save(price);
         }
         return price;

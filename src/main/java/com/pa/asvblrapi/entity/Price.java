@@ -23,9 +23,11 @@ public class Price {
     @NotNull
     private String name;
     @NotNull
+    private String code;
+    @NotNull
     private double price;
 
-    public Price(String name, double price) {
+    public Price(String name, String code, double price) {
         this.name = name;
         this.price = price;
     }

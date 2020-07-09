@@ -23,6 +23,11 @@ public class PriceService {
                 .orElseThrow(() -> new PriceNotFoundException(id));
     }
 
+    public Price getPriceByCode(String code) {
+        return this.priceRepository.findByCode(code)
+                .orElseThrow(() -> new PriceNotFoundException(code));
+    }
+
     public List<Price> updatePrice(List<Price> prices) {
         return this.priceRepository.saveAll(prices);
     }
