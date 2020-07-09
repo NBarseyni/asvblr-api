@@ -231,12 +231,15 @@ public class SubscriptionController {
     @PatchMapping("/{id}/validated-re-subscription")
     public ResponseEntity<Object> validatedReSubscription(@PathVariable Long id) {
         try {
-            this.subscriptionService.validatedReSubscription(id);
+            Subscription subscription = this.subscriptionService.validatedReSubscription(id);
+            this.emailService.sendMessageValidatedReSubscription(subscription);
             return ResponseEntity.status(HttpStatus.OK).body(null);
         } catch (SubscriptionNotFoundException | PlayerNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (SubscriptionAlreadyValidatedException | SubscriptionHasNotAllPaymentModeValidatedException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (MessagingException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 

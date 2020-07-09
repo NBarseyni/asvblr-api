@@ -304,12 +304,12 @@ public class SubscriptionService {
         return this.subscriptionRepository.save(subscription.get());
     }
 
-    public void validatedReSubscription(Long id) throws SubscriptionNotFoundException, PlayerNotFoundException,
+    public Subscription validatedReSubscription(Long id) throws SubscriptionNotFoundException, PlayerNotFoundException,
             SubscriptionAlreadyValidatedException, SubscriptionHasNotAllPaymentModeValidatedException {
         Subscription subscription = this.validatedSubscription(id);
         Player player = this.playerService.updatePlayer(subscription.getPlayer().getId(), PlayerMapper.instance.toDto(subscription.getPlayer()));
         subscription.setPlayer(player);
-        this.subscriptionRepository.save(subscription);
+        return this.subscriptionRepository.save(subscription);
     }
 
     public void unvalidatedSubscription(Long id) throws SubscriptionNotFoundException {
