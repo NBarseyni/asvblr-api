@@ -8,9 +8,11 @@ import com.pa.asvblrapi.mapper.PlayerMapper;
 import com.pa.asvblrapi.mapper.SubscriptionMapper;
 import com.pa.asvblrapi.mapper.SubscriptionPaidMapper;
 import com.pa.asvblrapi.repository.*;
+import com.pa.asvblrapi.spring.EmailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.*;
 
@@ -43,6 +45,12 @@ public class SubscriptionService {
 
     @Autowired
     private PlayerService playerService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private EmailServiceImpl emailService;
 
     public List<Subscription> getAllSubscriptions() {
         return this.subscriptionRepository.findAll();
@@ -284,8 +292,7 @@ public class SubscriptionService {
         }
     }
 
-    public Subscription validatedSubscription(Long id) throws SubscriptionNotFoundException, SubscriptionAlreadyValidatedException,
-            SubscriptionHasNotAllPaymentModeValidatedException {
+    public SubscriptionDto validatedSubscription(Long id) throws Exception {
         Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
         if (!subscription.isPresent()) {
             throw new SubscriptionNotFoundException(id);
@@ -299,17 +306,33 @@ public class SubscriptionService {
                 throw new SubscriptionHasNotAllPaymentModeValidatedException(id);
             }
         }
-        subscription.get().setValidated(true);
-        subscription.get().setValidationDate(new Date());
-        return this.subscriptionRepository.save(subscription.get());
+        if (subscription.get().getPlayer() == null) {
+            return this.validatedNewSubscription(subscription.get());
+        } else {
+            return this.validatedReSubscription(subscription.get());
+        }
     }
 
-    public Subscription validatedReSubscription(Long id) throws SubscriptionNotFoundException, PlayerNotFoundException,
-            SubscriptionAlreadyValidatedException, SubscriptionHasNotAllPaymentModeValidatedException {
-        Subscription subscription = this.validatedSubscription(id);
+    public SubscriptionDto validatedNewSubscription(Subscription subscription) throws Exception {
+        subscription.setValidated(true);
+        subscription.setValidationDate(new Date());
+
+        User user = this.userService.createUserSubscription(subscription.getFirstName(), subscription.getLastName(),
+                subscription.getEmail());
+        Player player = this.playerService.createPlayer(subscription, user);
+        this.setPlayer(subscription.getId(), player);
+
+        return SubscriptionMapper.instance.toDto(this.subscriptionRepository.save(subscription));
+    }
+
+    public SubscriptionDto validatedReSubscription(Subscription subscription) throws SubscriptionNotFoundException, PlayerNotFoundException,
+            SubscriptionAlreadyValidatedException, SubscriptionHasNotAllPaymentModeValidatedException, MessagingException {
+        subscription.setValidated(true);
+        subscription.setValidationDate(new Date());
         Player player = this.playerService.updatePlayer(subscription.getPlayer().getId(), PlayerMapper.instance.toDto(subscription.getPlayer()));
         subscription.setPlayer(player);
-        return this.subscriptionRepository.save(subscription);
+        this.emailService.sendMessageValidatedReSubscription(subscription);
+        return SubscriptionMapper.instance.toDto(this.subscriptionRepository.save(subscription));
     }
 
     public void unvalidatedSubscription(Long id) throws SubscriptionNotFoundException {

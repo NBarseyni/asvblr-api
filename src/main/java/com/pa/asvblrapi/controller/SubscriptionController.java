@@ -213,33 +213,14 @@ public class SubscriptionController {
     @PatchMapping("/{id}/validated")
     public ResponseEntity<Object> validatedSubscription(@PathVariable Long id) {
         try {
-            Subscription subscription = this.subscriptionService.validatedSubscription(id);
-            User user = this.userService.createUserSubscription(subscription.getFirstName(), subscription.getLastName(),
-                    subscription.getEmail());
-            Player player = this.playerService.createPlayer(subscription, user);
-            this.subscriptionService.setPlayer(id, player);
-        } catch (SubscriptionNotFoundException e) {
+            SubscriptionDto subscriptionDto = this.subscriptionService.validatedSubscription(id);
+            return ResponseEntity.status(HttpStatus.OK).body(subscriptionDto);
+        } catch (SubscriptionNotFoundException | PlayerNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         } catch (SubscriptionAlreadyValidatedException | SubscriptionHasNotAllPaymentModeValidatedException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
-        return ResponseEntity.status(HttpStatus.OK).body(null);
-    }
-
-    @PatchMapping("/{id}/validated-re-subscription")
-    public ResponseEntity<Object> validatedReSubscription(@PathVariable Long id) {
-        try {
-            Subscription subscription = this.subscriptionService.validatedReSubscription(id);
-            this.emailService.sendMessageValidatedReSubscription(subscription);
-            return ResponseEntity.status(HttpStatus.OK).body(null);
-        } catch (SubscriptionNotFoundException | PlayerNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        } catch (SubscriptionAlreadyValidatedException | SubscriptionHasNotAllPaymentModeValidatedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
-        } catch (MessagingException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
 
