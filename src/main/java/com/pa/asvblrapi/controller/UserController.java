@@ -1,25 +1,16 @@
 package com.pa.asvblrapi.controller;
 
 import com.pa.asvblrapi.dto.*;
-import com.pa.asvblrapi.entity.Player;
 import com.pa.asvblrapi.entity.User;
 import com.pa.asvblrapi.exception.*;
-import com.pa.asvblrapi.repository.UserRepository;
 import com.pa.asvblrapi.service.*;
-import com.pa.asvblrapi.spring.EmailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController

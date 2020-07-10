@@ -80,12 +80,6 @@ public class Subscription {
     @JoinColumn(name = "category_id", nullable = false)
     private SubscriptionCategory subscriptionCategory;
 
-    /*@ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "subscription_payment_modes",
-            joinColumns = @JoinColumn(name = "subscription_id"),
-            inverseJoinColumns = @JoinColumn(name = "paymentMode_id"))
-    private List<PaymentMode> paymentModes;
-     */
     @OneToMany(cascade = CascadeType.REMOVE, mappedBy = "subscription")
     private Set<SubscriptionPaid> subscriptionsPaid;
 

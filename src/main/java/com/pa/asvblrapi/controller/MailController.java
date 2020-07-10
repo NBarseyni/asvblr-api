@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.util.List;

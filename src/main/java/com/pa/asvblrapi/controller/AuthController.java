@@ -14,8 +14,6 @@ import com.pa.asvblrapi.mapper.UserMapper;
 import com.pa.asvblrapi.payload.request.LoginRequest;
 import com.pa.asvblrapi.payload.request.SignupRequest;
 import com.pa.asvblrapi.payload.response.JwtResponse;
-import com.pa.asvblrapi.payload.response.MessageResponse;
-import com.pa.asvblrapi.repository.RoleRepository;
 import com.pa.asvblrapi.repository.UserRepository;
 import com.pa.asvblrapi.service.UserDetailsImpl;
 import com.pa.asvblrapi.service.UserSecurityService;
@@ -28,7 +26,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;

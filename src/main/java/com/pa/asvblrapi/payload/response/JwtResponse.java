@@ -1,7 +1,6 @@
 package com.pa.asvblrapi.payload.response;
 
 import com.pa.asvblrapi.dto.UserDto;
-import com.pa.asvblrapi.entity.Player;
 import lombok.Getter;
 import lombok.Setter;
 

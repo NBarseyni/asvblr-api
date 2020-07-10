@@ -5,7 +5,6 @@ import com.pa.asvblrapi.dto.SubscriptionDto;
 import com.pa.asvblrapi.dto.TeamDto;
 import com.pa.asvblrapi.dto.UpdateLicenceNumberPlayerDto;
 import com.pa.asvblrapi.entity.Player;
-import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.exception.PlayerNotFoundException;
 import com.pa.asvblrapi.exception.SeasonNotFoundException;
 import com.pa.asvblrapi.mapper.PlayerMapper;

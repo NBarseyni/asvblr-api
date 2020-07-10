@@ -17,7 +17,6 @@ public interface SubscriptionMapper extends EntityMapper<SubscriptionDto, Subscr
     @Mapping(source = "player.id", target = "idPlayer")
     @Mapping(source = "season.id", target = "idSeason")
     @Mapping(source = "subscriptionCategory.id", target = "idSubscriptionCategory")
-    //@Mapping(source = "paymentModes", target = "idsPaymentMode")
     @Mapping(source = "CNI.id", target = "idCNI")
     @Mapping(source = "identityPhoto.id", target = "idIdentityPhoto")
     @Mapping(source = "medicalCertificate.id", target = "idMedicalCertificate")

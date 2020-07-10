@@ -3,7 +3,6 @@ package com.pa.asvblrapi.controller;
 import com.pa.asvblrapi.entity.Position;
 import com.pa.asvblrapi.exception.PositionNotFoundException;
 import com.pa.asvblrapi.service.PositionService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

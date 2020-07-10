@@ -1,21 +1,16 @@
 package com.pa.asvblrapi.controller;
 
 import com.pa.asvblrapi.dto.SeasonDto;
-import com.pa.asvblrapi.dto.SubscriptionDto;
 import com.pa.asvblrapi.entity.Season;
-import com.pa.asvblrapi.entity.Subscription;
 import com.pa.asvblrapi.exception.SeasonNotFoundException;
 import com.pa.asvblrapi.mapper.SeasonMapper;
-import com.pa.asvblrapi.mapper.SubscriptionMapper;
 import com.pa.asvblrapi.service.SeasonService;
-import com.pa.asvblrapi.service.SubscriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
