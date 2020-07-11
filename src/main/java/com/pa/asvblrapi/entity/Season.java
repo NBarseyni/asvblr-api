@@ -20,6 +20,7 @@ public class Season {
     private Long id;
     @NotNull
     private String name;
+    @NotNull
     private boolean currentSeason;
 
     @OneToMany(mappedBy = "season")

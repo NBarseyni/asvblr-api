@@ -65,6 +65,7 @@ public class Subscription {
     private boolean pc_allowToPublish;
     private boolean pc_unaccountability;
     private boolean pc_allowToWhatsapp;
+    @NotNull
     private Date creationDate;
     private Date validationDate;
     @ManyToOne

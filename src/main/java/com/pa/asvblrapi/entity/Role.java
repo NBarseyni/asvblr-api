@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
@@ -17,7 +18,7 @@ public class Role {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
+    @NotNull
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -31,7 +32,7 @@ public class Role {
     )
     private List<Privilege> privileges;
 
-    public Role (String name) {
+    public Role(String name) {
         this.name = name;
     }
 }
