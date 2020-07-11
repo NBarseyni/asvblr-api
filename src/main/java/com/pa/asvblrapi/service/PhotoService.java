@@ -5,6 +5,7 @@ import com.pa.asvblrapi.entity.Team;
 import com.pa.asvblrapi.exception.PhotoNotFoundException;
 import com.pa.asvblrapi.repository.PhotoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -20,7 +21,8 @@ public class PhotoService {
     @Autowired
     private PhotoRepository photoRepository;
 
-    private final String UPLOADED_FOLDER = "src/main/resources/public/photos/";
+    @Value("${asvblrapi.app.photoFolder}")
+    private String UPLOADED_FOLDER;
 
     public List<Photo> getAllPhotos() {
         return this.photoRepository.findAll();
