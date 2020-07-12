@@ -33,6 +33,9 @@ public class EmailServiceImpl {
     @Value("${asvblrapi.app.mailContact}")
     private String mailContact;
 
+    @Value("${asvblrapi.app.linkWebSite}")
+    private String linkWebSite;
+
     public void sendSimpleMessage(String to, String subject, String text) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -88,7 +91,7 @@ public class EmailServiceImpl {
         Context thymeleafContext = new Context();
 
         //String url = contextPath + "/users/change-password?token=" + token;
-        String url = "http://localhost:4200/login/reset-password?token=" + token;
+        String url = this.linkWebSite + "/login/reset-password?token=" + token;
         Map<String, Object> templateModel = new HashMap<>();
         templateModel.put("name", String.format("%s %s", user.getFirstName(), user.getLastName()));
         templateModel.put("username", user.getUsername());
