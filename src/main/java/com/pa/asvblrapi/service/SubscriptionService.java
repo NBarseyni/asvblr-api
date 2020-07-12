@@ -1,7 +1,9 @@
 package com.pa.asvblrapi.service;
 
+import com.pa.asvblrapi.dto.UrlSourceImageDto;
 import com.pa.asvblrapi.dto.SubscriptionDto;
 import com.pa.asvblrapi.dto.SubscriptionPaidDto;
+import com.pa.asvblrapi.dto.ValidityPhotoDto;
 import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.exception.*;
 import com.pa.asvblrapi.mapper.PlayerMapper;
@@ -10,10 +12,17 @@ import com.pa.asvblrapi.mapper.SubscriptionPaidMapper;
 import com.pa.asvblrapi.repository.*;
 import com.pa.asvblrapi.spring.EmailServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 @Service
@@ -51,6 +60,14 @@ public class SubscriptionService {
 
     @Autowired
     private EmailServiceImpl emailService;
+
+    @Autowired
+    private MicrosoftFace1ApiService microsoftFace1ApiService;
+
+    @Value("${asvblrapi.app.documentFolder}")
+    private String UPLOADED_FOLDER;
+
+    private String uriMicrosoftApi = "https://microsoft-face1.p.rapidapi.com/detect";
 
     public List<Subscription> getAllSubscriptions() {
         return this.subscriptionRepository.findAll();
@@ -282,6 +299,15 @@ public class SubscriptionService {
             subscription.get().setIdentityPhoto(document);
             this.subscriptionRepository.save(subscription.get());
         }
+    }
+
+    public ValidityPhotoDto checkValidityPhoto(Long id) throws NoSuchAlgorithmException {
+        Optional<Subscription> subscription = this.subscriptionRepository.findById(id);
+        if (!subscription.isPresent()) {
+            throw new SubscriptionNotFoundException(id);
+        }
+        boolean validity = this.microsoftFace1ApiService.checkIfPhotoHasFace(subscription.get().getIdentityPhoto().getName());
+        return new ValidityPhotoDto(validity);
     }
 
     public void addMedicalCertificate(Long id, Document document) {

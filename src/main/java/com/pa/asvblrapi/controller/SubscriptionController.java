@@ -3,6 +3,7 @@ package com.pa.asvblrapi.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pa.asvblrapi.dto.SubscriptionDto;
 import com.pa.asvblrapi.dto.SubscriptionPaidDto;
+import com.pa.asvblrapi.dto.ValidityPhotoDto;
 import com.pa.asvblrapi.entity.*;
 import com.pa.asvblrapi.exception.*;
 import com.pa.asvblrapi.mapper.SubscriptionMapper;
@@ -18,6 +19,7 @@ import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -179,6 +181,18 @@ public class SubscriptionController {
             this.subscriptionService.addMedicalCertificate(id, document);
             return ResponseEntity.status(HttpStatus.OK).body(null);
         } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    @PostMapping("/{id}/check-validity-photo")
+    public ResponseEntity<Object> checkValidityPhoto(@PathVariable Long id) {
+        try {
+            ValidityPhotoDto dto = this.subscriptionService.checkValidityPhoto(id);
+            return ResponseEntity.status(HttpStatus.OK).body(dto);
+        } catch (SubscriptionNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (NoSuchAlgorithmException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
     }
