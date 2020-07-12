@@ -37,7 +37,7 @@ public class MicrosoftFace1ApiService {
         // Body
         String token = srcImage + secretKey;
         String hashToken = convertStringToMD5(token);
-        String uri = linkWebSite + "p/" + hashToken + "/" + srcImage;
+        String uri = linkWebSite + "/p/" + hashToken + "/" + srcImage;
 
         //UrlSourceImageDto body = new UrlSourceImageDto(UPLOADED_FOLDER + srcImage);
         UrlSourceImageDto body = new UrlSourceImageDto(uri);
