@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -25,6 +26,7 @@ public class SubscriptionPaid {
     @JoinColumn(name = "payment_mode_id")
     private PaymentMode paymentMode;
 
+    @NotNull
     private boolean paid;
 
     public SubscriptionPaid(Subscription subscription, PaymentMode paymentMode) {

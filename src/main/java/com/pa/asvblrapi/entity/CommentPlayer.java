@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -16,7 +17,9 @@ public class CommentPlayer {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @NotNull
     private String comment;
+    @NotNull
     private int rate;
     @ManyToOne
     @JoinColumn(name = "jersey_id")

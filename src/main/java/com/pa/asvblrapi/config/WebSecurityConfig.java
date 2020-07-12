@@ -132,7 +132,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/clothing-sizes/**", "/api/payment-modes/**", "/api/positions/**",
                         "/api/subscription-categories/**", "/api/team-categories/**").permitAll()
                 .antMatchers("/documents/").hasAuthority("SUBSCRIPTION_MANAGEMENT")
-                .anyRequest().authenticated();
+                .anyRequest().authenticated()
+                .and().requiresChannel()
+                .anyRequest()
+                .requiresSecure();
 
         http.addFilterBefore(authenticationFiler(), UsernamePasswordAuthenticationFilter.class);
     }

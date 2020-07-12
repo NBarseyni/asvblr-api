@@ -9,6 +9,7 @@ import com.pa.asvblrapi.exception.UserIsNotPlayerException;
 import com.pa.asvblrapi.repository.DocumentRepository;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,7 +29,8 @@ public class DocumentService {
     @Autowired
     private PlayerService playerService;
 
-    private final String UPLOADED_FOLDER = "src/main/resources/public/documents/";
+    @Value("${asvblrapi.app.documentFolder}")
+    private String UPLOADED_FOLDER;
 
     public Optional<Document> getDocument(Long id) {
         return this.documentRepository.findById(id);
