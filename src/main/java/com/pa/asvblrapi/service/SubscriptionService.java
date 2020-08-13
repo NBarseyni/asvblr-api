@@ -132,16 +132,16 @@ public class SubscriptionService {
         }
 
         Subscription subscription = new Subscription(
-                subscriptionDto.getFirstName(),
-                subscriptionDto.getLastName(),
+                this.capitalize(subscriptionDto.getFirstName().trim()),
+                this.capitalize(subscriptionDto.getLastName().trim()),
                 subscriptionDto.isGender(),
-                subscriptionDto.getAddress(),
+                subscriptionDto.getAddress().trim(),
                 subscriptionDto.getPostcode(),
                 subscriptionDto.getCity(),
-                subscriptionDto.getEmail(),
+                subscriptionDto.getEmail().trim(),
                 subscriptionDto.getPhoneNumber(),
                 subscriptionDto.getBirthDate(),
-                subscriptionDto.getNationality(),
+                subscriptionDto.getNationality().trim(),
                 topSize,
                 pantsSize,
                 subscriptionDto.getRequestedJerseyNumber(),
@@ -150,7 +150,7 @@ public class SubscriptionService {
                 subscriptionDto.isReferee(),
                 subscriptionDto.isCoach(),
                 subscriptionDto.isCalendarRequested(),
-                subscriptionDto.getComment(),
+                subscriptionDto.getComment().trim(),
                 subscriptionDto.isPc_allowToLeaveAlone(),
                 subscriptionDto.isPc_allowClubToRescue(),
                 subscriptionDto.isPc_allowToTravelWithTeamMate(),
@@ -387,5 +387,15 @@ public class SubscriptionService {
         if (subscription.get().getMedicalCertificate() != null) {
             this.documentService.deleteDocument(subscription.get().getMedicalCertificate().getId());
         }
+    }
+
+    private String capitalize(String str) {
+        String[] words = str.split("-");
+
+        for (int i = 0; i < words.length; i++) {
+            words[i] = words[i].substring(0, 1).toUpperCase() + words[i].substring(1).toLowerCase();
+        }
+
+        return String.join("-", words);
     }
 }
