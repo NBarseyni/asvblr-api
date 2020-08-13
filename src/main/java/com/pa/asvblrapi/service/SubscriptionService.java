@@ -138,7 +138,7 @@ public class SubscriptionService {
                 subscriptionDto.getAddress().trim(),
                 subscriptionDto.getPostcode(),
                 subscriptionDto.getCity(),
-                subscriptionDto.getEmail().trim(),
+                subscriptionDto.getEmail().trim().toLowerCase(),
                 subscriptionDto.getPhoneNumber(),
                 subscriptionDto.getBirthDate(),
                 subscriptionDto.getNationality().trim(),
