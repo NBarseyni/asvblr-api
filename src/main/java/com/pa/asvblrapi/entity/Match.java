@@ -18,7 +18,7 @@ import java.util.List;
 @Table(name = "matche")
 public class Match {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @NotNull
     private Date date;

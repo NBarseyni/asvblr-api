@@ -117,6 +117,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createSubscriptionCategoryIfNotFound("Régional compétition");
         createSubscriptionCategoryIfNotFound("Pré-national compétition");
         createSubscriptionCategoryIfNotFound("National compétition");
+        createSubscriptionCategoryIfNotFound("Baby Volley");
 
         // Create PaymentMode
         createPaymentModeIfNotFound("Chèque banquaire");
