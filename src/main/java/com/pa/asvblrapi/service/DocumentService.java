@@ -27,6 +27,9 @@ public class DocumentService {
     private DocumentRepository documentRepository;
 
     @Autowired
+    private MicrosoftFace1ApiService microsoftFace1ApiService;
+
+    @Autowired
     private PlayerService playerService;
 
     @Value("${asvblrapi.app.documentFolder}")
@@ -34,6 +37,16 @@ public class DocumentService {
 
     public Optional<Document> getDocument(Long id) {
         return this.documentRepository.findById(id);
+    }
+
+    public String getUrl(Long id) {
+        Optional<Document> document = this.documentRepository.findById(id);
+
+        if (!document.isPresent()) {
+            throw new DocumentNotFoundException(id);
+        }
+
+        return this.microsoftFace1ApiService.getDocumentUrl(document.get());
     }
 
     public List<Document> getMyDocuments(User user) throws UserIsNotPlayerException {

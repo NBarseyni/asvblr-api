@@ -126,6 +126,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // Documents
                 .antMatchers(HttpMethod.GET, "/api/documents/my-documents").hasAuthority("PLAYER_READ")
                 .antMatchers(HttpMethod.GET, "/api/documents/{id}").hasAuthority("SUBSCRIPTION_MANAGEMENT")
+                .antMatchers(HttpMethod.GET, "/api/documents/{id}/url").hasAuthority("SUBSCRIPTION_MANAGEMENT")
                 // Drives
                 .antMatchers("/api/drives/**").hasAuthority("DRIVE_READ_CREATE")
                 // Dataset

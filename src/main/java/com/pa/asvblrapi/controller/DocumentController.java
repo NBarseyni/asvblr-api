@@ -30,6 +30,11 @@ public class DocumentController {
                 .orElseThrow(() -> new DocumentNotFoundException(id));
     }
 
+    @GetMapping("/{id}/url")
+    public String getUrl(@PathVariable long id) {
+        return this.documentService.getUrl(id);
+    }
+
     @GetMapping("/my-documents")
     public ResponseEntity<Object> getMyDocuments() {
         try {

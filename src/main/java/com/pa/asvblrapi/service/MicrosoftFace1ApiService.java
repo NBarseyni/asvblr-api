@@ -1,6 +1,7 @@
 package com.pa.asvblrapi.service;
 
 import com.pa.asvblrapi.dto.UrlSourceImageDto;
+import com.pa.asvblrapi.entity.Document;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -66,5 +67,16 @@ public class MicrosoftFace1ApiService {
         } catch (NoSuchAlgorithmException e) {
             throw new NoSuchAlgorithmException(e.getMessage());
         }
+    }
+
+    public String getDocumentUrl(Document document) {
+        String token = document.getName() + secretKey;
+        String hashToken = "";
+
+        try {
+            hashToken = convertStringToMD5(token);
+        } catch (Exception e) { }
+
+        return linkWebSite + "/p/" + hashToken + "/" + document.getName();
     }
 }
